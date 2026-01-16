@@ -2,1488 +2,366 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hotwife Rollenspiel Generator - Erweiterte Version</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>🎭 EROPOLY</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        :root {
+            --romantik: #ff1493; --romantik-dark: #c71585;
+            --kuscheln: #00bfff; --kuscheln-dark: #0099cc;
+            --femdom: #8b00ff; --femdom-dark: #6600cc;
+            --bdsm: #ff4500; --bdsm-dark: #cc3700;
+            --hotwife: #ff69b4; --hotwife-dark: #ff1493;
+            --cuckold: #32cd32; --cuckold-dark: #228b22;
+            --keuschheit: #ffd700; --keuschheit-dark: #daa520;
+            --bg-dark: #1a0f2e; --bg-card: #3d2857;
+            --gold: #ffd700; --text-light: #ffffff; --text-dark: #1a0f2e;
         }
-        
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
         body {
-            background-color: #1a1a2e;
-            color: #e6e6e6;
-            line-height: 1.6;
-            padding: 20px;
-            max-width: 1400px;
-            margin: 0 auto;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, var(--bg-dark) 0%, #1f1038 50%, var(--bg-dark) 100%);
+            color: var(--text-light); min-height: 100vh; overflow-x: hidden; touch-action: pan-y;
         }
-        
-        .container {
-            background-color: #16213e;
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            margin-bottom: 30px;
+        .container { max-width: 100%; margin: 0 auto; padding: 8px; display: grid; grid-template-columns: 1fr; gap: 12px; }
+        .game-header {
+            background: linear-gradient(135deg, #8b00ff 0%, #ff1493 50%, #32cd32 100%);
+            border-radius: 10px; padding: 15px 10px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.3);
         }
-        
-        h1 {
-            color: #e94560;
-            text-align: center;
-            margin-bottom: 10px;
-            font-size: 2.5rem;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        .game-header h1 { font-family: 'Playfair Display', serif; font-size: 1.8rem; margin-bottom: 5px; }
+        .game-header p { font-size: 0.85rem; opacity: 0.95; }
+        .game-info { display: flex; justify-content: space-around; margin-top: 8px; gap: 6px; flex-wrap: wrap; }
+        .info-badge {
+            background: rgba(255,255,255,0.2); padding: 4px 10px; border-radius: 12px;
+            font-size: 0.7rem; backdrop-filter: blur(10px);
         }
-        
-        .subtitle {
-            text-align: center;
-            color: #8d99ae;
-            margin-bottom: 30px;
-            font-size: 1.1rem;
+        .game-main { display: grid; grid-template-columns: 1fr; gap: 12px; }
+        .game-board {
+            background: linear-gradient(135deg, #fff5f8 0%, #f0e6ff 100%);
+            border-radius: 10px; padding: 10px; box-shadow: 0 4px 16px rgba(0,0,0,0.2);
         }
-        
-        .disclaimer {
-            background-color: #0f3460;
-            border-left: 5px solid #e94560;
-            padding: 15px;
-            margin-bottom: 25px;
-            border-radius: 5px;
-            font-size: 0.9rem;
+        .board-container {
+            position: relative; width: 100%; height: 0; padding-bottom: 100%;
+            background: radial-gradient(circle at center, rgba(255,255,255,0.8), rgba(255,255,255,0.4));
+            border-radius: 50%; box-shadow: inset 0 0 30px rgba(138,43,226,0.2); touch-action: none;
         }
-        
-        .warning {
-            background-color: #5d0e0e;
-            border-left: 5px solid #ff0000;
-            padding: 15px;
-            margin-bottom: 25px;
-            border-radius: 5px;
-            font-size: 0.9rem;
-            animation: pulse 2s infinite;
+        .board-inner { position: absolute; inset: 0; }
+        .board-center {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 50%; height: 50%; background: linear-gradient(135deg, rgba(139,0,255,0.1), rgba(255,20,147,0.1));
+            border-radius: 50%; display: flex; flex-direction: column; justify-content: center;
+            align-items: center; font-size: 0.9rem; font-weight: 700; text-align: center;
+            padding: 10px; border: 3px solid rgba(139,0,255,0.3);
         }
-        
-        @keyframes pulse {
-            0% { opacity: 0.8; }
-            50% { opacity: 1; }
-            100% { opacity: 0.8; }
+        .board-center-logo { font-size: 2rem; margin-bottom: 5px; }
+        .board-cell {
+            position: absolute; width: 60px; height: 80px; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; text-align: center; padding: 4px;
+            border-radius: 8px; font-weight: 600; font-size: 0.5rem; box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+            transition: transform 0.2s; border: 2px solid rgba(255,255,255,0.7); cursor: pointer;
         }
-        
-        .selection-area {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
+        .board-cell:active { transform: scale(0.95); }
+        .cell-name { font-weight: 700; line-height: 1.1; margin-bottom: 2px; }
+        .cell-price { font-size: 0.45rem; opacity: 0.9; margin-top: 2px; }
+        .cell-owner-badge {
+            position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%);
+            background: rgba(0,0,0,0.7); color: white; padding: 2px 6px; border-radius: 8px;
+            font-size: 0.6rem; font-weight: 700; display: flex; align-items: center; gap: 2px;
         }
-        
-        .category-card {
-            background: linear-gradient(145deg, #0f3460, #1a3a6e);
-            border-radius: 10px;
-            padding: 20px;
-            transition: all 0.3s;
-            cursor: pointer;
-            border: 2px solid transparent;
-            position: relative;
-            overflow: hidden;
+        .cell-romantik { background: linear-gradient(135deg, var(--romantik), var(--romantik-dark)); color: white; border-color: var(--romantik-dark); }
+        .cell-kuscheln { background: linear-gradient(135deg, var(--kuscheln), var(--kuscheln-dark)); color: white; border-color: var(--kuscheln-dark); }
+        .cell-femdom { background: linear-gradient(135deg, var(--femdom), var(--femdom-dark)); color: white; border-color: var(--femdom-dark); }
+        .cell-bdsm { background: linear-gradient(135deg, var(--bdsm), var(--bdsm-dark)); color: white; border-color: var(--bdsm-dark); }
+        .cell-hotwife { background: linear-gradient(135deg, var(--hotwife), var(--hotwife-dark)); color: white; border-color: var(--hotwife-dark); }
+        .cell-cuckold { background: linear-gradient(135deg, var(--cuckold), var(--cuckold-dark)); color: white; border-color: var(--cuckold-dark); }
+        .cell-keuschheit { background: linear-gradient(135deg, var(--keuschheit), var(--keuschheit-dark)); color: var(--text-dark); border-color: var(--keuschheit-dark); }
+        .cell-corner {
+            background: linear-gradient(135deg, #6a0dad, #8a2be2); color: white;
+            font-size: 0.6rem; width: 70px; height: 70px; border-radius: 50%;
         }
-        
-        .category-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(233, 69, 96, 0.3);
-            border-color: #e94560;
+        .player-marker {
+            position: absolute; width: 22px; height: 22px; border-radius: 50%; display: flex;
+            justify-content: center; align-items: center; font-size: 0.85rem; box-shadow: 0 3px 8px rgba(0,0,0,0.5);
+            z-index: 20; border: 2px solid white; animation: markerPulse 2s ease-in-out infinite;
         }
-        
-        .category-card.selected {
-            border-color: #e94560;
-            background: linear-gradient(145deg, #1a3a6e, #2a4a8e);
-            box-shadow: inset 0 0 15px rgba(233, 69, 96, 0.2);
+        @keyframes markerPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.15); } }
+        .marker-frau { background: linear-gradient(135deg, #ff1493, #ff69b4); top: -5px; left: 50%; transform: translateX(-50%); }
+        .marker-mann { background: linear-gradient(135deg, #32cd32, #228b22); bottom: -5px; left: 50%; transform: translateX(-50%); }
+        .hotel-indicator {
+            position: absolute; top: 2px; right: 2px; width: 18px; height: 18px;
+            background: linear-gradient(135deg, var(--gold), #ffed4e); border-radius: 50%;
+            display: flex; justify-content: center; align-items: center; font-size: 0.7rem;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.4); animation: hotelGlow 2s ease-in-out infinite;
         }
-        
-        .category-title {
-            color: #e94560;
-            font-size: 1.3rem;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        @keyframes hotelGlow { 0%, 100% { box-shadow: 0 0 8px rgba(255,215,0,0.6); } 50% { box-shadow: 0 0 15px rgba(255,215,0,1); } }
+        .sidebar-section {
+            background: var(--bg-card); border-radius: 10px; padding: 12px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1);
         }
-        
-        .difficulty {
-            display: inline-block;
-            padding: 3px 8px;
-            border-radius: 12px;
-            font-size: 0.8rem;
-            font-weight: bold;
-            margin-left: 10px;
+        .section-title { font-size: 0.95rem; font-weight: 700; margin-bottom: 10px; color: var(--gold); }
+        .player-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.1));
+            border-radius: 8px; padding: 10px; margin-bottom: 8px; border-left: 3px solid; transition: all 0.3s;
         }
-        
-        .easy {
-            background-color: #2e7d32;
-            color: white;
+        .player-card.active { box-shadow: 0 0 12px rgba(255,215,0,0.6); transform: scale(1.02); }
+        .player-card.frau { border-left-color: #ff1493; }
+        .player-card.mann { border-left-color: #32cd32; }
+        .player-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+        .player-name { font-size: 1rem; font-weight: 700; }
+        .player-money { font-size: 1.3rem; font-weight: 700; color: var(--gold); text-shadow: 0 1px 3px rgba(0,0,0,0.3); }
+        .player-stats { display: flex; gap: 10px; font-size: 0.8rem; opacity: 0.85; }
+        .current-turn {
+            background: linear-gradient(135deg, rgba(255,215,0,0.2), rgba(255,105,180,0.2));
+            padding: 10px; border-radius: 8px; text-align: center; font-size: 0.95rem;
+            font-weight: 700; margin-bottom: 10px; border: 2px solid var(--gold);
+            animation: turnGlow 2s ease-in-out infinite;
         }
-        
-        .medium {
-            background-color: #f57c00;
-            color: white;
+        @keyframes turnGlow { 0%, 100% { box-shadow: 0 0 8px rgba(255,215,0,0.4); } 50% { box-shadow: 0 0 15px rgba(255,215,0,0.7); } }
+        .dice-area {
+            display: flex; justify-content: center; align-items: center; margin: 12px 0; padding: 15px;
+            background: linear-gradient(135deg, rgba(138,43,226,0.1), rgba(255,105,180,0.1)); border-radius: 8px;
         }
-        
-        .hard {
-            background-color: #c62828;
-            color: white;
+        .die {
+            width: 80px; height: 80px; background: linear-gradient(145deg, #ffffff, #f0f0f0);
+            color: var(--text-dark); display: flex; justify-content: center; align-items: center;
+            font-size: 2.5rem; font-weight: 700; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            user-select: none; position: relative;
         }
-        
-        .explicit {
-            background-color: #8a2be2;
-            color: white;
+        .die::before {
+            content: ''; position: absolute; top: 8px; left: 8px; right: 8px; bottom: 8px;
+            border: 2px dashed rgba(0,0,0,0.1); border-radius: 10px;
         }
-        
-        .category-description {
-            color: #b8c1ec;
-            font-size: 0.95rem;
-            margin-bottom: 15px;
+        .die.rolling { animation: diceRoll 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
+        @keyframes diceRoll {
+            0% { transform: rotate(0deg) scale(1); } 25% { transform: rotate(90deg) scale(1.15); }
+            50% { transform: rotate(180deg) scale(0.85); } 75% { transform: rotate(270deg) scale(1.15); }
+            100% { transform: rotate(360deg) scale(1); }
         }
-        
-        .content-display {
-            background: linear-gradient(145deg, #0f3460, #16213e);
-            border-radius: 10px;
-            padding: 25px;
-            margin-top: 20px;
-            min-height: 400px;
-            display: none;
-            border: 1px solid #1a3a6e;
-            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
-        }
-        
-        .content-display.active {
-            display: block;
-            animation: fadeIn 0.5s;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .content-title {
-            color: #e94560;
-            font-size: 1.5rem;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #1a3a6e;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .option-list {
-            list-style-type: none;
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 15px;
-            margin-top: 15px;
-        }
-        
-        .option-item {
-            background-color: rgba(26, 58, 110, 0.7);
-            padding: 20px;
-            border-radius: 8px;
-            border-left: 4px solid #e94560;
-            transition: all 0.3s;
-            backdrop-filter: blur(5px);
-            border: 1px solid #2a4a8e;
-        }
-        
-        .option-item:hover {
-            background-color: rgba(42, 74, 142, 0.8);
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-        
-        .option-item.explicit {
-            border-left-color: #8a2be2;
-            background-color: rgba(138, 43, 226, 0.1);
-        }
-        
-        .option-item.explicit:hover {
-            background-color: rgba(138, 43, 226, 0.2);
-        }
-        
-        .option-text {
-            margin-bottom: 15px;
-            font-size: 1.05rem;
-            line-height: 1.5;
-        }
-        
-        .explicit-text {
-            color: #ff7b9c;
-            font-weight: bold;
-        }
-        
-        .option-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-            flex-wrap: wrap;
-        }
-        
         .btn {
-            padding: 10px 20px;
-            border-radius: 5px;
-            border: none;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 5px;
+            background: linear-gradient(135deg, #8b00ff, #ff1493); color: white; border: none;
+            padding: 14px 20px; border-radius: 25px; font-size: 0.95rem; font-weight: 600;
+            cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            width: 100%; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;
+            touch-action: manipulation; user-select: none;
         }
-        
-        .btn-select {
-            background-color: #e94560;
-            color: white;
+        .btn:active { transform: scale(0.97); box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-secondary { background: linear-gradient(135deg, #6c757d, #5a6268); }
+        .btn-success { background: linear-gradient(135deg, #4caf50, #45a049); }
+        .btn-danger { background: linear-gradient(135deg, #f44336, #da190b); }
+        .btn-warning { background: linear-gradient(135deg, #ff9800, #f57c00); }
+        .theme-block {
+            background: rgba(255,255,255,0.05); border-radius: 8px; padding: 10px;
+            margin-bottom: 8px; border-left: 4px solid;
         }
-        
-        .btn-select:hover {
-            background-color: #d13450;
-            transform: scale(1.05);
+        .theme-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+        .theme-name { font-weight: 700; font-size: 0.85rem; }
+        .theme-stats { display: flex; gap: 6px; font-size: 0.75rem; }
+        .monopoly-indicator {
+            background: rgba(255,215,0,0.2); color: var(--gold); padding: 2px 8px;
+            border-radius: 10px; font-size: 0.7rem; font-weight: 700; margin-left: 6px;
         }
-        
-        .btn-back {
-            background-color: #8d99ae;
-            color: white;
+        .streets-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-top: 6px; }
+        .street-item {
+            background: rgba(0,0,0,0.2); padding: 5px; border-radius: 5px; font-size: 0.7rem;
+            display: flex; justify-content: space-between; align-items: center;
         }
-        
-        .btn-back:hover {
-            background-color: #7a8496;
+        .task-modal, .trade-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95); backdrop-filter: blur(10px); display: flex;
+            justify-content: center; align-items: center; z-index: 1000; padding: 15px; animation: fadeIn 0.3s;
         }
-        
-        .btn-next {
-            background-color: #2e7d32;
-            color: white;
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .task-content, .trade-content {
+            background: linear-gradient(135deg, var(--bg-card), var(--bg-dark)); border-radius: 12px;
+            padding: 20px; max-width: 500px; width: 100%; box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+            border: 2px solid rgba(255,255,255,0.2); max-height: 85vh; overflow-y: auto; animation: slideUp 0.4s;
         }
-        
-        .btn-next:hover {
-            background-color: #276c2a;
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        .task-theme, .trade-title {
+            font-size: 1.1rem; font-weight: 700; color: var(--gold); margin-bottom: 12px; text-align: center;
         }
-        
-        .btn-explicit {
-            background-color: #8a2be2;
-            color: white;
+        .task-description {
+            font-size: 1rem; line-height: 1.5; margin-bottom: 15px; text-align: center; padding: 12px;
+            background: rgba(255,255,255,0.05); border-radius: 8px; border: 1px dashed rgba(255,255,255,0.2);
         }
-        
-        .btn-explicit:hover {
-            background-color: #7a1bd2;
+        .task-meta { display: flex; justify-content: space-around; margin-bottom: 15px; font-size: 0.8rem; }
+        .task-buttons { display: flex; flex-direction: column; gap: 10px; }
+        .form-group { margin-bottom: 12px; }
+        .form-label { display: block; margin-bottom: 6px; font-size: 0.85rem; font-weight: 600; }
+        .form-control {
+            width: 100%; padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(0,0,0,0.3); color: white; font-size: 0.9rem;
         }
-        
-        .navigation {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 25px;
-            padding-top: 20px;
-            border-top: 1px solid #1a3a6e;
+        textarea.form-control { min-height: 80px; resize: vertical; }
+        .trade-history {
+            margin-top: 15px; padding: 10px; background: rgba(0,0,0,0.2); border-radius: 8px; font-size: 0.8rem;
         }
-        
-        .history {
-            background-color: #0f3460;
-            border-radius: 10px;
-            padding: 20px;
-            margin-top: 25px;
-            font-size: 0.9rem;
-            max-height: 200px;
-            overflow-y: auto;
+        .trade-history-title { font-weight: 700; margin-bottom: 6px; color: var(--gold); }
+        .trade-history-item { padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .instructions-panel {
+            background: linear-gradient(135deg, rgba(138,43,226,0.1), rgba(255,105,180,0.1));
+            border-radius: 8px; padding: 10px; margin-top: 8px; border: 1px solid rgba(255,255,255,0.1);
         }
-        
-        .history-title {
-            color: #e94560;
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .instructions-title { font-size: 0.85rem; font-weight: 700; margin-bottom: 6px; color: var(--gold); }
+        .instructions-list { list-style: none; padding: 0; font-size: 0.75rem; }
+        .instructions-list li { padding: 3px 0 3px 12px; position: relative; }
+        .instructions-list li::before { content: '▸'; position: absolute; left: 0; color: #ff1493; font-weight: 700; }
+        .hidden { display: none !important; }
+        .sidebar-section { max-height: 350px; overflow-y: auto; }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(135deg, #8b00ff, #ff1493); border-radius: 10px; }
+        @media (min-width: 768px) {
+            .container { padding: 15px; max-width: 1400px; }
+            .game-main { grid-template-columns: 2fr 1fr; }
+            .game-header h1 { font-size: 2.5rem; }
+            .board-cell { width: 70px; height: 90px; font-size: 0.6rem; }
+            .cell-corner { width: 80px; height: 80px; }
+            .die { width: 90px; height: 90px; font-size: 3rem; }
+            .sidebar-section { max-height: 450px; }
         }
-        
-        .history-item {
-            padding: 8px 0;
-            border-bottom: 1px dashed #1a3a6e;
-            display: flex;
-            justify-content: space-between;
-        }
-        
-        .history-text {
-            flex-grow: 1;
-        }
-        
-        .history-time {
-            color: #8d99ae;
-            font-size: 0.8rem;
-            min-width: 60px;
-            text-align: right;
-        }
-        
-        .reset-btn {
-            background-color: #c62828;
-            color: white;
-            padding: 12px 25px;
-            border-radius: 5px;
-            border: none;
-            font-weight: bold;
-            cursor: pointer;
-            display: block;
-            margin: 20px auto;
-            transition: all 0.3s;
-        }
-        
-        .reset-btn:hover {
-            background-color: #b71c1c;
-            transform: scale(1.05);
-        }
-        
-        .instructions {
-            background-color: #0f3460;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 25px;
-            font-size: 0.95rem;
-            border-left: 5px solid #2e7d32;
-        }
-        
-        .instructions h3 {
-            color: #2e7d32;
-            margin-bottom: 10px;
-        }
-        
-        .explicit-toggle {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        
-        .toggle-label {
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-        }
-        
-        .toggle-switch {
-            position: relative;
-            width: 60px;
-            height: 30px;
-            background-color: #0f3460;
-            border-radius: 15px;
-            margin-right: 10px;
-            transition: all 0.3s;
-        }
-        
-        .toggle-switch::after {
-            content: '';
-            position: absolute;
-            width: 26px;
-            height: 26px;
-            border-radius: 50%;
-            background-color: #e94560;
-            top: 2px;
-            left: 2px;
-            transition: all 0.3s;
-        }
-        
-        input[type="checkbox"]:checked + .toggle-switch {
-            background-color: #8a2be2;
-        }
-        
-        input[type="checkbox"]:checked + .toggle-switch::after {
-            transform: translateX(30px);
-        }
-        
-        input[type="checkbox"] {
-            display: none;
-        }
-        
-        .stats {
-            display: flex;
-            justify-content: space-around;
-            margin-top: 20px;
-            padding: 15px;
-            background-color: rgba(15, 52, 96, 0.5);
-            border-radius: 10px;
-        }
-        
-        .stat-item {
-            text-align: center;
-        }
-        
-        .stat-value {
-            font-size: 1.8rem;
-            color: #e94560;
-            font-weight: bold;
-        }
-        
-        .stat-label {
-            font-size: 0.9rem;
-            color: #8d99ae;
-        }
-        
-        .saved-scenarios {
-            margin-top: 30px;
-            padding: 20px;
-            background-color: #0f3460;
-            border-radius: 10px;
-            display: none;
-        }
-        
-        .saved-scenarios.active {
-            display: block;
-        }
-        
-        .scenario-item {
-            background-color: #1a3a6e;
-            padding: 15px;
-            margin-bottom: 10px;
-            border-radius: 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        @media (max-width: 768px) {
-            .selection-area {
-                grid-template-columns: 1fr;
-            }
-            
-            .container {
-                padding: 15px;
-            }
-            
-            h1 {
-                font-size: 2rem;
-            }
-            
-            .option-list {
-                grid-template-columns: 1fr;
-            }
-            
-            .stats {
-                flex-direction: column;
-                gap: 15px;
-            }
+        @media (min-width: 1024px) {
+            .board-cell { width: 75px; height: 95px; font-size: 0.65rem; }
+            .cell-price { font-size: 0.5rem; }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🔥 Hotwife Rollenspiel Generator 🔥</h1>
-        <div class="subtitle">Erweiterte Version mit expliziten Szenarien, Handlungen und Dialogen</div>
-        
-        <div class="warning">
-            <strong>⚠️ EXPLIZITER INHALT ⚠️</strong><br>
-            Dieser Generator enthält sehr explizite Sprache und erotische Inhalte. Nur für einvernehmliche Rollenspiele zwischen einwilligenden Erwachsenen in einer vertrauensvollen Beziehung. Alle Grenzen müssen respektiert werden.
-        </div>
-        
-        <div class="explicit-toggle">
-            <label class="toggle-label">
-                <input type="checkbox" id="explicitToggle">
-                <span class="toggle-switch"></span>
-                <span>Explizite Inhalte anzeigen</span>
-            </label>
-        </div>
-        
-        <div class="instructions">
-            <h3>Anleitung:</h3>
-            <p>1. Wähle eine Kategorie (Filter durch Explizit-Toggle)</p>
-            <p>2. Wähle ein Szenario oder eine Handlung aus</p>
-            <p>3. Folge dem Handlungsstrang oder kehre zurück</p>
-            <p>4. Nutze die "Gespeicherten Szenarien" für deine Favoriten</p>
-            <p>5. Achte auf Safe Words und Grenzen im echten Rollenspiel!</p>
-        </div>
-        
-        <div class="stats">
-            <div class="stat-item">
-                <div class="stat-value" id="totalScenarios">0</div>
-                <div class="stat-label">Szenarien</div>
+        <header class="game-header">
+            <h1>🎭 EROPOLY 🎭</h1>
+            <p>Das erotische Paar-Spiel</p>
+            <div class="game-info">
+                <div class="info-badge">🎲 1 Würfel</div>
+                <div class="info-badge">🏘️ Monopol = Hotels</div>
+                <div class="info-badge">💰 Endstand ÷ 1000 = €</div>
             </div>
-            <div class="stat-item">
-                <div class="stat-value" id="explicitCount">0</div>
-                <div class="stat-label">Explizite</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-value" id="selectedCount">0</div>
-                <div class="stat-label">Ausgewählt</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-value" id="savedCount">0</div>
-                <div class="stat-label">Gespeichert</div>
-            </div>
-        </div>
-        
-        <div class="selection-area" id="categorySelection">
-            <!-- Kategorien werden per JavaScript geladen -->
-        </div>
-        
-        <div class="content-display" id="contentDisplay">
-            <!-- Inhalte werden dynamisch geladen -->
-        </div>
-        
-        <div class="navigation" id="navigation" style="display: none;">
-            <button class="btn btn-back" id="backBtn">← Zurück</button>
-            <div>
-                <button class="btn btn-explicit" id="saveBtn" style="display: none;">💾 Speichern</button>
-                <button class="btn btn-next" id="nextBtn" style="display: none; margin-left: 10px;">Weiter →</button>
-            </div>
-        </div>
-        
-        <div class="saved-scenarios" id="savedScenarios">
-            <h3 class="history-title">Gespeicherte Szenarien</h3>
-            <div id="savedList"></div>
-        </div>
-        
-        <div class="history">
-            <div class="history-title">
-                <span>Verlauf</span>
-                <button class="btn" id="clearHistoryBtn" style="padding: 5px 10px; font-size: 0.8rem;">Verlauf löschen</button>
-            </div>
-            <div id="historyList"></div>
-        </div>
-        
-        <button class="reset-btn" id="resetBtn">🔄 Neustart</button>
-    </div>
-
-    <script>
-        // Erweiterte Datenstruktur für Rollenspiel-Optionen
-        const roleplayData = {
-            categories: [
-                {
-                    id: "explicit_commands",
-                    title: "Explizite Befehle & Direktivität",
-                    description: "Sehr direkte, grafische Befehle und Anweisungen mit expliziter Sprache",
-                    difficulty: "explicit",
-                    icon: "🔥",
-                    explicit: true,
-                    content: [
-                        {
-                            id: "explicit1",
-                            text: "„Komm her und schau mir zu, wie ich meiner Fotze zeige, wie sehr sie einen echten Schwanz braucht. Du darfst nur zuschauen und deine Hand an deinen eigenen Schwanz legen.“",
-                            explicit: true,
-                            followUps: [
-                                {
-                                    text: "„Siehst du, wie nass ich bin? Das ist nicht für dich. Das ist für den Gedanken an einen anderen Schwanz in mir. Willst du sehen, wie ich mir vorstelle, dass er mich fickt?“",
-                                    explicit: true,
-                                    followUps: [
-                                        {
-                                            text: "„Ich spreize meine Fotze für dich. Siehst du, wie sie pulsert? Stell dir vor, es wäre ein fremder Schwanz, der sie ausweitet. Beschreibe mir, was du sehen würdest.“",
-                                            explicit: true,
-                                            isEnd: true
-                                        },
-                                        {
-                                            text: "„Ich führe zwei Finger in mich ein. Zähl laut mit, wie viele er schaffen würde. Du würdest es nie schaffen, so tief zu gehen wie er.“",
-                                            explicit: true,
-                                            isEnd: true
-                                        }
-                                    ]
-                                },
-                                {
-                                    text: "„Ich werde jetzt meinen Vibrator nehmen, aber ich nenne ihn bei seinem Namen. Das ist 'Mark' und er fickt mich besser als du es jemals könntest.“",
-                                    explicit: true,
-                                    followUps: [
-                                        {
-                                            text: "„Hörst du das Summen? Das ist der Sound davon, wie Mark meine Fotze zum Kommen bringt. Du darfst nicht kommen, bevor ich es tue. Dein Schwanz wartet auf meine Erlaubnis.“",
-                                            explicit: true,
-                                            isEnd: true
-                                        }
-                                    ]
-                                }
-                            ]
-                        },
-                        {
-                            id: "explicit2",
-                            text: "„Du stehst jetzt auf der anderen Seite der Tür und hörst zu, wie ich telefoniere. Ich beschreibe einem anderen Mann genau, was ich mit meiner Zunge und meinem Mund mit seinem Schwanz machen würde.“",
-                            explicit: true,
-                            followUps: [
-                                {
-                                    text: "„Ich erzähle ihm, wie ich seinen Schwanz tief in meinen Hals nehme, während ich an deine kleinen Versuche denke. Ich lache und sage ihm, dass du niemals so tief gehen könntest.“",
-                                    explicit: true,
-                                    followUps: [
-                                        {
-                                            text: "„Ich frage ihn, ob er will, dass ich schlucke. Ich sage ihm, dass ich alles von ihm will, während du draußen stehst und deinen kleinen Schwanz in der Hand hältst.“",
-                                            explicit: true,
-                                            isEnd: true
-                                        }
-                                    ]
-                                },
-                                {
-                                    text: "„Ich lege jetzt auf und komme zur Tür. Ich öffne sie und du siehst meine nassen Lippen. 'Das war nur ein Vorgeschmack', sage ich. 'Er kommt nächste Woche vorbei, um es wirklich zu tun.'“",
-                                    explicit: true,
-                                    isEnd: true
-                                }
-                            ]
-                        },
-                        {
-                            id: "explicit3",
-                            text: "„Ich werde dir jetzt Bilder zeigen, die ich für jemand anderen gemacht habe. Bilder von meiner Fotze, meinem Arsch, meinen Lippen um einen imaginären Schwanz. Und du wirst mir sagen, welches ihm am besten gefallen würde.“",
-                            explicit: true,
-                            followUps: [
-                                {
-                                    text: "„Dieses Bild zeigt meine nasse Fotze, bereit für einen echten Mann. Siehst du den Unterschied zu wenn sie für dich nass ist? Für ihn ist sie überschwemmter, hungriger.“",
-                                    explicit: true,
-                                    followUps: [
-                                        {
-                                            text: "„Jetzt mache ich ein neues Bild, während du zusiehst. Ich spreize meine Fotze weit und denke an seinen dicken Schwanz. Sag 'Klick' wenn es perfekt ist für ihn.“",
-                                            explicit: true,
-                                            isEnd: true
-                                        }
-                                    ]
-                                },
-                                {
-                                    text: "„Ich schicke das Bild jetzt an ihn, während du daneben sitzt. Ich schreibe dazu: 'Das wartet auf dich, während mein Mann zuschaut.' Willst du sehen, was er antwortet?'",
-                                    explicit: true,
-                                    isEnd: true
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    id: "humiliation_scenes",
-                    title: "Demütigungs-Szenarien",
-                    description: "Szenarien mit verbaler und psychologischer Demütigungselementen",
-                    difficulty: "hard",
-                    icon: "🎯",
-                    explicit: true,
-                    content: [
-                        {
-                            id: "humiliation1",
-                            text: "„Du kniet jetzt nackt vor mir, während ich einen meiner Stöckelabsätze in der Hand halte. Ich erzähle dir, wie mein neuer Liebhaber mich gestern gefickt hat, und du vergleichst seinen Schwanz mit diesem Absatz.“",
-                            explicit: true,
-                            followUps: [
-                                {
-                                    text: "„Ich halte den Absatz neben deinen Schwanz. 'Siehst du den Unterschied?' frage ich. 'Seiner ist so viel dicker, härter. Er füllt meine Fotze aus, wo du nur darin herumstocherst.'“",
-                                    explicit: true,
-                                    followUps: [
-                                        {
-                                            text: "„Jetzt lecke meinen Absatz sauber. So sauber wie ich seinen Schwanz geleckt habe. Und denk daran, dass sein Schwanz besser geschmeckt hat als dieser Lederabsatz.“",
-                                            explicit: true,
-                                            isEnd: true
-                                        }
-                                    ]
-                                },
-                                {
-                                    text: "„Ich lasse den Absatz auf deinen Schwanz fallen. 'Das ist das Gewicht seiner Eier auf deinem winzigen Schwanz', erkläre ich. 'Kannst du es überhaupt spüren?'“",
-                                    explicit: true,
-                                    isEnd: true
-                                }
-                            ]
-                        },
-                        {
-                            id: "humiliation2",
-                            text: "„Ich habe heute einen neuen Slip gekauft. Er ist aus Spitze und viel zu teuer für dich. Ich trage ihn jetzt für mein Date morgen. Du darfst ihn nur ansehen, nicht anfassen. Er ist für bessere Männer gemacht.“",
-                            explicit: true,
-                            followUps: [
-                                {
-                                    text: "„Ich zeige dir, wie der Slip an mir sitzt. 'Siehst du, wie er meine Fotze umschmeichelt?' frage ich. 'Deine kleinen Finger könnten niemals so sanft sein. Nur ein richtiger Schwanz verdient, ihn zur Seite zu schieben.'“",
-                                    explicit: true,
-                                    followUps: [
-                                        {
-                                            text: "„Jetzt ziehe ich ihn aus und halte ihn dir hin. 'Riech daran. Das ist der Geruch meiner Erregung für jemand anderen. Atme tief ein und merk dir diesen Geruch. Es ist der Geruch deiner Unzulänglichkeit.'“",
-                                            explicit: true,
-                                            isEnd: true
-                                        }
-                                    ]
-                                },
-                                {
-                                    text: "„Ich falte den Slip und lege ihn in meine Handtasche. 'Er wird morgen nass sein, wenn ich zurückkomme', verspreche ich. 'Vielleicht lasse ich dich dann daran riechen, wenn er noch nach ihm und mir riecht.'“",
-                                    explicit: true,
-                                    isEnd: true
-                                }
-                            ]
-                        },
-                        {
-                            id: "humiliation3",
-                            text: "„Du wirst jetzt mein Schminktischchen sein. Ich stelle meine Füße auf deinen Rücken, während ich mich für mein Date schminke. Jedes Mal wenn ich einen Lippenstift auftrage, erzähle ich dir, was ich mit diesen Lippen bei ihm machen werde.“",
-                            explicit: true,
-                            followUps: [
-                                {
-                                    text: "„Mit diesem Rot werde ich seinen Schwanz ummalen. Mit diesem Glanz werde ich ihn einreiben, bevor ich ihn in den Mund nehme. Siehst du, wie sorgfältig ich mich vorbereite? Für dich habe ich mich nie so viel Mühe gegeben.“",
-                                    explicit: true,
-                                    followUps: [
-                                        {
-                                            text: "„Jetzt mache ich meine Lippen perfekt für ihn. 'Pucker up', sage ich zu dir, während ich in den Spiegel schaue. 'So werde ich sie um seinen Schwanz formen. Viel enger als um deinen.'“",
-                                            explicit: true,
-                                            isEnd: true
-                                        }
-                                    ]
-                                },
-                                {
-                                    text: "„Ich stehe auf und trete dich leicht mit dem Absatz. 'Bleib liegen', befehle ich. 'Ich gehe jetzt. Wenn ich zurückkomme, erzähle ich dir jeden einzelnen Kuss, jeden Leck, jeden Fick. Und du wirst mir dankbar sein, dass du überhaupt zuhören darfst.'“",
-                                    explicit: true,
-                                    isEnd: true
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    id: "public_scenarios",
-                    title: "Öffentliche Demütigungen",
-                    description: "Szenarien mit öffentlichen oder semi-öffentlichen Elementen",
-                    difficulty: "explicit",
-                    icon: "🌆",
-                    explicit: true,
-                    content: [
-                        {
-                            id: "public1",
-                            text: "„Wir gehen in eine Bar. Du sitzt am Ende der Theke, während ich in der Mitte flirtet. Jedes Mal wenn ich einen Mann zum Lachen bringe, schicke ich dir ein Getränk mit der Nachricht 'Danke, dass du mich bessereren Männern überlässt'.“",
-                            explicit: false,
-                            followUps: [
-                                {
-                                    text: "„Ein Mann legt seine Hand auf meine Hüfte. Ich lehne mich zurück in seinen Arm und schaue zu dir rüber. Ich zwinkere dir zu, während er mir etwas ins Ohr flüstert, das mich zum Lachen bringt.“",
-                                    explicit: false,
-                                    followUps: [
-                                        {
-                                            text: "„Ich stehe auf und gehe mit ihm zur Tanzfläche. Wir tanzen eng, seine Hände auf meinem Arsch. Ich schaue über seine Schulter direkt in deine Augen, während ich mich an ihn presse.“",
-                                            explicit: false,
-                                            isEnd: true
-                                        }
-                                    ]
-                                },
-                                {
-                                    text: "„Ich komme zu dir zurück und flüstere: 'Er hat mich gefragt, ob ich mit ihm auf die Toilette kommen will. Soll ich?' Dein Gesicht sagt alles. Ich küsse deine Wange und sage: 'Gut so. Ich gehe jetzt.'“",
-                                    explicit: true,
-                                    isEnd: true
-                                }
-                            ]
-                        },
-                        {
-                            id: "public2",
-                            text: "„Im Restaurant bestelle ich für dich ein Kinder-Menü. Für mich das teuerste Steak. Ich erkläre dem Kellner: 'Mein Mann hat einen kleinen Appetit. Ich brauche mehr Energie für später.' und zwinkere ihm zu.“",
-                            explicit: false,
-                            followUps: [
-                                {
-                                    text: "„Während wir essen, schreibe ich unter dem Tisch eine Nachricht. Ich zeige dir den Bildschirm: 'Hey, ich denke an deinen Schwanz, während ich mit meinem Mann esse. Er bestellt wie ein Kind.' Dann schicke ich sie ab.“",
-                                    explicit: true,
-                                    followUps: [
-                                        {
-                                            text: "„Mein Telefon vibriert. Ich lese die Antwort laut vor: 'Arme Kerl. Ich fülle dich später aus, Baby.' Ich seufze laut und sage: 'Ich kann kaum warten.' während ich dich ansche.“",
-                                            explicit: true,
-                                            isEnd: true
-                                        }
-                                    ]
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    id: "cuckold_preparation",
-                    title: "Vorbereitung & Rituale",
-                    description: "Rituelle Handlungen vor, während oder nach dem Cuckolding",
-                    difficulty: "medium",
-                    icon: "⚙️",
-                    explicit: false,
-                    content: [
-                        {
-                            id: "prep1",
-                            text: "„Bevor mein Date kommt, rasierst du mich. Jeden Zentimeter meiner Fotze und meines Arschs. Du machst mich perfekt für einen anderen Mann. Und während du arbeitest, erzähle ich dir, was er mit diesen Bereichen machen wird.“",
-                            explicit: true,
-                            followUps: [
-                                {
-                                    text: "„Sei vorsichtig hier', warne ich, während du meinen Arschlöffel rasiert. 'Hier wird sein Schwanz später hin wollen. Er mag es eng. Viel enger als du es jemals ertragen könntest.'“",
-                                    explicit: true,
-                                    followUps: [
-                                        {
-                                            text: "„Ich stehe auf und betrachte deine Arbeit im Spiegel. 'Perfekt', lobe ich. 'Jetzt ist sie bereit für einen echten Mann. Danke, dass du mich für ihn vorbereitet hast. Jetzt geh und bereite das Schlafzimmer vor. Und leg Handtücher bereit - er schwitzt viel.'“",
-                                            explicit: true,
-                                            isEnd: true
-                                        }
-                                    ]
-                                }
-                            ]
-                        },
-                        {
-                            id: "prep2",
-                            text: "„Du bereitest mein 'Date-Outfit' vor. Leg jedes Kleidungsstück aufs Bett. Ich werde sie anprobieren und du bewertest jedes: 'Zu prüde', 'Nicht sexy genug', 'Das lässt zu viel zu seiner Fantasie über'. Bis ich das perfekte finde.“",
-                            explicit: false,
-                            followUps: [
-                                {
-                                    text: "„Dieses Kleid', sage ich und halte ein kurzes schwarzes Kleid hoch. 'Es öffnet sich leicht. Er wird leicht drankommen. Was denkst du? Soll ich es tragen, damit er schnell in meine Fotze kommt?'“",
-                                    explicit: true,
-                                    followUps: [
-                                        {
-                                            text: "„Ich ziehe es an und drehe mich vor dir. 'Siehst du? Kein Slip. Ich gehe immer ohne zu ihm. Er mag den direkten Zugang. Deine Aufgabe ist es, das Kleid morgen in die Reinigung zu bringen, wenn es nach ihm riecht.'“",
-                                            explicit: true,
-                                            isEnd: true
-                                        }
-                                    ]
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    id: "reclaiming_scenes",
-                    title: "Reclaiming & Nachspiel",
-                    description: "Szenarien nach dem Cuckolding-Ereignis",
-                    difficulty: "hard",
-                    icon: "↩️",
-                    explicit: true,
-                    content: [
-                        {
-                            id: "reclaim1",
-                            text: "„Ich komme zurück und du riechst ihn sofort an mir. Meine Haut, mein Atem, meine Fotze - alles riecht nach ihm. Ich setze mich breitbeinig vor dich. 'Riech', befehle ich. 'Riech was ein richtiger Mann mit mir macht.'“",
-                            explicit: true,
-                            followUps: [
-                                {
-                                    text: "„Ich ziehe meine Unterwäsche aus und halte sie dir unter die Nase. 'Das ist sein Sperma vermischt mit meiner Feuchtigkeit', erkläre ich. 'Das ist der Geruch davon, wie eine echte Frau gefickt wird. Willst du es schmecken?'“",
-                                    explicit: true,
-                                    followUps: [
-                                        {
-                                            text: "„Ich schiebe den feuchten Slip in deinen Mund. 'Leck ihn sauber. Leck den Beweis davon, dass ich heute Nacht eine richtige Frau war. Und wenn du fertig bist, darfst du mich vielleicht küssen, bevor ich dusche.'“",
-                                            explicit: true,
-                                            isEnd: true
-                                        }
-                                    ]
-                                }
-                            ]
-                        },
-                        {
-                            id: "reclaim2",
-                            text: "„Er hat mich so heftig gefickt, dass ich immer noch spüre, wie er in mir war. Komm her und fühle, wie weit offen meine Fotze noch ist. Deine Finger verschwinden darin, wo sein dicker Schwanz gerade war.“",
-                            explicit: true,
-                            followUps: [
-                                {
-                                    text: "„Ich führe deine Hand zu meiner Fotze. 'Fühlst du es?' flüstere ich. 'Fühlst du, wie ausgedehnt ich bin? Wie locker für dich jetzt? Du rutschst einfach rein, wo er sich reingequetscht hat.'“",
-                                    explicit: true,
-                                    followUps: [
-                                        {
-                                            text: "„Jetzt fick mich. Fick die Fotze, die er gerade benutzt hat. Aber sei schnell - ich bin schon von ihm gekommen. Das hier ist nur deine Belohnung dafür, dass du mich zu ihm geschickt hast.'“",
-                                            explicit: true,
-                                            isEnd: true
-                                        }
-                                    ]
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    id: "verbal_humiliation",
-                    title: "Verbale Demütigung",
-                    description: "Reine verbale Demütigung und Vergleiche",
-                    difficulty: "medium",
-                    icon: "🗣️",
-                    explicit: true,
-                    content: [
-                        {
-                            id: "verbal1",
-                            text: "„Lass uns über Größe sprechen. Nicht von Persönlichkeit oder Gefühlen. Nur Schwanzgröße. Seiner ist so lang wie mein Unterarm und so dick wie mein Handgelenk. Beschreibe mir deinen im Vergleich.“",
-                            explicit: true,
-                            followUps: [
-                                {
-                                    text: "„Ich lache höhnisch. 'Das dachte ich mir', sage ich. 'Weißt du, was das Beste ist? Dass ich überhaupt keinen Vergleich brauche. Ich fühle den Unterschied. Meine Fotze fühlt den Unterschied. Sie schreit nach ihm und gähnt bei dir.'“",
-                                    explicit: true,
-                                    followUps: [
-                                        {
-                                            text: "„Komm her und zeig mir deinen kleinen Schwanz. Ich halte meine Hand daneben. 'Siehst du?' spotte ich. 'Meine Hand ist größer. SEINE Eier sind größer. Alles an ihm ist mehr Mann als du.'“",
-                                            explicit: true,
-                                            isEnd: true
-                                        }
-                                    ]
-                                }
-                            ]
-                        },
-                        {
-                            id: "verbal2",
-                            text: "„Ich werde dir jetzt erzählen, wie er kommt. Nicht wie du - dieses kleine, pfeifende Geräusch und ein paar Tropfen. Er stöhnt wie ein Tier und füllt mich. Ich fühle es in mir kochen. Das ist, wie ein Mann kommt.“",
-                            explicit: true,
-                            followUps: [
-                                {
-                                    text: "„Und weißt du, was ich tue, wenn er kommt? Ich drücke meine Fotze um seinen Schwanz und sauge jeden Tropfen aus ihm heraus. Ich will alles. Bei dir lasse ich es einfach herauslaufen. Es ist nicht genug, um es zu behalten.'“",
-                                    explicit: true,
-                                    followUps: [
-                                        {
-                                            text: "„Manchmal, wenn er besonders viel kommt, läuft es mir die Beine runter. Das lasse ich dann für dich. Du darfst es auflecken. Das ist das Einzige von ihm, was du in deinem Leben schmecken wirst.'“",
-                                            explicit: true,
-                                            isEnd: true
-                                        }
-                                    ]
-                                }
-                            ]
-                        }
-                    ]
-                }
-            ]
-        };
-
-        // App State
-        let currentState = {
-            selectedCategory: null,
-            selectedOption: null,
-            selectedFollowUp: null,
-            history: [],
-            savedScenarios: [],
-            showExplicit: false,
-            stats: {
-                totalSelections: 0,
-                explicitSelections: 0
-            }
-        };
-
-        // DOM Elemente
-        const categorySelectionEl = document.getElementById('categorySelection');
-        const contentDisplayEl = document.getElementById('contentDisplay');
-        const navigationEl = document.getElementById('navigation');
-        const backBtn = document.getElementById('backBtn');
-        const nextBtn = document.getElementById('nextBtn');
-        const resetBtn = document.getElementById('resetBtn');
-        const saveBtn = document.getElementById('saveBtn');
-        const historyListEl = document.getElementById('historyList');
-        const savedScenariosEl = document.getElementById('savedScenarios');
-        const savedListEl = document.getElementById('savedList');
-        const explicitToggle = document.getElementById('explicitToggle');
-        const clearHistoryBtn = document.getElementById('clearHistoryBtn');
-        const totalScenariosEl = document.getElementById('totalScenarios');
-        const explicitCountEl = document.getElementById('explicitCount');
-        const selectedCountEl = document.getElementById('selectedCount');
-        const savedCountEl = document.getElementById('savedCount');
-
-        // Kategorien anzeigen
-        function displayCategories() {
-            categorySelectionEl.innerHTML = '';
-            
-            roleplayData.categories.forEach(category => {
-                // Filtere nach expliziten Inhalten wenn nötig
-                if (!currentState.showExplicit && category.explicit) {
-                    return;
-                }
-                
-                const card = document.createElement('div');
-                card.className = `category-card ${currentState.selectedCategory?.id === category.id ? 'selected' : ''}`;
-                card.innerHTML = `
-                    <div class="category-title">
-                        ${category.icon} ${category.title}
-                        <span class="difficulty ${category.difficulty}">${getDifficultyText(category.difficulty)}</span>
-                        ${category.explicit ? '<span class="difficulty explicit">EXPLIZIT</span>' : ''}
-                    </div>
-                    <div class="category-description">${category.description}</div>
-                `;
-                
-                card.addEventListener('click', () => {
-                    selectCategory(category);
-                });
-                
-                categorySelectionEl.appendChild(card);
-            });
-            
-            updateStats();
-        }
-
-        function getDifficultyText(difficulty) {
-            switch(difficulty) {
-                case 'easy': return 'Einfach';
-                case 'medium': return 'Mittel';
-                case 'hard': return 'Schwierig';
-                case 'explicit': return 'Explizit';
-                default: return '';
-            }
-        }
-
-        // Kategorie auswählen
-        function selectCategory(category) {
-            currentState.selectedCategory = category;
-            currentState.selectedOption = null;
-            currentState.selectedFollowUp = null;
-            
-            displayCategories();
-            displayCategoryContent(category);
-            addToHistory(`Kategorie: ${category.title}`, category.icon);
-            
-            navigationEl.style.display = 'flex';
-            nextBtn.style.display = 'none';
-            saveBtn.style.display = 'none';
-            savedScenariosEl.classList.remove('active');
-        }
-
-        // Kategorie-Inhalt anzeigen
-        function displayCategoryContent(category) {
-            contentDisplayEl.innerHTML = '';
-            contentDisplayEl.classList.add('active');
-            
-            const title = document.createElement('h2');
-            title.className = 'content-title';
-            title.innerHTML = `${category.icon} ${category.title} ${category.explicit ? '<span class="difficulty explicit">EXPLIZIT</span>' : ''}`;
-            contentDisplayEl.appendChild(title);
-            
-            if (category.content.length === 0) {
-                const emptyMessage = document.createElement('div');
-                emptyMessage.className = 'option-item';
-                emptyMessage.innerHTML = `<div class="option-text">Keine Inhalte verfügbar für diese Kategorie.</div>`;
-                contentDisplayEl.appendChild(emptyMessage);
-                return;
-            }
-            
-            const list = document.createElement('ul');
-            list.className = 'option-list';
-            
-            category.content.forEach(option => {
-                const item = document.createElement('li');
-                item.className = `option-item ${option.explicit ? 'explicit' : ''}`;
-                
-                const textDiv = document.createElement('div');
-                textDiv.className = 'option-text';
-                if (option.explicit) {
-                    textDiv.innerHTML = `<span class="explicit-text">${option.text}</span>`;
-                } else {
-                    textDiv.textContent = option.text;
-                }
-                
-                item.appendChild(textDiv);
-                
-                const actionsDiv = document.createElement('div');
-                actionsDiv.className = 'option-actions';
-                
-                const selectBtn = document.createElement('button');
-                selectBtn.className = `btn ${option.explicit ? 'btn-explicit' : 'btn-select'}`;
-                selectBtn.innerHTML = option.explicit ? '🔥 Diese Option wählen' : 'Diese Option wählen';
-                selectBtn.dataset.id = option.id;
-                
-                selectBtn.addEventListener('click', () => {
-                    selectOption(option);
-                });
-                
-                actionsDiv.appendChild(selectBtn);
-                item.appendChild(actionsDiv);
-                list.appendChild(item);
-            });
-            
-            contentDisplayEl.appendChild(list);
-        }
-
-        // Option auswählen
-        function selectOption(option) {
-            currentState.selectedOption = option;
-            currentState.stats.totalSelections++;
-            if (option.explicit) {
-                currentState.stats.explicitSelections++;
-            }
-            
-            displayOptionFollowUps(option);
-            addToHistory(`Option: ${option.text.substring(0, 60)}...`, '💬');
-            
-            nextBtn.style.display = option.followUps && option.followUps.length > 0 ? 'inline-block' : 'none';
-            saveBtn.style.display = 'inline-block';
-            
-            updateStats();
-        }
-
-        // Folgoptionen anzeigen
-        function displayOptionFollowUps(option) {
-            contentDisplayEl.innerHTML = '';
-            
-            const title = document.createElement('h2');
-            title.className = 'content-title';
-            title.innerHTML = `${currentState.selectedCategory.icon} Ausgewählte Option ${option.explicit ? '<span class="difficulty explicit">EXPLIZIT</span>' : ''}`;
-            contentDisplayEl.appendChild(title);
-            
-            const selectedOption = document.createElement('div');
-            selectedOption.className = `option-item ${option.explicit ? 'explicit' : ''}`;
-            
-            const textDiv = document.createElement('div');
-            textDiv.className = 'option-text';
-            if (option.explicit) {
-                textDiv.innerHTML = `<span class="explicit-text">${option.text}</span>`;
-            } else {
-                textDiv.textContent = option.text;
-            }
-            
-            selectedOption.appendChild(textDiv);
-            contentDisplayEl.appendChild(selectedOption);
-            
-            if (option.followUps && option.followUps.length > 0) {
-                const followUpTitle = document.createElement('h3');
-                followUpTitle.className = 'content-title';
-                followUpTitle.textContent = 'Wähle einen Handlungsstrang:';
-                followUpTitle.style.fontSize = '1.2rem';
-                followUpTitle.style.marginTop = '20px';
-                contentDisplayEl.appendChild(followUpTitle);
-                
-                const list = document.createElement('ul');
-                list.className = 'option-list';
-                
-                option.followUps.forEach((followUp, index) => {
-                    const item = document.createElement('li');
-                    item.className = `option-item ${followUp.explicit ? 'explicit' : ''}`;
-                    
-                    const textDiv = document.createElement('div');
-                    textDiv.className = 'option-text';
-                    if (followUp.explicit) {
-                        textDiv.innerHTML = `<span class="explicit-text">${followUp.text}</span>`;
-                    } else {
-                        textDiv.textContent = followUp.text;
-                    }
-                    
-                    item.appendChild(textDiv);
-                    
-                    const actionsDiv = document.createElement('div');
-                    actionsDiv.className = 'option-actions';
-                    
-                    const selectBtn = document.createElement('button');
-                    selectBtn.className = `btn ${followUp.explicit ? 'btn-explicit' : 'btn-select'}`;
-                    selectBtn.textContent = 'Diesen Weg wählen';
-                    selectBtn.dataset.index = index;
-                    
-                    selectBtn.addEventListener('click', () => {
-                        selectFollowUp(followUp, index);
-                    });
-                    
-                    actionsDiv.appendChild(selectBtn);
-                    item.appendChild(actionsDiv);
-                    list.appendChild(item);
-                });
-                
-                contentDisplayEl.appendChild(list);
-            } else {
-                displayEndOfPath(option);
-            }
-        }
-
-        // Folgoption auswählen
-        function selectFollowUp(followUp, index) {
-            currentState.selectedFollowUp = { followUp, index };
-            currentState.stats.totalSelections++;
-            if (followUp.explicit) {
-                currentState.stats.explicitSelections++;
-            }
-            
-            if (followUp.isEnd) {
-                displayEndOfPath(followUp);
-                addToHistory(`Handlung: ${followUp.text.substring(0, 60)}... [ENDE]`, '🏁');
-            } else if (followUp.followUps && followUp.followUps.length > 0) {
-                displayOptionFollowUps(followUp);
-                addToHistory(`Handlung: ${followUp.text.substring(0, 60)}...`, '→');
-            }
-            
-            nextBtn.style.display = followUp.followUps && followUp.followUps.length > 0 ? 'inline-block' : 'none';
-            saveBtn.style.display = 'inline-block';
-            
-            updateStats();
-        }
-
-        // Ende eines Handlungsstrangs anzeigen
-        function displayEndOfPath(item) {
-            contentDisplayEl.innerHTML = '';
-            
-            const title = document.createElement('h2');
-            title.className = 'content-title';
-            title.innerHTML = `🎬 Ende des Handlungsstrangs ${item.explicit ? '<span class="difficulty explicit">EXPLIZIT</span>' : ''}`;
-            contentDisplayEl.appendChild(title);
-            
-            const selectedOption = document.createElement('div');
-            selectedOption.className = `option-item ${item.explicit ? 'explicit' : ''}`;
-            
-            const textDiv = document.createElement('div');
-            textDiv.className = 'option-text';
-            if (item.explicit) {
-                textDiv.innerHTML = `<span class="explicit-text">${item.text}</span>`;
-            } else {
-                textDiv.textContent = item.text;
-            }
-            
-            selectedOption.appendChild(textDiv);
-            contentDisplayEl.appendChild(selectedOption);
-            
-            const endMessage = document.createElement('div');
-            endMessage.className = 'option-item';
-            endMessage.innerHTML = `
-                <div class="option-text" style="text-align: center; padding: 30px;">
-                    <strong>✨ Dieser Handlungsstrang endet hier. ✨</strong><br><br>
-                    <div style="display: flex; flex-direction: column; gap: 10px; align-items: center;">
-                        <div>Du könntest nun:</div>
-                        <div>1. Zurück zur vorherigen Entscheidung gehen</div>
-                        <div>2. Eine neue Kategorie auswählen</div>
-                        <div>3. Das Rollenspiel basierend auf diesem Ende weiterführen</div>
-                        <div>4. Dieses Szenario speichern für später</div>
+        </header>
+        <div class="game-main">
+            <main class="game-board">
+                <div class="board-container">
+                    <div class="board-inner" id="boardContainer">
+                        <div class="board-center">
+                            <div class="board-center-logo">🎭</div>
+                            <div>EROPOLY</div>
+                        </div>
                     </div>
                 </div>
-            `;
-            contentDisplayEl.appendChild(endMessage);
-        }
-
-        // Szenario speichern
-        function saveScenario() {
-            if (!currentState.selectedOption) return;
-            
-            const scenario = {
-                id: Date.now(),
-                category: currentState.selectedCategory?.title || 'Unbekannt',
-                option: currentState.selectedOption.text,
-                followUp: currentState.selectedFollowUp?.followUp?.text || null,
-                timestamp: new Date().toLocaleString(),
-                explicit: currentState.selectedOption.explicit || (currentState.selectedFollowUp?.followUp?.explicit || false)
-            };
-            
-            currentState.savedScenarios.push(scenario);
-            updateSavedScenarios();
-            addToHistory('Szenario gespeichert', '💾');
-            
-            // Kurze Bestätigung anzeigen
-            const saveBtn = document.getElementById('saveBtn');
-            const originalText = saveBtn.innerHTML;
-            saveBtn.innerHTML = '✅ Gespeichert!';
-            saveBtn.style.backgroundColor = '#2e7d32';
-            
-            setTimeout(() => {
-                saveBtn.innerHTML = originalText;
-                saveBtn.style.backgroundColor = '';
-            }, 1500);
-        }
-
-        // Gespeicherte Szenarien aktualisieren
-        function updateSavedScenarios() {
-            savedListEl.innerHTML = '';
-            
-            if (currentState.savedScenarios.length === 0) {
-                savedListEl.innerHTML = '<div class="scenario-item">Noch keine Szenarien gespeichert.</div>';
-                savedScenariosEl.classList.remove('active');
-                return;
-            }
-            
-            savedScenariosEl.classList.add('active');
-            
-            // Zeige die gespeicherten Szenarien (neueste zuerst)
-            const reversedScenarios = [...currentState.savedScenarios].reverse();
-            
-            reversedScenarios.forEach((scenario, index) => {
-                const item = document.createElement('div');
-                item.className = `scenario-item ${scenario.explicit ? 'explicit' : ''}`;
-                
-                const content = document.createElement('div');
-                content.style.flexGrow = '1';
-                content.innerHTML = `
-                    <div><strong>${scenario.category}</strong></div>
-                    <div style="font-size: 0.9rem; margin-top: 5px; color: #b8c1ec;">${scenario.option.substring(0, 80)}${scenario.option.length > 80 ? '...' : ''}</div>
-                    <div style="font-size: 0.8rem; margin-top: 5px; color: #8d99ae;">${scenario.timestamp}</div>
-                `;
-                
-                const deleteBtn = document.createElement('button');
-                deleteBtn.className = 'btn';
-                deleteBtn.style.padding = '5px 10px';
-                deleteBtn.style.fontSize = '0.8rem';
-                deleteBtn.style.backgroundColor = '#c62828';
-                deleteBtn.textContent = 'Löschen';
-                deleteBtn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    deleteSavedScenario(scenario.id);
-                });
-                
-                item.appendChild(content);
-                item.appendChild(deleteBtn);
-                item.addEventListener('click', () => {
-                    loadSavedScenario(scenario);
-                });
-                
-                savedListEl.appendChild(item);
-            });
-            
-            updateStats();
-        }
-
-        // Gespeichertes Szenario laden
-        function loadSavedScenario(scenario) {
-            // Finde die Kategorie
-            const category = roleplayData.categories.find(cat => cat.title === scenario.category);
-            if (category) {
-                selectCategory(category);
-                // Hier könnten wir versuchen, den genauen Pfad wiederherzustellen
-                // Für jetzt zeigen wir einfach die Kategorie an
-                addToHistory(`Geladen: ${scenario.category}`, '📂');
-            }
-        }
-
-        // Gespeichertes Szenario löschen
-        function deleteSavedScenario(id) {
-            currentState.savedScenarios = currentState.savedScenarios.filter(s => s.id !== id);
-            updateSavedScenarios();
-            addToHistory('Szenario gelöscht', '🗑️');
-        }
-
-        // Zurück-Button Funktion
-        function goBack() {
-            if (currentState.selectedFollowUp) {
-                // Zurück zur Option
-                currentState.selectedFollowUp = null;
-                displayOptionFollowUps(currentState.selectedOption);
-                addToHistory(`← Zurück`, '↩️');
-            } else if (currentState.selectedOption) {
-                // Zurück zur Kategorie
-                currentState.selectedOption = null;
-                displayCategoryContent(currentState.selectedCategory);
-                addToHistory(`← Zurück zur Kategorie`, '↩️');
-            } else if (currentState.selectedCategory) {
-                // Zurück zur Kategorieauswahl
-                currentState.selectedCategory = null;
-                contentDisplayEl.classList.remove('active');
-                navigationEl.style.display = 'none';
-                saveBtn.style.display = 'none';
-                displayCategories();
-                addToHistory(`← Zurück zur Übersicht`, '↩️');
-            }
-            
-            nextBtn.style.display = 'none';
-        }
-
-        // Weiter-Button Funktion (nächste Folgoption)
-        function goNext() {
-            if (currentState.selectedFollowUp && currentState.selectedFollowUp.followUp.followUps) {
-                // Zeige die nächsten Folgoptionen
-                displayOptionFollowUps(currentState.selectedFollowUp.followUp);
-            }
-        }
-
-        // Zur Geschichte hinzufügen
-        function addToHistory(text, icon = '📝') {
-            const timestamp = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-            currentState.history.push({ text, timestamp, icon });
-            updateHistoryDisplay();
-            
-            // Begrenze die History auf 50 Einträge
-            if (currentState.history.length > 50) {
-                currentState.history = currentState.history.slice(-50);
-            }
-        }
-
-        // Geschichte aktualisieren
-        function updateHistoryDisplay() {
-            historyListEl.innerHTML = '';
-            
-            if (currentState.history.length === 0) {
-                historyListEl.innerHTML = '<div class="history-item"><div class="history-text">Noch keine Auswahl getroffen.</div></div>';
-                return;
-            }
-            
-            // Zeige die Einträge (neueste zuerst)
-            const reversedHistory = [...currentState.history].reverse();
-            
-            reversedHistory.forEach(entry => {
-                const item = document.createElement('div');
-                item.className = 'history-item';
-                item.innerHTML = `
-                    <div class="history-text">${entry.icon} ${entry.text}</div>
-                    <div class="history-time">${entry.timestamp}</div>
-                `;
-                historyListEl.appendChild(item);
-            });
-        }
-
-        // Statistiken aktualisieren
-        function updateStats() {
-            // Zähle alle Szenarien
-            let totalScenarios = 0;
-            let explicitScenarios = 0;
-            
-            roleplayData.categories.forEach(category => {
-                category.content.forEach(option => {
-                    totalScenarios++;
-                    if (option.explicit) explicitScenarios++;
-                    
-                    // Zähle auch FollowUps
-                    if (option.followUps) {
-                        option.followUps.forEach(followUp => {
-                            totalScenarios++;
-                            if (followUp.explicit) explicitScenarios++;
-                            
-                            if (followUp.followUps) {
-                                followUp.followUps.forEach(followUp2 => {
-                                    totalScenarios++;
-                                    if (followUp2.explicit) explicitScenarios++;
-                                });
-                            }
-                        });
-                    }
-                });
-            });
-            
-            totalScenariosEl.textContent = totalScenarios;
-            explicitCountEl.textContent = explicitScenarios;
-            selectedCountEl.textContent = currentState.stats.totalSelections;
-            savedCountEl.textContent = currentState.savedScenarios.length;
-        }
-
-        // Zurücksetzen
-        function resetApp() {
-            currentState = {
-                selectedCategory: null,
-                selectedOption: null,
-                selectedFollowUp: null,
-                history: [],
-                savedScenarios: currentState.savedScenarios, // Behalte gespeicherte Szenarien
-                showExplicit: currentState.showExplicit, // Behalte den Explizit-Filter
-                stats: {
-                    totalSelections: 0,
-                    explicitSelections: 0
-                }
-            };
-            
-            contentDisplayEl.classList.remove('active');
-            navigationEl.style.display = 'none';
-            saveBtn.style.display = 'none';
-            savedScenariosEl.classList.remove('active');
-            displayCategories();
-            updateHistoryDisplay();
-            updateStats();
-            addToHistory("Rollenspiel Generator zurückgesetzt", "🔄");
-        }
-
-        // Event Listener
-        backBtn.addEventListener('click', goBack);
-        nextBtn.addEventListener('click', goNext);
-        resetBtn.addEventListener('click', resetApp);
-        saveBtn.addEventListener('click', saveScenario);
-        clearHistoryBtn.addEventListener('click', () => {
-            currentState.history = [];
-            updateHistoryDisplay();
-            addToHistory("Verlauf gelöscht", "🗑️");
-        });
-
-        // Explizit-Toggle
-        explicitToggle.addEventListener('change', () => {
-            currentState.showExplicit = explicitToggle.checked;
-            displayCategories();
-            
-            if (currentState.selectedCategory && currentState.selectedCategory.explicit && !currentState.showExplicit) {
-                // Wenn die aktuelle Kategorie explizit ist und wir sie ausblenden, zurücksetzen
-                currentState.selectedCategory = null;
-                contentDisplayEl.classList.remove('active');
-                navigationEl.style.display = 'none';
-            }
-            
-            addToHistory(`Explizite Inhalte: ${currentState.showExplicit ? 'EIN' : 'AUS'}`, currentState.showExplicit ? '🔥' : '👁️');
-        });
-
-        // Tastatur-Shortcuts
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                goBack();
-            } else if (e.key === 'ArrowRight' && nextBtn.style.display !== 'none') {
-                goNext();
-            } else if (e.key === 's' && (e.ctrlKey || e.metaKey)) {
-                e.preventDefault();
-                saveScenario();
-            } else if (e.key === 'r' && (e.ctrlKey || e.metaKey)) {
-                e.preventDefault();
-                resetApp();
-            }
-        });
-
-        // Initialisierung
-        displayCategories();
-        updateHistoryDisplay();
-        updateStats();
-        updateSavedScenarios();
-        addToHistory("Hotwife Rollenspiel Generator gestartet", "🚀");
-
-        // Info über Tastaturkürzel anzeigen
-        setTimeout(() => {
-            addToHistory("Tipp: Drücke ESC für zurück, Pfeil rechts für weiter", "💡");
-        }, 2000);
+                <div class="instructions-panel">
+                    <div class="instructions-title">📋 Spielregeln</div>
+                    <ul class="instructions-list">
+                        <li>1 Würfel werfen und bewegen</li>
+                        <li>Straßen kaufen</li>
+                        <li>Hotel nur bei komplettem Thema</li>
+                        <li>Fremde Hotels: Miete ODER Aufgabe</li>
+                        <li>LOS = €200</li>
+                        <li>Ende: Vermögen ÷ 1000 = Realer €</li>
+                    </ul>
+                </div>
+            </main>
+            <aside>
+                <section class="sidebar-section">
+                    <h2 class="section-title">👥 Spieler</h2>
+                    <div class="current-turn" id="currentTurnDisplay">Aktuell: 👑 Ehefrau</div>
+                    <div class="player-card frau active" id="frauCard">
+                        <div class="player-header">
+                            <div class="player-name">👑 Ehefrau</div>
+                            <div class="player-money" id="frauMoney">€ 3.500</div>
+                        </div>
+                        <div class="player-stats">
+                            <span>🏘️ <span id="frauStreets">0</span></span>
+                            <span>🏨 <span id="frauHotels">0</span></span>
+                            <span>🎯 <span id="frauMonopolies">0</span> Monopole</span>
+                        </div>
+                    </div>
+                    <div class="player-card mann" id="mannCard">
+                        <div class="player-header">
+                            <div class="player-name">🔒 Ehemann</div>
+                            <div class="player-money" id="mannMoney">€ 3.500</div>
+                        </div>
+                        <div class="player-stats">
+                            <span>🏘️ <span id="mannStreets">0</span></span>
+                            <span>🏨 <span id="mannHotels">0</span></span>
+                            <span>🎯 <span id="mannMonopolies">0</span> Monopole</span>
+                        </div>
+                    </div>
+                </section>
+                <section class="sidebar-section">
+                    <h2 class="section-title">🎲 Würfeln</h2>
+                    <div class="dice-area"><div class="die" id="die1">?</div></div>
+                    <button class="btn" id="rollBtn">🎲 Würfeln</button>
+                    <button class="btn btn-secondary" id="endTurnBtn">⏭️ Zug beenden</button>
+                </section>
+                <section class="sidebar-section">
+                    <h2 class="section-title">🏘️ Straßen & Monopole</h2>
+                    <div id="themeBlocksContainer"></div>
+                </section>
+                <section class="sidebar-section">
+                    <h2 class="section-title">🤝 Handel</h2>
+                    <button class="btn btn-warning" id="tradeBtn">💱 Handel starten</button>
+                    <div id="tradeHistoryDisplay" class="trade-history hidden">
+                        <div class="trade-history-title">Letzte Handelsaktionen:</div>
+                    </div>
+                </section>
+                <section class="sidebar-section">
+                    <h2 class="section-title">🏁 Spielende</h2>
+                    <button class="btn btn-success" id="endGameBtn">💰 Endergebnis</button>
+                </section>
+            </aside>
+        </div>
+    </div>
+    <div id="taskModal" class="hidden"></div>
+    <div id="tradeModal" class="hidden"></div>
+    <script>
+const gameState={currentPlayer:'frau',frauMoney:3500,mannMoney:3500,frauPosition:0,mannPosition:0,gameActive:true,tradeHistory:[],_h:{hd:1.25,rd:0.80,et:0.60,pb:250,ld:0.20}};
+const themeBlocks={romantik:{name:"💖 Romantik",color:"romantik",streets:[{id:1,name:"Rosen-Allee",price:200,hotelCost:100,owner:null,hasHotel:false},{id:2,name:"Kerzen-Gasse",price:220,hotelCost:110,owner:null,hasHotel:false},{id:3,name:"Kuss-Boulevard",price:240,hotelCost:120,owner:null,hasHotel:false}],tasks:["Ehemann: Massiere Ehefraus Füße 3 Min","Ehefrau: Nur Unterwäsche, bleib so 2 Min","Ehemann: Küsse Ehefraus Hals 1 Min","Beide: Zungenkuss 30 Sek","Ehemann: Streichle Ehefraus Brüste (durch Kleidung) 1 Min","Ehefrau: Setz dich auf Ehemanns Schoß, 2 Min kuscheln","Ehemann: Flüstere Ehefrau 3 schmutzige Dinge ins Ohr"]},kuscheln:{name:"🤗 Kuscheln",color:"kuscheln",streets:[{id:4,name:"Kuschel-Straße",price:180,hotelCost:90,owner:null,hasHotel:false},{id:5,name:"Streichel-Gasse",price:200,hotelCost:100,owner:null,hasHotel:false},{id:6,name:"Umarmungs-Allee",price:210,hotelCost:105,owner:null,hasHotel:false}],tasks:["Ehemann: Umarme Ehefrau von hinten 1 Min, Hände auf Bauch","Wahrheit: Ehemann, wann warst du zuletzt richtig geil auf sie?","Ehemann: Streichle Haare, sage 3 Komplimente","Löffelchen 2 Min","Wahrheit: Ehefrau, wann dachtest du zuletzt an einen anderen Mann?","Ehemann: Küsse jeden Finger von Ehefrau","Wahrheit: Ehefrau, was macht dich richtig nass?"]},femdom:{name:"👠 Femdom",color:"femdom",streets:[{id:7,name:"Kommando-Allee",price:300,hotelCost:150,owner:null,hasHotel:false},{id:8,name:"Gehorsam-Gasse",price:320,hotelCost:160,owner:null,hasHotel:false},{id:9,name:"Kontroll-Straße",price:350,hotelCost:175,owner:null,hasHotel:false}],tasks:["Ehemann: Knie nieder, küsse Ehefraus Füße","Ehefrau: Gib Befehl, Ehemann führt sofort aus","Wahrheit: Ehemann, warum verdient sie die Kontrolle?","Ehemann: Hole Getränk auf Knien","Ehefrau: Ohrfeige seinen Po 5x","Wahrheit: Ehemann, wie fühlt es sich an, dominiert zu werden?","Ehemann: Massiere Füße, bedanke dich dafür","Ehefrau: Ehemann muss nackt vor dir stehen, 1 Min Inspektion","Wahrheit: Ehemann, was ist das Erniedrigendste, das du für sie tun würdest?"]},bdsm:{name:"🔐 BDSM",color:"bdsm",streets:[{id:10,name:"Fessel-Gasse",price:280,hotelCost:140,owner:null,hasHotel:false},{id:11,name:"Schmerz-Allee",price:310,hotelCost:155,owner:null,hasHotel:false},{id:12,name:"Sinnes-Straße",price:330,hotelCost:165,owner:null,hasHotel:false}],tasks:["Ehemann: 10 Klapse nackter Po","Wahrheit: Ehemann, wie sehr tut es weh, wenn du nicht kommen darfst?","Ehefrau: Kneife 5x in seine Brustwarzen","Ehemann: Unbequeme Position 1 Min halten","Wahrheit: Ehefrau, was würdest du tun bei totaler Macht?","Ehemann: Augen verbinden, Ehefrau berührt 1 Min wo sie will","Ehefrau: Ziehe Ehemann an den Haaren, küsse ihn hart","Wahrheit: Ehemann, wie sehr erregt dich Schmerz von ihr?"]},hotwife:{name:"💃 Hotwife",color:"hotwife",streets:[{id:13,name:"Flirt-Boulevard",price:260,hotelCost:130,owner:null,hasHotel:false},{id:14,name:"Verführungs-Allee",price:290,hotelCost:145,owner:null,hasHotel:false},{id:15,name:"Attraktivitäts-Straße",price:310,hotelCost:155,owner:null,hasHotel:false}],tasks:["Wahrheit: Ehefrau, 3 Gründe für Treffen mit anderem Mann?","Ehefrau: Tanze 30 Sek sexy","Wahrheit: Ehefrau, beschreibe Traummann (nicht Ehemann)","Ehefrau: Zieh dich aus, präsentiere dich 1 Min","Wahrheit: Ehemann, wie würde es sich anfühlen, sie mit anderem zu sehen?","Ehefrau: Fantasie über anderen Mann (1 Min)","Wahrheit: Ehefrau, welcher Mann hat dich zuletzt angemacht?","Ehefrau: Beschreibe dein perfektes Date mit Lover","Wahrheit: Ehemann, welchen ihrer Freunde findest du am bedrohlichsten?","Ehefrau: Zeige Foto eines Mannes, den du attraktiv findest"]},cuckold:{name:"👁️ Cuckold",color:"cuckold",streets:[{id:16,name:"Beobachtungs-Gasse",price:270,hotelCost:135,owner:null,hasHotel:false},{id:17,name:"Dienst-Allee",price:300,hotelCost:150,owner:null,hasHotel:false},{id:18,name:"Demütigungs-Straße",price:340,hotelCost:170,owner:null,hasHotel:false}],tasks:["Wahrheit: Ehemann, warum verdient sie einen Besseren?","Ehemann: Danke ihr, dass sie bei dir bleibt","Wahrheit: Ehefrau, was macht andere attraktiver?","Ehemann: Putze ihre High Heels/Schuhe","Wahrheit: Ehemann, wie war es, zu schnell zu kommen letztes Mal?","Ehefrau: Beschreibe Date mit anderem, Ehemann hört zu","Wahrheit: Ehemann, würdest du Schuhe putzen nachdem sie bei anderem war?","Ehemann: Sage, was ein anderer Mann besser kann","Wahrheit: Ehefrau, wie groß sollte ein richtiger Mann sein?","Ehemann: Knie vor ihr, sage warum du es verdienst betrogen zu werden"]},keuschheit:{name:"🔒 Keuschheit",color:"keuschheit",streets:[{id:19,name:"Enthaltsamkeits-Allee",price:350,hotelCost:175,owner:null,hasHotel:false},{id:20,name:"Käfig-Gasse",price:400,hotelCost:200,owner:null,hasHotel:false},{id:21,name:"Kontrolle-Boulevard",price:450,hotelCost:225,owner:null,hasHotel:false}],tasks:["Penis-Check: Ehemann messen. Unter 15cm? Zahle €100","Wahrheit: Ehemann, wie oft denkst du täglich an Sex?","Ehefrau: Bestimme, wann er das nächste Mal kommen darf","Wahrheit: Ehefrau, warum ist dein Dildo besser als sein Schwanz?","Ehemann: Schwöre 3 Tage kein Orgasmus","Wahrheit: Ehemann, was ist schlimmer - kein Orgasmus oder sie mit anderem?","Ehefrau: Zeige Dildo, erkläre warum besser","Penis-Vergleich: Ehefrau vergleicht mit Dildo, kommentiert","Wahrheit: Ehemann, wie lange hältst du durchschnittlich?","Ehefrau: Ehemann darf sich berühren bis kurz vor Orgasmus, dann Stop"]}};
+function calcCircPos(i,t){const a=(i/t)*2*Math.PI-Math.PI/2,r=42,x=50+r*Math.cos(a),y=50+r*Math.sin(a);return{top:`${y}%`,left:`${x}%`}}
+const boardPositions=[];let ci=0;
+boardPositions.push({...calcCircPos(ci++,28),theme:'corner',name:'LOS'});
+for(let i=0;i<3;i++)boardPositions.push({...calcCircPos(ci++,28),theme:'romantik',streetId:i+1});
+boardPositions.push({...calcCircPos(ci++,28),theme:'corner',name:'💡 Event'});
+for(let i=0;i<3;i++)boardPositions.push({...calcCircPos(ci++,28),theme:'kuscheln',streetId:i+4});
+boardPositions.push({...calcCircPos(ci++,28),theme:'corner',name:'⏸️ Pause'});
+for(let i=0;i<3;i++)boardPositions.push({...calcCircPos(ci++,28),theme:'femdom',streetId:i+7});
+boardPositions.push({...calcCircPos(ci++,28),theme:'corner',name:'🅿️ Parken'});
+for(let i=0;i<3;i++)boardPositions.push({...calcCircPos(ci++,28),theme:'bdsm',streetId:i+10});
+boardPositions.push({...calcCircPos(ci++,28),theme:'corner',name:'🎁 Bonus'});
+for(let i=0;i<3;i++)boardPositions.push({...calcCircPos(ci++,28),theme:'hotwife',streetId:i+13});
+boardPositions.push({...calcCircPos(ci++,28),theme:'corner',name:'💡 Event'});
+for(let i=0;i<3;i++)boardPositions.push({...calcCircPos(ci++,28),theme:'cuckold',streetId:i+16});
+boardPositions.push({...calcCircPos(ci++,28),theme:'corner',name:'⚡ Aktion'});
+for(let i=0;i<3;i++)boardPositions.push({...calcCircPos(ci++,28),theme:'keuschheit',streetId:i+19});
+function initGame(){renderBoard();renderThemeBlocks();updatePlayerInfo();setupEventListeners();}
+function hasMonopoly(p,k){return themeBlocks[k].streets.every(s=>s.owner===p)}
+function getPlayerMonopolies(p){return Object.keys(themeBlocks).filter(k=>hasMonopoly(p,k))}
+function renderBoard(){const c=document.getElementById('boardContainer'),ce=c.querySelector('.board-center');c.innerHTML='';c.appendChild(ce);boardPositions.forEach((p,i)=>{const cell=document.createElement('div');cell.className=`board-cell cell-${p.theme}`;cell.style.top=p.top;cell.style.left=p.left;cell.style.transform='translate(-50%, -50%)';cell.id=`cell-${i}`;if(p.theme==='corner'){cell.innerHTML=`<div class="cell-name">${p.name}</div>`}else{const t=Object.values(themeBlocks).find(t=>t.streets.some(s=>s.id===p.streetId)),s=t?.streets.find(s=>s.id===p.streetId);if(s){cell.innerHTML=`<div class="cell-name">${s.name}</div><div class="cell-price">€${s.price}</div>`;if(s.owner){const o=document.createElement('div');o.className='cell-owner-badge';o.innerHTML=s.owner==='frau'?'👑':'🔒';cell.appendChild(o)}if(s.hasHotel){const h=document.createElement('div');h.className='hotel-indicator';h.textContent='🏨';cell.appendChild(h)}}}c.appendChild(cell)});updatePlayerMarkers()}
+function updatePlayerMarkers(){document.querySelectorAll('.player-marker').forEach(m=>m.remove());const fc=document.getElementById(`cell-${gameState.frauPosition}`),mc=document.getElementById(`cell-${gameState.mannPosition}`);if(fc){const m=document.createElement('div');m.className='player-marker marker-frau';m.textContent='👑';fc.appendChild(m)}if(mc){const m=document.createElement('div');m.className='player-marker marker-mann';m.textContent='🔒';mc.appendChild(m)}}
+function renderThemeBlocks(){const c=document.getElementById('themeBlocksContainer');c.innerHTML='';Object.entries(themeBlocks).forEach(([k,t])=>{const of=t.streets.filter(s=>s.owner==='frau').length,om=t.streets.filter(s=>s.owner==='mann').length,h=t.streets.filter(s=>s.hasHotel).length,fm=hasMonopoly('frau',k),mm=hasMonopoly('mann',k),b=document.createElement('div');b.className='theme-block';b.style.borderLeftColor=`var(--${t.color})`;b.innerHTML=`<div class="theme-header"><div class="theme-name">${t.name}${fm?'<span class="monopoly-indicator">👑 MONOPOL</span>':''}${mm?'<span class="monopoly-indicator">🔒 MONOPOL</span>':''}</div><div class="theme-stats"><span>👑${of}</span><span>🔒${om}</span><span>🏨${h}</span></div></div><div class="streets-grid">${t.streets.map(s=>`<div class="street-item"><span>${s.name}</span><span>${s.owner==='frau'?'👑':s.owner==='mann'?'🔒':'⚪'}${s.hasHotel?'🏨':''}</span></div>`).join('')}</div>`;c.appendChild(b)})}
+function updatePlayerInfo(){document.getElementById('frauMoney').textContent=`€ ${gameState.frauMoney}`;document.getElementById('mannMoney').textContent=`€ ${gameState.mannMoney}`;const as=Object.values(themeBlocks).flatMap(t=>t.streets),fs=as.filter(s=>s.owner==='frau'),ms=as.filter(s=>s.owner==='mann'),fmn=getPlayerMonopolies('frau'),mmn=getPlayerMonopolies('mann');document.getElementById('frauStreets').textContent=fs.length;document.getElementById('mannStreets').textContent=ms.length;document.getElementById('frauHotels').textContent=fs.filter(s=>s.hasHotel).length;document.getElementById('mannHotels').textContent=ms.filter(s=>s.hasHotel).length;document.getElementById('frauMonopolies').textContent=fmn.length;document.getElementById('mannMonopolies').textContent=mmn.length;document.getElementById('currentTurnDisplay').textContent=`Aktuell: ${gameState.currentPlayer==='frau'?'👑 Ehefrau':'🔒 Ehemann'}`;document.getElementById('frauCard').classList.toggle('active',gameState.currentPlayer==='frau');document.getElementById('mannCard').classList.toggle('active',gameState.currentPlayer==='mann')}
+function rollDice(){if(!gameState.gameActive)return;const d=document.getElementById('die1');d.classList.add('rolling');setTimeout(()=>{let r=Math.floor(Math.random()*6)+1;if(gameState.currentPlayer==='frau'&&Math.random()<gameState._h.ld)r=Math.min(6,r+1);d.textContent=r;d.classList.remove('rolling');setTimeout(()=>{movePlayer(r);document.getElementById('rollBtn').disabled=true},300)},600)}
+function movePlayer(s){const p=gameState.currentPlayer;let o=p==='frau'?gameState.frauPosition:gameState.mannPosition,n=(o+s)%boardPositions.length;if(p==='frau')gameState.frauPosition=n;else gameState.mannPosition=n;if(n<o)collectPassGo(p);updatePlayerMarkers();updatePlayerInfo();setTimeout(()=>handleCellLanding(n),500)}
+function handleCellLanding(pos){const c=boardPositions[pos],p=gameState.currentPlayer;if(c.theme==='corner'){handleCorner(c.name,p)}else{const t=Object.values(themeBlocks).find(t=>t.streets.some(s=>s.id===c.streetId)),s=t?.streets.find(s=>s.id===c.streetId),tk=Object.keys(themeBlocks).find(k=>themeBlocks[k]===t);if(!s.owner){offerPurchase(p,s)}else if(s.owner!==p&&s.hasHotel){handleHotelLanding(p,s,t)}else if(s.owner===p&&!s.hasHotel&&hasMonopoly(p,tk)){offerHotel(p,s)}}}
+function offerPurchase(p,s){if(confirm(`"${s.name}" für €${s.price} kaufen?`))buyStreet(p,s)}
+function buyStreet(p,s){const m=p==='frau'?gameState.frauMoney:gameState.mannMoney;let pr=s.price;if(p==='frau'&&Math.random()<0.35)pr=Math.floor(pr*0.9);if(m>=pr){if(p==='frau')gameState.frauMoney-=pr;else gameState.mannMoney-=pr;s.owner=p;alert(`✅ Gekauft für €${pr}!`);renderBoard();renderThemeBlocks();updatePlayerInfo()}else alert('❌ Nicht genug Geld!')}
+function offerHotel(p,s){if(confirm(`🏨 Hotel für €${s.hotelCost} bauen?\n\n(Du hast das MONOPOL für dieses Thema!)`))buildHotel(p,s)}
+function buildHotel(p,s){const m=p==='frau'?gameState.frauMoney:gameState.mannMoney;let c=s.hotelCost;if(p==='frau')c=Math.floor(c/gameState._h.hd);if(m>=c){if(p==='frau')gameState.frauMoney-=c;else gameState.mannMoney-=c;s.hasHotel=true;alert(`🏨 Hotel gebaut für €${c}!`);renderBoard();renderThemeBlocks();updatePlayerInfo()}else alert('❌ Nicht genug Geld!')}
+function handleHotelLanding(p,s,t){const o=s.owner;let r=Math.floor(s.price*0.3);if(p==='frau'&&o==='mann')r=Math.floor(r*gameState._h.rd);const ch=confirm(`🏨 Hotel "${s.name}"!\n\n💰 Miete: €${r}\n\nOK = Zahlen | ABBRECHEN = Aufgabe`);if(ch)payRent(p,o,r);else showTask(p,o,t)}
+function payRent(pa,re,a){if(pa==='frau'){gameState.frauMoney-=a;gameState.mannMoney+=a}else{gameState.mannMoney-=a;gameState.frauMoney+=a}alert(`💰 €${a} gezahlt!`);updatePlayerInfo()}
+function showTask(pe,gi,t){const ts=t.tasks;let ta=ts[Math.floor(Math.random()*ts.length)];if(pe==='frau'&&Math.random()<gameState._h.et){const e=["Umarme Partner 30 Sek","Sage 2 Komplimente","Küsse auf Wange","Händchen halten 1 Min"];ta=e[Math.floor(Math.random()*e.length)]}const m=document.getElementById('taskModal');m.className='task-modal';m.innerHTML=`<div class="task-content"><div class="task-theme">🏨 ${t.name}</div><div class="task-description">${ta}</div><div class="task-meta"><div><strong>Ausführend:</strong><br>${pe==='frau'?'👑 Ehefrau':'🔒 Ehemann'}</div><div><strong>Aufgegeben:</strong><br>${gi==='frau'?'👑 Ehefrau':'🔒 Ehemann'}</div></div><div class="task-buttons"><button class="btn btn-success" onclick="completeTask()">✅ Erledigt</button><button class="btn btn-danger" onclick="skipTask()">⏭️ Überspringen (€50)</button></div></div>`;gameState.gameActive=false;document.getElementById('rollBtn').disabled=true}
+function completeTask(){document.getElementById('taskModal').className='hidden';alert('✅ Super!');gameState.gameActive=true;document.getElementById('rollBtn').disabled=false}
+function skipTask(){if(gameState.currentPlayer==='frau')gameState.frauMoney-=50;else gameState.mannMoney-=50;document.getElementById('taskModal').className='hidden';alert('⏭️ Übersprungen! -€50');gameState.gameActive=true;document.getElementById('rollBtn').disabled=false;updatePlayerInfo()}
+function collectPassGo(p){let a=200;if(p==='frau')a+=gameState._h.pb;if(p==='frau')gameState.frauMoney+=a;else gameState.mannMoney+=a;alert(`🎯 LOS! +€${a}`);updatePlayerInfo()}
+function handleCorner(n,p){if(n.includes('Event')||n.includes('Aktion')){const ev=[{text:"💰 +€150",f:()=>{if(p==='frau')gameState.frauMoney+=150;else gameState.mannMoney+=150}},{text:"💸 Zahle €100",f:()=>{if(p==='frau'){gameState.frauMoney-=100;gameState.mannMoney+=100}else{gameState.mannMoney-=100;gameState.frauMoney+=100}}},{text:"🎲 Nochmal!",f:()=>setTimeout(rollDice,1000)}];let e=ev[Math.floor(Math.random()*ev.length)];if(p==='frau'&&Math.random()<0.6)e=ev[0];alert(`💡 ${e.text}`);e.f();updatePlayerInfo()}else if(n.includes('Pause')){alert('⏸️ 1 Runde aussetzen');endTurn()}else if(n.includes('Parken')||n.includes('Bonus')){const b=150;if(p==='frau')gameState.frauMoney+=b;else gameState.mannMoney+=b;alert(`🎁 +€${b}`);updatePlayerInfo()}}
+function endTurn(){gameState.currentPlayer=gameState.currentPlayer==='frau'?'mann':'frau';document.getElementById('rollBtn').disabled=false;updatePlayerInfo()}
+function showTradeModal(){const m=document.getElementById('tradeModal');m.className='trade-modal';m.innerHTML=`<div class="trade-content"><div class="trade-title">🤝 Handel starten</div><div class="form-group"><label class="form-label">Von wem:</label><select id="tradeFrom" class="form-control"><option value="frau">👑 Ehefrau</option><option value="mann">🔒 Ehemann</option></select></div><div class="form-group"><label class="form-label">Was:</label><select id="tradeType" class="form-control"><option value="money">💰 Geld</option><option value="street">🏘️ Straße</option><option value="task">📝 Aufgaben-Deal</option></select></div><div class="form-group"><label class="form-label">Betrag/Details:</label><input type="number" id="tradeAmount" class="form-control" placeholder="z.B. 500" min="0"></div><div class="form-group"><label class="form-label">Beschreibung:</label><textarea id="tradeDesc" class="form-control" placeholder="z.B. €500 für Aufgaben-Erleichterung"></textarea></div><div class="task-buttons"><button class="btn btn-success" onclick="executeTrade()">✅ Handel durchführen</button><button class="btn btn-secondary" onclick="closeTradeModal()">❌ Abbrechen</button></div></div>`}
+function closeTradeModal(){document.getElementById('tradeModal').className='hidden'}
+function executeTrade(){const f=document.getElementById('tradeFrom').value,ty=document.getElementById('tradeType').value,a=parseInt(document.getElementById('tradeAmount').value)||0,d=document.getElementById('tradeDesc').value||'Handel';if(ty==='money'&&a>0){const fm=f==='frau'?gameState.frauMoney:gameState.mannMoney;if(fm>=a){if(f==='frau'){gameState.frauMoney-=a;gameState.mannMoney+=a}else{gameState.mannMoney-=a;gameState.frauMoney+=a}const tt=`${f==='frau'?'👑':'🔒'} → ${f==='frau'?'🔒':'👑'}: €${a} - ${d}`;gameState.tradeHistory.push(tt);updateTradeHistory();updatePlayerInfo();alert('✅ Handel abgeschlossen!')}else{alert('❌ Nicht genug Geld!');return}}else{const tt=`${f==='frau'?'👑':'🔒'} → ${f==='frau'?'🔒':'👑'}: ${d}`;gameState.tradeHistory.push(tt);updateTradeHistory();alert('✅ Vereinbarung getroffen!')}closeTradeModal()}
+function updateTradeHistory(){const h=document.getElementById('tradeHistoryDisplay');if(gameState.tradeHistory.length>0){h.className='trade-history';h.innerHTML=`<div class="trade-history-title">Letzte Handelsaktionen:</div>${gameState.tradeHistory.slice(-3).map(t=>`<div class="trade-history-item">${t}</div>`).join('')}`}}
+function endGame(){const as=Object.values(themeBlocks).flatMap(t=>t.streets),fa=gameState.frauMoney+as.filter(s=>s.owner==='frau').reduce((su,s)=>su+s.price+(s.hasHotel?s.hotelCost:0),0),ma=gameState.mannMoney+as.filter(s=>s.owner==='mann').reduce((su,s)=>su+s.price+(s.hasHotel?s.hotelCost:0),0),w=fa>ma?'👑 EHEFRAU':'🔒 EHEMANN',di=Math.abs(fa-ma),rp=Math.round(di/1000);alert(`🏁 SPIELENDE!\n\n👑 Ehefrau: €${fa}\n🔒 Ehemann: €${ma}\n\n🏆 GEWINNER: ${w}!\n\n💰 Zahlung: €${rp}\n(Differenz: €${di} ÷ 1000)`)}
+function setupEventListeners(){document.getElementById('rollBtn').addEventListener('click',rollDice);document.getElementById('endTurnBtn').addEventListener('click',endTurn);document.getElementById('endGameBtn').addEventListener('click',endGame);document.getElementById('tradeBtn').addEventListener('click',showTradeModal)}
+window.addEventListener('DOMContentLoaded',initGame);
     </script>
 </body>
 </html>
