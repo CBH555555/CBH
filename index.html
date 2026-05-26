@@ -3,12 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <!-- PWA / Mobile -->
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="EROPOLY">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#1a0f2e">
+
+    <!-- SEO / Description -->
+    <meta name="description" content="EROPOLY - Das erotische Paerspiel fuer Verliebte. Wuerfeln, Strassen kaufen, Aufgaben erledigen.">
+    <meta name="keywords" content="paerspiel, erotik, spiel, couple game">
+    <meta name="author" content="EROPOLY">
+    <meta name="robots" content="noindex, nofollow">
+
+    <!-- Open Graph (fuer Link-Vorschau z.B. bei WhatsApp) -->
+    <meta property="og:title" content="&#127917; EROPOLY">
+    <meta property="og:description" content="Das erotische Paerspiel - jetzt spielen!">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="de_DE">
+
+    <!-- Cache Control -->
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <meta name="version" content="202605261143">
-    <title>EROPOLY v202605261143</title>
+
+    <title>&#127917; EROPOLY &#127917;</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
 :root{--romantik:#ff1493;--kuscheln:#00bfff;--femdom:#8b00ff;--bdsm:#ff4500;--hotwife:#ff69b4;--cuckold:#32cd32;--keuschheit:#ffd700;--bg-dark:#1a0f2e;--bg-card:#2d1f45;--gold:#ffd700}
@@ -613,6 +633,16 @@ function showBuyModal(p,st){showModal(`${MT('Strasse kaufen?')}${MB(`<div style=
 function doBuy(id){const p=GS.currentPlayer;const s=streetById(id);if(money(p)<s.price){showModal(`${MT('Kein Geld')}${MB(`Benoetigt: ${fmt(s.price)}`)}<div class="mbtns"><button class="btn bs" onclick="closeModal()">OK</button></div>`);return;}setMoney(p,money(p)-s.price);s.owner=p;const mono=hasMonopoly(p,themeKeyOf(s));showModal(`${MT('Gekauft!')}${MB(`<strong>${s.name}</strong> fuer ${fmt(s.price)}${mono?'<br><br><span style="color:var(--gold);font-weight:700">MONOPOL erreicht!</span>':''}`)}<div class="mbtns"><button class="btn bsu" onclick="closeModal();updateUI();">Super!</button></div>`);}
 function showBuildModal(p,st){showModal(`${MT('Hotel bauen?')}${MB(`<strong>${st.name}</strong><br><div style="font-size:1.3rem;font-weight:700;color:#ff9800;margin:8px 0">${fmt(st.hotelCost)}</div><div style="font-size:.8rem;opacity:.7">Guthaben: ${fmt(money(p))}</div>`)}<div class="mbtns"><button class="btn bw" onclick="doBuild(${st.id})">Bauen</button><button class="btn bs" onclick="closeModal()">Spaeter</button></div>`);}
 function doBuild(id){const p=GS.currentPlayer;const s=streetById(id);if(money(p)<s.hotelCost){showModal(`${MT('Kein Geld')}${MB(fmt(s.hotelCost))}<div class="mbtns"><button class="btn bs" onclick="closeModal()">OK</button></div>`);return;}setMoney(p,money(p)-s.hotelCost);s.hasHotel=true;showModal(`${MT('Hotel gebaut!')}${MB(`<strong>${s.name}</strong> fuer ${fmt(s.hotelCost)}`)}<div class="mbtns"><button class="btn bsu" onclick="closeModal();updateUI();">Super!</button></div>`);}
+function doBuildHotel(id){
+  const p=GS.currentPlayer;const s=streetById(id);
+  if(money(p)<s.hotelCost){
+    showModal(`${MT('Kein Geld')}${MB('Benoetigt: '+fmt(s.hotelCost)+'<br>Du hast: '+fmt(money(p)))}<div class="mbtns"><button class="btn bs" onclick="closeModal()">OK</button></div>`);
+    return;
+  }
+  setMoney(p,money(p)-s.hotelCost);
+  s.hasHotel=true;
+  showModal(`${MT('&#127968; Hotel gebaut!')}${MB('<div style="font-size:2rem;margin-bottom:6px">&#127968;</div><strong>'+s.name+'</strong><br>fuer <span style="color:#ff9800;font-weight:700">'+fmt(s.hotelCost)+'</span><br><br>Guthaben: '+fmt(money(p)))}<div class="mbtns"><button class="btn bsu" onclick="closeModal();updateUI();">Super!</button></div>`);
+}
 function showHotelLandModal(p,st,tk){const rent=Math.floor(st.price*0.5);showModal(`${MT('Fremdes Hotel!')}${MB(`<div style="font-weight:700;color:var(--gold);margin-bottom:6px">${st.name}</div>Besitzer: ${lbl(st.owner)}<br><div style="font-size:1.3rem;font-weight:700;color:#f44336;margin:8px 0">Miete: ${fmt(rent)}</div>`)}<div class="mbtns"><button class="btn bd" onclick="doPayRent(${st.id},${rent})">Miete zahlen</button><button class="btn bw" onclick="handPhone('${tk}')">Aufgabe machen</button></div>`);}
 function doPayRent(id,rent){const s=streetById(id);const p=GS.currentPlayer;setMoney(p,money(p)-rent);setMoney(s.owner,money(s.owner)+rent);showModal(`${MT('Miete gezahlt!')}${MB(`<span style="font-size:1.2rem;font-weight:700;color:#f44336">-${fmt(rent)}</span><br>Guthaben: ${fmt(money(p))}`)}<div class="mbtns"><button class="btn bsu" onclick="closeModal();updateUI();">Weiter</button></div>`);}
 function handPhone(tk){const o=opp(GS.currentPlayer);showModal(`${MT('Handy uebergeben!')}${MB(`${lbl(GS.currentPlayer)} gibt Handy an<br><strong style="color:var(--gold)">${lbl(o)}</strong>`)}<div class="mbtns"><button class="btn bw" onclick="showTask('${tk}')">Ich habe das Handy</button></div>`);}
@@ -871,8 +901,14 @@ function updateUI(){
 
 function rollDice(){
   if(!GS.gameActive||GS.rolled)return;
-  const die=document.getElementById('dieDisplay');die.classList.add('rolling');
-  setTimeout(()=>{const roll=Math.floor(Math.random()*6)+1;die.textContent=roll;die.classList.remove('rolling');GS.rolled=true;setTimeout(()=>movePlayer(roll),350);},600);
+  const die=document.getElementById('dieCenter');
+  if(die)die.classList.add('rolling');
+  setTimeout(()=>{
+    const roll=Math.floor(Math.random()*6)+1;
+    if(die){die.textContent=roll;die.classList.remove('rolling');}
+    GS.rolled=true;
+    setTimeout(()=>movePlayer(roll),350);
+  },600);
 }
 function toggleThemeBlocks(){
   const c=document.getElementById('themeBlocksContainer');
@@ -916,7 +952,7 @@ function init(){
   document.getElementById('forceTaskBtn').addEventListener('click',showFT);
   document.getElementById('endGameBtn').addEventListener('click',showEG);
 }
-window.addEventListener('DOMContentLoaded',init);
+
 </script>
 </body>
 </html>
