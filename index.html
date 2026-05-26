@@ -4,365 +4,425 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <title>🎭 EROPOLY</title>
+    <title>EROPOLY</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --romantik: #ff1493; --romantik-dark: #c71585;
-            --kuscheln: #00bfff; --kuscheln-dark: #0099cc;
-            --femdom: #8b00ff; --femdom-dark: #6600cc;
-            --bdsm: #ff4500; --bdsm-dark: #cc3700;
-            --hotwife: #ff69b4; --hotwife-dark: #ff1493;
-            --cuckold: #32cd32; --cuckold-dark: #228b22;
-            --keuschheit: #ffd700; --keuschheit-dark: #daa520;
-            --bg-dark: #1a0f2e; --bg-card: #3d2857;
-            --gold: #ffd700; --text-light: #ffffff; --text-dark: #1a0f2e;
-        }
-        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, var(--bg-dark) 0%, #1f1038 50%, var(--bg-dark) 100%);
-            color: var(--text-light); min-height: 100vh; overflow-x: hidden; touch-action: pan-y;
-        }
-        .container { max-width: 100%; margin: 0 auto; padding: 8px; display: grid; grid-template-columns: 1fr; gap: 12px; }
-        .game-header {
-            background: linear-gradient(135deg, #8b00ff 0%, #ff1493 50%, #32cd32 100%);
-            border-radius: 10px; padding: 15px 10px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-        }
-        .game-header h1 { font-family: 'Playfair Display', serif; font-size: 1.8rem; margin-bottom: 5px; }
-        .game-header p { font-size: 0.85rem; opacity: 0.95; }
-        .game-info { display: flex; justify-content: space-around; margin-top: 8px; gap: 6px; flex-wrap: wrap; }
-        .info-badge {
-            background: rgba(255,255,255,0.2); padding: 4px 10px; border-radius: 12px;
-            font-size: 0.7rem; backdrop-filter: blur(10px);
-        }
-        .game-main { display: grid; grid-template-columns: 1fr; gap: 12px; }
-        .game-board {
-            background: linear-gradient(135deg, #fff5f8 0%, #f0e6ff 100%);
-            border-radius: 10px; padding: 10px; box-shadow: 0 4px 16px rgba(0,0,0,0.2);
-        }
-        .board-container {
-            position: relative; width: 100%; height: 0; padding-bottom: 100%;
-            background: radial-gradient(circle at center, rgba(255,255,255,0.8), rgba(255,255,255,0.4));
-            border-radius: 50%; box-shadow: inset 0 0 30px rgba(138,43,226,0.2); touch-action: none;
-        }
-        .board-inner { position: absolute; inset: 0; }
-        .board-center {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 50%; height: 50%; background: linear-gradient(135deg, rgba(139,0,255,0.1), rgba(255,20,147,0.1));
-            border-radius: 50%; display: flex; flex-direction: column; justify-content: center;
-            align-items: center; font-size: 0.9rem; font-weight: 700; text-align: center;
-            padding: 10px; border: 3px solid rgba(139,0,255,0.3);
-        }
-        .board-center-logo { font-size: 2rem; margin-bottom: 5px; }
-        .board-cell {
-            position: absolute; width: 50px; height: 65px; display: flex; flex-direction: column;
-            justify-content: center; align-items: center; text-align: center; padding: 3px;
-            border-radius: 6px; font-weight: 600; font-size: 0.45rem; box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-            transition: transform 0.2s; border: 2px solid rgba(255,255,255,0.7); cursor: pointer;
-        }
-        .board-cell:active { transform: scale(0.95); }
-        .cell-name { font-weight: 700; line-height: 1; margin-bottom: 2px; font-size: 0.42rem; }
-        .cell-price { font-size: 0.38rem; opacity: 0.9; margin-top: 1px; }
-        .cell-owner-badge {
-            position: absolute; bottom: 1px; left: 50%; transform: translateX(-50%);
-            background: rgba(0,0,0,0.7); color: white; padding: 1px 4px; border-radius: 6px;
-            font-size: 0.5rem; font-weight: 700; display: flex; align-items: center; gap: 1px;
-        }
-        .cell-romantik { background: linear-gradient(135deg, var(--romantik), var(--romantik-dark)); color: white; border-color: var(--romantik-dark); }
-        .cell-kuscheln { background: linear-gradient(135deg, var(--kuscheln), var(--kuscheln-dark)); color: white; border-color: var(--kuscheln-dark); }
-        .cell-femdom { background: linear-gradient(135deg, var(--femdom), var(--femdom-dark)); color: white; border-color: var(--femdom-dark); }
-        .cell-bdsm { background: linear-gradient(135deg, var(--bdsm), var(--bdsm-dark)); color: white; border-color: var(--bdsm-dark); }
-        .cell-hotwife { background: linear-gradient(135deg, var(--hotwife), var(--hotwife-dark)); color: white; border-color: var(--hotwife-dark); }
-        .cell-cuckold { background: linear-gradient(135deg, var(--cuckold), var(--cuckold-dark)); color: white; border-color: var(--cuckold-dark); }
-        .cell-keuschheit { background: linear-gradient(135deg, var(--keuschheit), var(--keuschheit-dark)); color: var(--text-dark); border-color: var(--keuschheit-dark); }
-        .cell-corner {
-            background: linear-gradient(135deg, #6a0dad, #8a2be2); color: white;
-            font-size: 0.5rem; width: 55px; height: 55px; border-radius: 50%;
-        }
-        .player-marker {
-            position: absolute; width: 18px; height: 18px; border-radius: 50%; display: flex;
-            justify-content: center; align-items: center; font-size: 0.75rem; box-shadow: 0 2px 6px rgba(0,0,0,0.5);
-            z-index: 20; border: 2px solid white; animation: markerPulse 2s ease-in-out infinite;
-        }
-        @keyframes markerPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.15); } }
-        .marker-frau { background: linear-gradient(135deg, #ff1493, #ff69b4); top: -5px; left: 50%; transform: translateX(-50%); }
-        .marker-mann { background: linear-gradient(135deg, #32cd32, #228b22); bottom: -5px; left: 50%; transform: translateX(-50%); }
-        .hotel-indicator {
-            position: absolute; top: 1px; right: 1px; width: 14px; height: 14px;
-            background: linear-gradient(135deg, var(--gold), #ffed4e); border-radius: 50%;
-            display: flex; justify-content: center; align-items: center; font-size: 0.6rem;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.4); animation: hotelGlow 2s ease-in-out infinite;
-        }
-        @keyframes hotelGlow { 0%, 100% { box-shadow: 0 0 8px rgba(255,215,0,0.6); } 50% { box-shadow: 0 0 15px rgba(255,215,0,1); } }
-        .sidebar-section {
-            background: var(--bg-card); border-radius: 10px; padding: 12px;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1);
-        }
-        .section-title { font-size: 0.95rem; font-weight: 700; margin-bottom: 10px; color: var(--gold); }
-        .player-card {
-            background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.1));
-            border-radius: 8px; padding: 10px; margin-bottom: 8px; border-left: 3px solid; transition: all 0.3s;
-        }
-        .player-card.active { box-shadow: 0 0 12px rgba(255,215,0,0.6); transform: scale(1.02); }
-        .player-card.frau { border-left-color: #ff1493; }
-        .player-card.mann { border-left-color: #32cd32; }
-        .player-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
-        .player-name { font-size: 1rem; font-weight: 700; }
-        .player-money { font-size: 1.3rem; font-weight: 700; color: var(--gold); text-shadow: 0 1px 3px rgba(0,0,0,0.3); }
-        .player-stats { display: flex; gap: 10px; font-size: 0.8rem; opacity: 0.85; }
-        .current-turn {
-            background: linear-gradient(135deg, rgba(255,215,0,0.2), rgba(255,105,180,0.2));
-            padding: 10px; border-radius: 8px; text-align: center; font-size: 0.95rem;
-            font-weight: 700; margin-bottom: 10px; border: 2px solid var(--gold);
-            animation: turnGlow 2s ease-in-out infinite;
-        }
-        @keyframes turnGlow { 0%, 100% { box-shadow: 0 0 8px rgba(255,215,0,0.4); } 50% { box-shadow: 0 0 15px rgba(255,215,0,0.7); } }
-        .dice-area {
-            display: flex; justify-content: center; align-items: center; margin: 12px 0; padding: 10px;
-            background: linear-gradient(135deg, rgba(138,43,226,0.1), rgba(255,105,180,0.1)); border-radius: 8px;
-            position: sticky; top: 8px; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-        }
-        .die {
-            width: 60px; height: 60px; background: linear-gradient(145deg, #ffffff, #f0f0f0);
-            color: var(--text-dark); display: flex; justify-content: center; align-items: center;
-            font-size: 2rem; font-weight: 700; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            user-select: none; position: relative;
-        }
-        .die::before {
-            content: ''; position: absolute; top: 8px; left: 8px; right: 8px; bottom: 8px;
-            border: 2px dashed rgba(0,0,0,0.1); border-radius: 10px;
-        }
-        .die.rolling { animation: diceRoll 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
-        @keyframes diceRoll {
-            0% { transform: rotate(0deg) scale(1); } 25% { transform: rotate(90deg) scale(1.15); }
-            50% { transform: rotate(180deg) scale(0.85); } 75% { transform: rotate(270deg) scale(1.15); }
-            100% { transform: rotate(360deg) scale(1); }
-        }
-        .btn {
-            background: linear-gradient(135deg, #8b00ff, #ff1493); color: white; border: none;
-            padding: 14px 20px; border-radius: 25px; font-size: 0.95rem; font-weight: 600;
-            cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            width: 100%; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;
-            touch-action: manipulation; user-select: none;
-        }
-        .btn:active { transform: scale(0.97); box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
-        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-        .btn-secondary { background: linear-gradient(135deg, #6c757d, #5a6268); }
-        .btn-success { background: linear-gradient(135deg, #4caf50, #45a049); }
-        .btn-danger { background: linear-gradient(135deg, #f44336, #da190b); }
-        .btn-warning { background: linear-gradient(135deg, #ff9800, #f57c00); }
-        .theme-block {
-            background: rgba(255,255,255,0.05); border-radius: 8px; padding: 10px;
-            margin-bottom: 8px; border-left: 4px solid;
-        }
-        .theme-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
-        .theme-name { font-weight: 700; font-size: 0.85rem; }
-        .theme-stats { display: flex; gap: 6px; font-size: 0.75rem; }
-        .monopoly-indicator {
-            background: rgba(255,215,0,0.2); color: var(--gold); padding: 2px 8px;
-            border-radius: 10px; font-size: 0.7rem; font-weight: 700; margin-left: 6px;
-        }
-        .streets-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-top: 6px; }
-        .street-item {
-            background: rgba(0,0,0,0.2); padding: 5px; border-radius: 5px; font-size: 0.7rem;
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        .task-modal, .trade-modal {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95); backdrop-filter: blur(10px); display: flex;
-            justify-content: center; align-items: center; z-index: 1000; padding: 15px; animation: fadeIn 0.3s;
-        }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        .task-content, .trade-content {
-            background: linear-gradient(135deg, var(--bg-card), var(--bg-dark)); border-radius: 12px;
-            padding: 20px; max-width: 500px; width: 100%; box-shadow: 0 8px 32px rgba(0,0,0,0.5);
-            border: 2px solid rgba(255,255,255,0.2); max-height: 85vh; overflow-y: auto; animation: slideUp 0.4s;
-        }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-        .task-theme, .trade-title {
-            font-size: 1.1rem; font-weight: 700; color: var(--gold); margin-bottom: 12px; text-align: center;
-        }
-        .task-description {
-            font-size: 1rem; line-height: 1.5; margin-bottom: 15px; text-align: center; padding: 12px;
-            background: rgba(255,255,255,0.05); border-radius: 8px; border: 1px dashed rgba(255,255,255,0.2);
-        }
-        .task-meta { display: flex; justify-content: space-around; margin-bottom: 15px; font-size: 0.8rem; }
-        .task-buttons { display: flex; flex-direction: column; gap: 10px; }
-        .form-group { margin-bottom: 12px; }
-        .form-label { display: block; margin-bottom: 6px; font-size: 0.85rem; font-weight: 600; }
-        .form-control {
-            width: 100%; padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2);
-            background: rgba(0,0,0,0.3); color: white; font-size: 0.9rem;
-        }
-        textarea.form-control { min-height: 80px; resize: vertical; }
-        .trade-history {
-            margin-top: 15px; padding: 10px; background: rgba(0,0,0,0.2); border-radius: 8px; font-size: 0.8rem;
-        }
-        .trade-history-title { font-weight: 700; margin-bottom: 6px; color: var(--gold); }
-        .trade-history-item { padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
-        .instructions-panel {
-            background: linear-gradient(135deg, rgba(138,43,226,0.1), rgba(255,105,180,0.1));
-            border-radius: 8px; padding: 10px; margin-top: 8px; border: 1px solid rgba(255,255,255,0.1);
-        }
-        .instructions-title { font-size: 0.85rem; font-weight: 700; margin-bottom: 6px; color: var(--gold); }
-        .instructions-list { list-style: none; padding: 0; font-size: 0.75rem; }
-        .instructions-list li { padding: 3px 0 3px 12px; position: relative; }
-        .instructions-list li::before { content: '▸'; position: absolute; left: 0; color: #ff1493; font-weight: 700; }
-        .hidden { display: none !important; }
-        .sidebar-section { max-height: 350px; overflow-y: auto; }
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); }
-        ::-webkit-scrollbar-thumb { background: linear-gradient(135deg, #8b00ff, #ff1493); border-radius: 10px; }
-        @media (min-width: 768px) {
-            .container { padding: 15px; max-width: 1400px; }
-            .game-main { grid-template-columns: 2fr 1fr; }
-            .game-header h1 { font-size: 2.5rem; }
-            .board-cell { width: 70px; height: 90px; font-size: 0.6rem; }
-            .cell-corner { width: 80px; height: 80px; }
-            .die { width: 90px; height: 90px; font-size: 3rem; }
-            .sidebar-section { max-height: 450px; }
-        }
-        @media (min-width: 1024px) {
-            .board-cell { width: 75px; height: 95px; font-size: 0.65rem; }
-            .cell-price { font-size: 0.5rem; }
-        }
+:root{--romantik:#ff1493;--kuscheln:#00bfff;--femdom:#8b00ff;--bdsm:#ff4500;--hotwife:#ff69b4;--cuckold:#32cd32;--keuschheit:#ffd700;--bg-dark:#1a0f2e;--bg-card:#2d1f45;--gold:#ffd700}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:'Poppins',sans-serif;background:linear-gradient(135deg,var(--bg-dark),#1f1038,var(--bg-dark));color:#fff;min-height:100vh;overflow-x:hidden}
+.game-header{position:sticky;top:0;z-index:200;background:linear-gradient(135deg,#6a0dad,#c71585,#228b22);padding:5px 8px;box-shadow:0 3px 14px rgba(0,0,0,.55)}
+.hi{display:flex;justify-content:space-between;align-items:center;gap:4px}
+.hp{flex:1;font-size:.65rem;font-weight:700}
+.hp.l{text-align:left}.hp.r{text-align:right}
+.hpb{display:inline-block;padding:3px 7px;border-radius:7px;background:rgba(0,0,0,.45);border:1.5px solid rgba(255,255,255,.2)}
+.hpb.on{border-color:var(--gold);animation:glow 1.8s ease-in-out infinite}
+@keyframes glow{0%,100%{box-shadow:0 0 5px rgba(255,215,0,.35)}50%{box-shadow:0 0 14px rgba(255,215,0,.8)}}
+.hc{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:3px}
+.ht{font-family:'Playfair Display',serif;font-size:.8rem;font-weight:900;letter-spacing:1px}
+.hbtns{display:flex;gap:3px}
+.hb{border:none;padding:5px 9px;border-radius:9px;font-size:.58rem;font-weight:700;cursor:pointer;touch-action:manipulation;white-space:nowrap}
+.hb-r{background:linear-gradient(135deg,#8b00ff,#ff1493);color:#fff}
+.hb-a{background:linear-gradient(135deg,#ff9800,#e65100);color:#fff}
+.hb-e{background:rgba(255,255,255,.18);color:#fff}
+.hb:active{transform:scale(.93)}.hb:disabled{opacity:.4;cursor:not-allowed}
+.die-h{width:26px;height:26px;background:linear-gradient(145deg,#fff,#eee);color:#1a0f2e;border-radius:6px;display:flex;justify-content:center;align-items:center;font-size:.95rem;font-weight:900;box-shadow:0 2px 5px rgba(0,0,0,.4)}
+.die-h.rolling{animation:dr .6s cubic-bezier(.68,-.55,.265,1.55)}
+@keyframes dr{0%{transform:rotate(0)scale(1)}25%{transform:rotate(90deg)scale(1.2)}50%{transform:rotate(180deg)scale(.8)}75%{transform:rotate(270deg)scale(1.2)}100%{transform:rotate(360deg)scale(1)}}
+.wrap{max-width:100%;padding:8px}
+.gl{display:grid;grid-template-columns:1fr;gap:10px}
+@media(min-width:768px){.wrap{max-width:1400px;margin:0 auto;padding:14px}.gl{grid-template-columns:1fr 1fr}}
+.board-section{background:linear-gradient(135deg,#fff5f8,#f0e6ff);border-radius:12px;padding:10px;box-shadow:0 4px 20px rgba(0,0,0,.25)}
+#boardSvg{width:100%;height:auto;display:block;touch-action:manipulation}
+.seg{cursor:pointer;transition:filter .15s}.seg:active{filter:brightness(1.3)}
+.sb{display:flex;flex-direction:column;gap:10px}
+.card{background:var(--bg-card);border-radius:10px;padding:12px;box-shadow:0 4px 16px rgba(0,0,0,.2);border:1px solid rgba(255,255,255,.07)}
+.ct{font-size:.88rem;font-weight:700;color:var(--gold);margin-bottom:9px}
+.pc{background:linear-gradient(135deg,rgba(255,255,255,.04),rgba(255,255,255,.09));border-radius:8px;padding:9px;margin-bottom:7px;border-left:3px solid;transition:all .25s}
+.pc.fr{border-left-color:#ff1493}.pc.mn{border-left-color:#32cd32}
+.pc.active{box-shadow:0 0 13px rgba(255,215,0,.5);transform:scale(1.02)}
+.pch{display:flex;justify-content:space-between;align-items:center}
+.pcn{font-size:.9rem;font-weight:700}.pcm{font-size:1.2rem;font-weight:700;color:var(--gold)}
+.pcs{display:flex;gap:10px;font-size:.73rem;opacity:.85;margin-top:3px}
+.btn{background:linear-gradient(135deg,#8b00ff,#ff1493);color:#fff;border:none;padding:10px 15px;border-radius:18px;font-size:.8rem;font-weight:600;cursor:pointer;width:100%;margin-bottom:6px;box-shadow:0 3px 10px rgba(0,0,0,.2);touch-action:manipulation}
+.btn:active{transform:scale(.97)}.btn:disabled{opacity:.45;cursor:not-allowed}
+.bs{background:linear-gradient(135deg,#555,#444)}.bsu{background:linear-gradient(135deg,#4caf50,#388e3c)}
+.bd{background:linear-gradient(135deg,#f44336,#c62828)}.bw{background:linear-gradient(135deg,#ff9800,#e65100)}
+.bb{background:linear-gradient(135deg,#2196f3,#1565c0)}
+.tb{background:rgba(255,255,255,.04);border-radius:8px;padding:8px;margin-bottom:7px;border-left:4px solid}
+.tbh{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+.tbn{font-weight:700;font-size:.78rem}.tbs{display:flex;gap:5px;font-size:.68rem}
+.mbadge{background:rgba(255,215,0,.2);color:var(--gold);padding:1px 5px;border-radius:7px;font-size:.58rem;font-weight:700;margin-left:3px}
+.sg{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:4px}
+.si{background:rgba(0,0,0,.2);padding:3px 5px;border-radius:4px;font-size:.66rem;display:flex;justify-content:space-between;align-items:center}
+.rules{background:rgba(255,255,255,.04);border-radius:8px;padding:8px;margin-top:8px}
+.rt{font-size:.75rem;font-weight:700;color:var(--gold);margin-bottom:4px}
+.rl{list-style:none;padding:0;font-size:.65rem;line-height:1.6}
+.rl li::before{content:'\25B8 ';color:#ff1493;font-weight:700}
+.moverlay{position:fixed;inset:0;background:rgba(0,0,0,.93);backdrop-filter:blur(8px);display:flex;justify-content:center;align-items:center;z-index:1000;padding:14px;animation:fi .22s}
+@keyframes fi{from{opacity:0}to{opacity:1}}
+.mbox{background:linear-gradient(135deg,var(--bg-card),var(--bg-dark));border-radius:14px;padding:20px;max-width:460px;width:100%;max-height:88vh;overflow-y:auto;box-shadow:0 8px 36px rgba(0,0,0,.6);border:2px solid rgba(255,255,255,.14);animation:su .32s}
+@keyframes su{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:translateY(0)}}
+.mt{font-size:1.05rem;font-weight:700;color:var(--gold);text-align:center;margin-bottom:13px}
+.mb{font-size:.95rem;line-height:1.55;text-align:center;padding:13px;background:rgba(255,255,255,.05);border-radius:8px;border:1px dashed rgba(255,255,255,.17);margin-bottom:13px}
+.mbtns{display:flex;flex-direction:column;gap:8px}.mbtns .btn{margin-bottom:0}
+.rbadge{display:inline-block;padding:7px 16px;border-radius:9px;background:rgba(255,215,0,.15);color:var(--gold);font-size:1.05rem;font-weight:700;margin:8px 0}
+.pnote{font-size:.75rem;opacity:.7;margin-top:3px}
+.fr2{margin-bottom:10px}.fl{display:block;font-size:.78rem;font-weight:600;margin-bottom:4px}
+.fsel,.finp{width:100%;padding:8px 10px;border-radius:7px;background:rgba(0,0,0,.3);color:#fff;font-size:.82rem;border:1px solid rgba(255,255,255,.17)}
+.fsel option{background:#2d1f45}
+.tdiv{text-align:center;margin:10px 0;font-size:1.1rem;opacity:.45}
     </style>
 </head>
 <body>
-    <div class="container">
-        <header class="game-header">
-            <h1>🎭 EROPOLY 🎭</h1>
-            <p>Das erotische Paar-Spiel</p>
-            <div class="game-info">
-                <div class="info-badge">🎲 1 Würfel</div>
-                <div class="info-badge">🏘️ Monopol = Hotels</div>
-                <div class="info-badge">💰 Endstand ÷ 1000 = €</div>
-            </div>
-        </header>
-        <div class="game-main">
-            <main class="game-board">
-                <div class="board-container">
-                    <div class="board-inner" id="boardContainer">
-                        <div class="board-center">
-                            <div class="board-center-logo">🎭</div>
-                            <div>EROPOLY</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="instructions-panel">
-                    <div class="instructions-title">📋 Spielregeln</div>
-                    <ul class="instructions-list">
-                        <li>1 Würfel werfen und bewegen</li>
-                        <li>Straßen kaufen</li>
-                        <li>Hotel nur bei komplettem Thema</li>
-                        <li>Fremde Hotels: Miete ODER Aufgabe</li>
-                        <li>LOS = €200</li>
-                        <li>Ende: Vermögen ÷ 1000 = Realer €</li>
-                    </ul>
-                </div>
-            </main>
-            <aside>
-                <section class="sidebar-section">
-                    <h2 class="section-title">👥 Spieler</h2>
-                    <div class="current-turn" id="currentTurnDisplay">Aktuell: 👑 Ehefrau</div>
-                    <div class="player-card frau active" id="frauCard">
-                        <div class="player-header">
-                            <div class="player-name">👑 Ehefrau</div>
-                            <div class="player-money" id="frauMoney">€ 3.500</div>
-                        </div>
-                        <div class="player-stats">
-                            <span>🏘️ <span id="frauStreets">0</span></span>
-                            <span>🏨 <span id="frauHotels">0</span></span>
-                            <span>🎯 <span id="frauMonopolies">0</span> Monopole</span>
-                        </div>
-                    </div>
-                    <div class="player-card mann" id="mannCard">
-                        <div class="player-header">
-                            <div class="player-name">🔒 Ehemann</div>
-                            <div class="player-money" id="mannMoney">€ 3.500</div>
-                        </div>
-                        <div class="player-stats">
-                            <span>🏘️ <span id="mannStreets">0</span></span>
-                            <span>🏨 <span id="mannHotels">0</span></span>
-                            <span>🎯 <span id="mannMonopolies">0</span> Monopole</span>
-                        </div>
-                    </div>
-                </section>
-                <section class="sidebar-section">
-                    <h2 class="section-title">🎲 Würfeln</h2>
-                    <div class="dice-area"><div class="die" id="die1">?</div></div>
-                    <button class="btn" id="rollBtn">🎲 Würfeln</button>
-                    <button class="btn btn-secondary" id="endTurnBtn">⏭️ Zug beenden</button>
-                </section>
-                <section class="sidebar-section">
-                    <h2 class="section-title">🏘️ Straßen & Monopole</h2>
-                    <div id="themeBlocksContainer"></div>
-                </section>
-                <section class="sidebar-section">
-                    <h2 class="section-title">🤝 Handel</h2>
-                    <button class="btn btn-warning" id="tradeBtn">💱 Handel starten</button>
-                    <div id="tradeHistoryDisplay" class="trade-history hidden">
-                        <div class="trade-history-title">Letzte Handelsaktionen:</div>
-                    </div>
-                </section>
-                <section class="sidebar-section">
-                    <h2 class="section-title">🏁 Spielende</h2>
-                    <button class="btn btn-success" id="endGameBtn">💰 Endergebnis</button>
-                </section>
-            </aside>
-        </div>
+<header class="game-header">
+  <div class="hi">
+    <div class="hp l"><div class="hpb" id="hpFrau">&#128081; <span id="hFM">3.500</span> | <span id="hFH">0</span>&#127968;</div></div>
+    <div class="hc">
+      <div style="display:flex;align-items:center;gap:5px">
+        <div class="ht">&#127917; EROPOLY</div>
+        <div class="die-h" id="dieDisplay">?</div>
+      </div>
+      <div class="hbtns">
+        <button class="hb hb-r" id="rollBtn">&#127922; Wuerfeln</button>
+        <button class="hb hb-a" id="actionBtn">&#127919; Aktion</button>
+        <button class="hb hb-e" id="endTurnBtn">&#9197;&#65039;</button>
+      </div>
     </div>
-    <div id="taskModal" class="hidden"></div>
-    <div id="tradeModal" class="hidden"></div>
-    <script>
-const gameState={currentPlayer:'frau',frauMoney:3500,mannMoney:3500,frauPosition:0,mannPosition:0,gameActive:true,tradeHistory:[],_h:{hd:1.25,rd:0.80,et:0.60,pb:250,ld:0.20}};
-const themeBlocks={romantik:{name:"💖 Romantik",color:"romantik",streets:[{id:1,name:"Rosen-Allee",price:200,hotelCost:100,owner:null,hasHotel:false},{id:2,name:"Kerzen-Gasse",price:220,hotelCost:110,owner:null,hasHotel:false},{id:3,name:"Kuss-Boulevard",price:240,hotelCost:120,owner:null,hasHotel:false}],tasks:["Ehemann: Massiere Ehefraus Rücken 3 Min","Ehefrau: Nur Unterwäsche, bleib so 2 Min","Ehemann: Küsse Ehefraus Hals 1 Min","Beide: Zungenkuss 30 Sek","Ehemann: Streichle Ehefraus Brüste (durch Kleidung) 1 Min","Ehefrau: Setz dich auf Ehemanns Schoß, 2 Min kuscheln","Ehemann: Flüstere Ehefrau 3 schmutzige Dinge ins Ohr"]},kuscheln:{name:"🤗 Kuscheln",color:"kuscheln",streets:[{id:4,name:"Kuschel-Straße",price:180,hotelCost:90,owner:null,hasHotel:false},{id:5,name:"Streichel-Gasse",price:200,hotelCost:100,owner:null,hasHotel:false},{id:6,name:"Umarmungs-Allee",price:210,hotelCost:105,owner:null,hasHotel:false}],tasks:["Ehemann: Umarme Ehefrau von hinten 1 Min, Hände auf Bauch","Wahrheit: Ehemann, wann warst du zuletzt richtig geil auf sie?","Ehemann: Streichle Haare, sage 3 Komplimente","Löffelchen 2 Min","Wahrheit: Ehefrau, wann dachtest du zuletzt an einen anderen Mann?","Ehemann: Küsse jeden Finger von Ehefrau","Wahrheit: Ehefrau, was macht dich richtig nass?"]},femdom:{name:"👠 Femdom",color:"femdom",streets:[{id:7,name:"Kommando-Allee",price:300,hotelCost:150,owner:null,hasHotel:false},{id:8,name:"Gehorsam-Gasse",price:320,hotelCost:160,owner:null,hasHotel:false},{id:9,name:"Kontroll-Straße",price:350,hotelCost:175,owner:null,hasHotel:false}],tasks:["Ehemann: Knie nieder, massiere Ehefraus Beine","Ehefrau: Gib Befehl, Ehemann führt sofort aus","Wahrheit: Ehemann, warum verdient sie die Kontrolle?","Ehemann: Hole Getränk auf Knien","Ehefrau: Ohrfeige seinen Po 5x","Wahrheit: Ehemann, wie fühlt es sich an, dominiert zu werden?","Ehemann: Ganzkörper-Massage für Ehefrau, 5 Min","Ehefrau: Ehemann muss nackt vor dir stehen, 1 Min Inspektion","Wahrheit: Ehemann, was ist das Erniedrigendste, das du für sie tun würdest?"]},bdsm:{name:"🔐 BDSM",color:"bdsm",streets:[{id:10,name:"Fessel-Gasse",price:280,hotelCost:140,owner:null,hasHotel:false},{id:11,name:"Schmerz-Allee",price:310,hotelCost:155,owner:null,hasHotel:false},{id:12,name:"Sinnes-Straße",price:330,hotelCost:165,owner:null,hasHotel:false}],tasks:["Ehemann: 10 Klapse nackter Po","Wahrheit: Ehemann, wie sehr tut es weh, wenn du nicht kommen darfst?","Ehefrau: Kneife 5x in seine Brustwarzen","Ehemann: Unbequeme Position 1 Min halten","Wahrheit: Ehefrau, was würdest du tun bei totaler Macht?","Ehemann: Augen verbinden, Ehefrau berührt 1 Min wo sie will","Ehefrau: Ziehe Ehemann an den Haaren, küsse ihn hart","Wahrheit: Ehemann, wie sehr erregt dich Schmerz von ihr?"]},hotwife:{name:"💃 Hotwife",color:"hotwife",streets:[{id:13,name:"Flirt-Boulevard",price:260,hotelCost:130,owner:null,hasHotel:false},{id:14,name:"Verführungs-Allee",price:290,hotelCost:145,owner:null,hasHotel:false},{id:15,name:"Attraktivitäts-Straße",price:310,hotelCost:155,owner:null,hasHotel:false}],tasks:["Wahrheit: Ehefrau, 3 Gründe für Treffen mit anderem Mann?","Ehefrau: Tanze 30 Sek sexy","Wahrheit: Ehefrau, beschreibe Traummann (nicht Ehemann)","Ehefrau: Zieh dich aus, präsentiere dich 1 Min","Wahrheit: Ehemann, wie würde es sich anfühlen, sie mit anderem zu sehen?","Ehefrau: Fantasie über anderen Mann (1 Min)","Wahrheit: Ehefrau, welcher Mann hat dich zuletzt angemacht?","Ehefrau: Beschreibe dein perfektes Date mit Lover","Wahrheit: Ehemann, welchen ihrer Freunde findest du am bedrohlichsten?","Ehefrau: Zeige Foto eines Mannes, den du attraktiv findest"]},cuckold:{name:"👁️ Cuckold",color:"cuckold",streets:[{id:16,name:"Beobachtungs-Gasse",price:270,hotelCost:135,owner:null,hasHotel:false},{id:17,name:"Dienst-Allee",price:300,hotelCost:150,owner:null,hasHotel:false},{id:18,name:"Demütigungs-Straße",price:340,hotelCost:170,owner:null,hasHotel:false}],tasks:["Wahrheit: Ehemann, warum verdient sie einen Besseren?","Ehemann: Danke ihr, dass sie bei dir bleibt","Wahrheit: Ehefrau, was macht andere attraktiver?","Ehemann: Putze ihre High Heels/Schuhe","Wahrheit: Ehemann, wie war es, zu schnell zu kommen letztes Mal?","Ehefrau: Beschreibe Date mit anderem, Ehemann hört zu","Wahrheit: Ehemann, würdest du Schuhe putzen nachdem sie bei anderem war?","Ehemann: Sage, was ein anderer Mann besser kann","Wahrheit: Ehefrau, wie groß sollte ein richtiger Mann sein?","Ehemann: Knie vor ihr, sage warum du es verdienst betrogen zu werden"]},keuschheit:{name:"🔒 Keuschheit",color:"keuschheit",streets:[{id:19,name:"Enthaltsamkeits-Allee",price:350,hotelCost:175,owner:null,hasHotel:false},{id:20,name:"Käfig-Gasse",price:400,hotelCost:200,owner:null,hasHotel:false},{id:21,name:"Kontrolle-Boulevard",price:450,hotelCost:225,owner:null,hasHotel:false}],tasks:["Penis-Check: Ehemann messen. Unter 15cm? Zahle €100","Wahrheit: Ehemann, wie oft denkst du täglich an Sex?","Ehefrau: Bestimme, wann er das nächste Mal kommen darf","Wahrheit: Ehefrau, warum ist dein Dildo besser als sein Schwanz?","Ehemann: Schwöre 3 Tage kein Orgasmus","Wahrheit: Ehemann, was ist schlimmer - kein Orgasmus oder sie mit anderem?","Ehefrau: Zeige Dildo, erkläre warum besser","Penis-Vergleich: Ehefrau vergleicht mit Dildo, kommentiert","Wahrheit: Ehemann, wie lange hältst du durchschnittlich?","Ehefrau: Ehemann darf sich berühren bis kurz vor Orgasmus, dann Stop"]}};
-function calcCircPos(i,t){const a=(i/t)*2*Math.PI-Math.PI/2,r=42,x=50+r*Math.cos(a),y=50+r*Math.sin(a);return{top:`${y}%`,left:`${x}%`}}
-const boardPositions=[];let ci=0;
-boardPositions.push({...calcCircPos(ci++,28),theme:'corner',name:'LOS'});
-for(let i=0;i<3;i++)boardPositions.push({...calcCircPos(ci++,28),theme:'romantik',streetId:i+1});
-boardPositions.push({...calcCircPos(ci++,28),theme:'corner',name:'💡 Event'});
-for(let i=0;i<3;i++)boardPositions.push({...calcCircPos(ci++,28),theme:'kuscheln',streetId:i+4});
-boardPositions.push({...calcCircPos(ci++,28),theme:'corner',name:'⏸️ Pause'});
-for(let i=0;i<3;i++)boardPositions.push({...calcCircPos(ci++,28),theme:'femdom',streetId:i+7});
-boardPositions.push({...calcCircPos(ci++,28),theme:'corner',name:'🅿️ Parken'});
-for(let i=0;i<3;i++)boardPositions.push({...calcCircPos(ci++,28),theme:'bdsm',streetId:i+10});
-boardPositions.push({...calcCircPos(ci++,28),theme:'corner',name:'🎁 Bonus'});
-for(let i=0;i<3;i++)boardPositions.push({...calcCircPos(ci++,28),theme:'hotwife',streetId:i+13});
-boardPositions.push({...calcCircPos(ci++,28),theme:'corner',name:'💡 Event'});
-for(let i=0;i<3;i++)boardPositions.push({...calcCircPos(ci++,28),theme:'cuckold',streetId:i+16});
-boardPositions.push({...calcCircPos(ci++,28),theme:'corner',name:'⚡ Aktion'});
-for(let i=0;i<3;i++)boardPositions.push({...calcCircPos(ci++,28),theme:'keuschheit',streetId:i+19});
-function initGame(){renderBoard();renderThemeBlocks();updatePlayerInfo();setupEventListeners();}
-function hasMonopoly(p,k){return themeBlocks[k].streets.every(s=>s.owner===p)}
-function getPlayerMonopolies(p){return Object.keys(themeBlocks).filter(k=>hasMonopoly(p,k))}
-function renderBoard(){const c=document.getElementById('boardContainer'),ce=c.querySelector('.board-center');c.innerHTML='';c.appendChild(ce);boardPositions.forEach((p,i)=>{const cell=document.createElement('div');cell.className=`board-cell cell-${p.theme}`;cell.style.top=p.top;cell.style.left=p.left;cell.style.transform='translate(-50%, -50%)';cell.id=`cell-${i}`;if(p.theme==='corner'){cell.innerHTML=`<div class="cell-name">${p.name}</div>`}else{const t=Object.values(themeBlocks).find(t=>t.streets.some(s=>s.id===p.streetId)),s=t?.streets.find(s=>s.id===p.streetId);if(s){cell.innerHTML=`<div class="cell-name">${s.name}</div><div class="cell-price">€${s.price}</div>`;if(s.owner){const o=document.createElement('div');o.className='cell-owner-badge';o.innerHTML=s.owner==='frau'?'👑':'🔒';cell.appendChild(o)}if(s.hasHotel){const h=document.createElement('div');h.className='hotel-indicator';h.textContent='🏨';cell.appendChild(h)}}}c.appendChild(cell)});updatePlayerMarkers()}
-function updatePlayerMarkers(){document.querySelectorAll('.player-marker').forEach(m=>m.remove());const fc=document.getElementById(`cell-${gameState.frauPosition}`),mc=document.getElementById(`cell-${gameState.mannPosition}`);if(fc){const m=document.createElement('div');m.className='player-marker marker-frau';m.textContent='👑';fc.appendChild(m)}if(mc){const m=document.createElement('div');m.className='player-marker marker-mann';m.textContent='🔒';mc.appendChild(m)}}
-function renderThemeBlocks(){const c=document.getElementById('themeBlocksContainer');c.innerHTML='';Object.entries(themeBlocks).forEach(([k,t])=>{const of=t.streets.filter(s=>s.owner==='frau').length,om=t.streets.filter(s=>s.owner==='mann').length,h=t.streets.filter(s=>s.hasHotel).length,fm=hasMonopoly('frau',k),mm=hasMonopoly('mann',k),b=document.createElement('div');b.className='theme-block';b.style.borderLeftColor=`var(--${t.color})`;b.innerHTML=`<div class="theme-header"><div class="theme-name">${t.name}${fm?'<span class="monopoly-indicator">👑 MONOPOL</span>':''}${mm?'<span class="monopoly-indicator">🔒 MONOPOL</span>':''}</div><div class="theme-stats"><span>👑${of}</span><span>🔒${om}</span><span>🏨${h}</span></div></div><div class="streets-grid">${t.streets.map(s=>`<div class="street-item"><span>${s.name}</span><span>${s.owner==='frau'?'👑':s.owner==='mann'?'🔒':'⚪'}${s.hasHotel?'🏨':''}</span></div>`).join('')}</div>`;c.appendChild(b)})}
-function updatePlayerInfo(){document.getElementById('frauMoney').textContent=`€ ${gameState.frauMoney}`;document.getElementById('mannMoney').textContent=`€ ${gameState.mannMoney}`;const as=Object.values(themeBlocks).flatMap(t=>t.streets),fs=as.filter(s=>s.owner==='frau'),ms=as.filter(s=>s.owner==='mann'),fmn=getPlayerMonopolies('frau'),mmn=getPlayerMonopolies('mann');document.getElementById('frauStreets').textContent=fs.length;document.getElementById('mannStreets').textContent=ms.length;document.getElementById('frauHotels').textContent=fs.filter(s=>s.hasHotel).length;document.getElementById('mannHotels').textContent=ms.filter(s=>s.hasHotel).length;document.getElementById('frauMonopolies').textContent=fmn.length;document.getElementById('mannMonopolies').textContent=mmn.length;document.getElementById('currentTurnDisplay').textContent=`Aktuell: ${gameState.currentPlayer==='frau'?'👑 Ehefrau':'🔒 Ehemann'}`;document.getElementById('frauCard').classList.toggle('active',gameState.currentPlayer==='frau');document.getElementById('mannCard').classList.toggle('active',gameState.currentPlayer==='mann')}
-function rollDice(){if(!gameState.gameActive)return;const d=document.getElementById('die1');d.classList.add('rolling');setTimeout(()=>{let r=Math.floor(Math.random()*6)+1;if(gameState.currentPlayer==='frau'&&Math.random()<gameState._h.ld)r=Math.min(6,r+1);d.textContent=r;d.classList.remove('rolling');setTimeout(()=>{movePlayer(r);document.getElementById('rollBtn').disabled=true},300)},600)}
-function movePlayer(s){const p=gameState.currentPlayer;let o=p==='frau'?gameState.frauPosition:gameState.mannPosition,n=(o+s)%boardPositions.length;if(p==='frau')gameState.frauPosition=n;else gameState.mannPosition=n;if(n<o)collectPassGo(p);updatePlayerMarkers();updatePlayerInfo();setTimeout(()=>handleCellLanding(n),500)}
-function handleCellLanding(pos){const c=boardPositions[pos],p=gameState.currentPlayer;if(c.theme==='corner'){handleCorner(c.name,p)}else{const t=Object.values(themeBlocks).find(t=>t.streets.some(s=>s.id===c.streetId)),s=t?.streets.find(s=>s.id===c.streetId),tk=Object.keys(themeBlocks).find(k=>themeBlocks[k]===t);if(!s.owner){offerPurchase(p,s)}else if(s.owner!==p&&s.hasHotel){handleHotelLanding(p,s,t)}else if(s.owner===p&&!s.hasHotel&&hasMonopoly(p,tk)){offerHotel(p,s)}}}
-function offerPurchase(p,s){if(confirm(`"${s.name}" für €${s.price} kaufen?`))buyStreet(p,s)}
-function buyStreet(p,s){const m=p==='frau'?gameState.frauMoney:gameState.mannMoney;let pr=s.price;if(p==='frau'&&Math.random()<0.35)pr=Math.floor(pr*0.9);if(m>=pr){if(p==='frau')gameState.frauMoney-=pr;else gameState.mannMoney-=pr;s.owner=p;alert(`✅ Gekauft für €${pr}!`);renderBoard();renderThemeBlocks();updatePlayerInfo()}else alert('❌ Nicht genug Geld!')}
-function offerHotel(p,s){if(confirm(`🏨 Hotel für €${s.hotelCost} bauen?\n\n(Du hast das MONOPOL für dieses Thema!)`))buildHotel(p,s)}
-function buildHotel(p,s){const m=p==='frau'?gameState.frauMoney:gameState.mannMoney;let c=s.hotelCost;if(p==='frau')c=Math.floor(c/gameState._h.hd);if(m>=c){if(p==='frau')gameState.frauMoney-=c;else gameState.mannMoney-=c;s.hasHotel=true;alert(`🏨 Hotel gebaut für €${c}!`);renderBoard();renderThemeBlocks();updatePlayerInfo()}else alert('❌ Nicht genug Geld!')}
-function handleHotelLanding(p,s,t){const o=s.owner;let r=Math.floor(s.price*0.3);if(p==='frau'&&o==='mann')r=Math.floor(r*gameState._h.rd);const ch=confirm(`🏨 Hotel "${s.name}"!\n\n💰 Miete: €${r}\n\nOK = Zahlen | ABBRECHEN = Aufgabe`);if(ch)payRent(p,o,r);else showTask(p,o,t)}
-function payRent(pa,re,a){if(pa==='frau'){gameState.frauMoney-=a;gameState.mannMoney+=a}else{gameState.mannMoney-=a;gameState.frauMoney+=a}alert(`💰 €${a} gezahlt!`);updatePlayerInfo()}
-function showTask(pe,gi,t){const ts=t.tasks;let ta=ts[Math.floor(Math.random()*ts.length)];if(pe==='frau'&&Math.random()<gameState._h.et){const e=["Umarme Partner 30 Sek","Sage 2 Komplimente","Küsse auf Wange","Händchen halten 1 Min"];ta=e[Math.floor(Math.random()*e.length)]}const m=document.getElementById('taskModal');m.className='task-modal';m.innerHTML=`<div class="task-content"><div class="task-theme">🏨 ${t.name}</div><div class="task-description">${ta}</div><div class="task-meta"><div><strong>Ausführend:</strong><br>${pe==='frau'?'👑 Ehefrau':'🔒 Ehemann'}</div><div><strong>Aufgegeben:</strong><br>${gi==='frau'?'👑 Ehefrau':'🔒 Ehemann'}</div></div><div class="task-buttons"><button class="btn btn-success" onclick="completeTask()">✅ Erledigt</button><button class="btn btn-danger" onclick="skipTask()">⏭️ Überspringen (€50)</button></div></div>`;gameState.gameActive=false;document.getElementById('rollBtn').disabled=true}
-function completeTask(){document.getElementById('taskModal').className='hidden';alert('✅ Super!');gameState.gameActive=true;document.getElementById('rollBtn').disabled=false}
-function skipTask(){if(gameState.currentPlayer==='frau')gameState.frauMoney-=50;else gameState.mannMoney-=50;document.getElementById('taskModal').className='hidden';alert('⏭️ Übersprungen! -€50');gameState.gameActive=true;document.getElementById('rollBtn').disabled=false;updatePlayerInfo()}
-function collectPassGo(p){let a=200;if(p==='frau')a+=gameState._h.pb;if(p==='frau')gameState.frauMoney+=a;else gameState.mannMoney+=a;alert(`🎯 LOS! +€${a}`);updatePlayerInfo()}
-function handleCorner(n,p){if(n.includes('Event')||n.includes('Aktion')){const ev=[{text:"💰 +€150",f:()=>{if(p==='frau')gameState.frauMoney+=150;else gameState.mannMoney+=150}},{text:"💸 Zahle €100",f:()=>{if(p==='frau'){gameState.frauMoney-=100;gameState.mannMoney+=100}else{gameState.mannMoney-=100;gameState.frauMoney+=100}}},{text:"🎲 Nochmal!",f:()=>setTimeout(rollDice,1000)}];let e=ev[Math.floor(Math.random()*ev.length)];if(p==='frau'&&Math.random()<0.6)e=ev[0];alert(`💡 ${e.text}`);e.f();updatePlayerInfo()}else if(n.includes('Pause')){alert('⏸️ 1 Runde aussetzen');endTurn()}else if(n.includes('Parken')||n.includes('Bonus')){const b=150;if(p==='frau')gameState.frauMoney+=b;else gameState.mannMoney+=b;alert(`🎁 +€${b}`);updatePlayerInfo()}}
-function endTurn(){gameState.currentPlayer=gameState.currentPlayer==='frau'?'mann':'frau';document.getElementById('rollBtn').disabled=false;updatePlayerInfo()}
-function showTradeModal(){const m=document.getElementById('tradeModal');m.className='trade-modal';m.innerHTML=`<div class="trade-content"><div class="trade-title">🤝 Handel starten</div><div class="form-group"><label class="form-label">Von wem:</label><select id="tradeFrom" class="form-control"><option value="frau">👑 Ehefrau</option><option value="mann">🔒 Ehemann</option></select></div><div class="form-group"><label class="form-label">Was:</label><select id="tradeType" class="form-control"><option value="money">💰 Geld</option><option value="street">🏘️ Straße</option><option value="task">📝 Aufgaben-Deal</option></select></div><div class="form-group"><label class="form-label">Betrag/Details:</label><input type="number" id="tradeAmount" class="form-control" placeholder="z.B. 500" min="0"></div><div class="form-group"><label class="form-label">Beschreibung:</label><textarea id="tradeDesc" class="form-control" placeholder="z.B. €500 für Aufgaben-Erleichterung"></textarea></div><div class="task-buttons"><button class="btn btn-success" onclick="executeTrade()">✅ Handel durchführen</button><button class="btn btn-secondary" onclick="closeTradeModal()">❌ Abbrechen</button></div></div>`}
-function closeTradeModal(){document.getElementById('tradeModal').className='hidden'}
-function executeTrade(){const f=document.getElementById('tradeFrom').value,ty=document.getElementById('tradeType').value,a=parseInt(document.getElementById('tradeAmount').value)||0,d=document.getElementById('tradeDesc').value||'Handel';if(ty==='money'&&a>0){const fm=f==='frau'?gameState.frauMoney:gameState.mannMoney;if(fm>=a){if(f==='frau'){gameState.frauMoney-=a;gameState.mannMoney+=a}else{gameState.mannMoney-=a;gameState.frauMoney+=a}const tt=`${f==='frau'?'👑':'🔒'} → ${f==='frau'?'🔒':'👑'}: €${a} - ${d}`;gameState.tradeHistory.push(tt);updateTradeHistory();updatePlayerInfo();alert('✅ Handel abgeschlossen!')}else{alert('❌ Nicht genug Geld!');return}}else{const tt=`${f==='frau'?'👑':'🔒'} → ${f==='frau'?'🔒':'👑'}: ${d}`;gameState.tradeHistory.push(tt);updateTradeHistory();alert('✅ Vereinbarung getroffen!')}closeTradeModal()}
-function updateTradeHistory(){const h=document.getElementById('tradeHistoryDisplay');if(gameState.tradeHistory.length>0){h.className='trade-history';h.innerHTML=`<div class="trade-history-title">Letzte Handelsaktionen:</div>${gameState.tradeHistory.slice(-3).map(t=>`<div class="trade-history-item">${t}</div>`).join('')}`}}
-function endGame(){const as=Object.values(themeBlocks).flatMap(t=>t.streets),fa=gameState.frauMoney+as.filter(s=>s.owner==='frau').reduce((su,s)=>su+s.price+(s.hasHotel?s.hotelCost:0),0),ma=gameState.mannMoney+as.filter(s=>s.owner==='mann').reduce((su,s)=>su+s.price+(s.hasHotel?s.hotelCost:0),0),w=fa>ma?'👑 EHEFRAU':'🔒 EHEMANN',di=Math.abs(fa-ma),rp=Math.round(di/1000);alert(`🏁 SPIELENDE!\n\n👑 Ehefrau: €${fa}\n🔒 Ehemann: €${ma}\n\n🏆 GEWINNER: ${w}!\n\n💰 Zahlung: €${rp}\n(Differenz: €${di} ÷ 1000)`)}
-function setupEventListeners(){document.getElementById('rollBtn').addEventListener('click',rollDice);document.getElementById('endTurnBtn').addEventListener('click',endTurn);document.getElementById('endGameBtn').addEventListener('click',endGame);document.getElementById('tradeBtn').addEventListener('click',showTradeModal)}
-window.addEventListener('DOMContentLoaded',initGame);
-    </script>
+    <div class="hp r"><div class="hpb" id="hpMann">&#128274; <span id="hMM">3.500</span> | <span id="hMH">0</span>&#127968;</div></div>
+  </div>
+</header>
+<div class="wrap">
+ <div class="gl">
+  <main>
+   <div class="board-section">
+     <svg id="boardSvg" viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg"></svg>
+   </div>
+   <div class="rules">
+     <div class="rt">&#128203; Spielregeln</div>
+     <ul class="rl">
+       <li>1 Wuerfel - bewegen &amp; Strassen kaufen</li>
+       <li>Hotel nur bei komplettem Monopol (alle 3 Themen-Strassen)</li>
+       <li>Fremdes Hotel: Miete ODER Aufgabe machen</li>
+       <li>LOS uberqueren = +200 Euro</li>
+       <li>Spielende: Gesamtvermoegen / 1000 = realer Euro-Betrag</li>
+     </ul>
+   </div>
+  </main>
+  <aside class="sb">
+   <div class="card">
+     <div class="ct">Spieler</div>
+     <div class="pc fr active" id="frauCard">
+       <div class="pch"><div class="pcn">&#128081; Ehefrau</div><div class="pcm" id="frauMoney">3.500</div></div>
+       <div class="pcs"><span>&#127968; <span id="frauStreets">0</span></span><span>&#127968; <span id="frauHotels">0</span></span><span>&#127919; <span id="frauMon">0</span> Monopole</span></div>
+     </div>
+     <div class="pc mn" id="mannCard">
+       <div class="pch"><div class="pcn">&#128274; Ehemann</div><div class="pcm" id="mannMoney">3.500</div></div>
+       <div class="pcs"><span>&#127968; <span id="mannStreets">0</span></span><span>&#127968; <span id="mannHotels">0</span></span><span>&#127919; <span id="mannMon">0</span> Monopole</span></div>
+     </div>
+   </div>
+   <div class="card">
+     <div class="ct">Spezial-Aktionen</div>
+     <button class="btn bw" id="tradeBtn">Handel starten</button>
+     <button class="btn bd" id="theftBtn">Diebstahl (kostet 200 Euro)</button>
+     <button class="btn" id="forceTaskBtn">Aufgabe erzwingen (150 Euro)</button>
+   </div>
+   <div class="card">
+     <div class="ct">Strassen &amp; Monopole</div>
+     <div id="themeBlocksContainer"></div>
+   </div>
+   <div class="card">
+     <div class="ct">Spielende</div>
+     <button class="btn bsu" id="endGameBtn">Endergebnis berechnen</button>
+   </div>
+  </aside>
+ </div>
+</div>
+<div id="MC" style="display:none"></div>
+<script>
+const GS={currentPlayer:'frau',frauMoney:3500,mannMoney:3500,frauPos:0,mannPos:0,gameActive:true,rolled:false};
+const THEMES={
+  romantik:{name:"Romantik",emoji:"\u{1F496}",color:"#ff1493",light:"#ff69b4",streets:[
+    {id:1,name:"Rosen-Allee",short:"Rosen",price:200,hotelCost:100,owner:null,hasHotel:false},
+    {id:2,name:"Kerzen-Gasse",short:"Kerzen",price:220,hotelCost:110,owner:null,hasHotel:false},
+    {id:3,name:"Kuss-Blvd",short:"Kuss",price:240,hotelCost:120,owner:null,hasHotel:false}],
+    tasks:["Ehemann: Massiere Ehefraus Ruecken 3 Minuten lang","Ehefrau: Nur Unterwaesche - bleib so fuer 2 Minuten","Ehemann: Kuesse Ehefraus Hals langsam fuer 1 Minute","Beide: Zungenkuss - mindestens 30 Sekunden","Ehemann: Streichle Ehefraus Brueste (durch Kleidung) fuer 1 Min","Ehefrau: Setz dich auf Ehemanns Schoss und kuschle 2 Min","Ehemann: Fluestere Ehefrau 3 schmutzige Dinge ins Ohr","Beide: Slow Dance - eng umschlungen fuer 2 Minuten","Wahrheit: Ehemann, was liebst du am meisten an ihrem Koerper?","Ehefrau: Sitze auf ihm, bewege dich langsam fuer 1 Minute"]},
+  kuscheln:{name:"Kuscheln",emoji:"\u{1F917}",color:"#00bfff",light:"#66d9ff",streets:[
+    {id:4,name:"Kuschel-Str.",short:"Kuschel",price:180,hotelCost:90,owner:null,hasHotel:false},
+    {id:5,name:"Streichel-G.",short:"Streich",price:200,hotelCost:100,owner:null,hasHotel:false},
+    {id:6,name:"Umarm.-Allee",short:"Umarm",price:210,hotelCost:105,owner:null,hasHotel:false}],
+    tasks:["Ehemann: Umarme Ehefrau von hinten 1 Min, Haende auf dem Bauch","Wahrheit: Ehemann, wann warst du zuletzt richtig geil auf sie?","Ehemann: Streichle ihre Haare und sage 3 ehrliche Komplimente","Beide: Loeffelchen - mindestens 2 Minuten","Wahrheit: Ehefrau, wann dachtest du zuletzt an einen anderen Mann?","Ehemann: Kuesse jeden ihrer Finger einzeln","Wahrheit: Ehefrau, was macht dich richtig nass?","Beide: Kuscheln - Ehemann reibt sich leicht an ihr","Wahrheit: Wer von euch ist im Moment geiler?","Ehefrau: Kuschle nackt mit ihm fuer 2 Minuten"]},
+  femdom:{name:"Femdom",emoji:"\u{1F460}",color:"#8b00ff",light:"#b44dff",streets:[
+    {id:7,name:"Kommando-Al.",short:"Komm",price:300,hotelCost:150,owner:null,hasHotel:false},
+    {id:8,name:"Gehorsam-G.",short:"Gehor",price:320,hotelCost:160,owner:null,hasHotel:false},
+    {id:9,name:"Kontroll-Str.",short:"Kontr",price:350,hotelCost:175,owner:null,hasHotel:false}],
+    tasks:["Ehemann: Knie nieder und massiere Ehefraus Beine","Ehefrau: Gib einen Befehl - Ehemann fuehrt ihn sofort aus","Wahrheit: Ehemann, warum verdient sie die Kontrolle?","Ehemann: Hole ihr ein Getraenk auf Knien","Ehefrau: Ohrfeige seinen Po 5 Mal","Wahrheit: Ehemann, wie fuehlt es sich an von ihr dominiert zu werden?","Ehemann: Ganzkoerper-Massage fuer Ehefrau - 5 Minuten","Ehefrau: Ehemann muss nackt vor ihr stehen - 1 Minute Inspektion","Wahrheit: Ehemann, was waere das Erniedrigendste das du fuer sie tun wuerdest?","Ehemann: Kuesse ihre Fuesse"]},
+  bdsm:{name:"BDSM",emoji:"\u{1F510}",color:"#ff4500",light:"#ff7040",streets:[
+    {id:10,name:"Fessel-Gasse",short:"Fessel",price:280,hotelCost:140,owner:null,hasHotel:false},
+    {id:11,name:"Schmerz-Al.",short:"Schmerz",price:310,hotelCost:155,owner:null,hasHotel:false},
+    {id:12,name:"Sinnes-Str.",short:"Sinnes",price:330,hotelCost:165,owner:null,hasHotel:false}],
+    tasks:["Ehemann: 10 Klapse auf den nackten Po","Wahrheit: Ehemann, wie sehr tut es weh wenn du nicht kommen darfst?","Ehefrau: Kneife 5 Mal in seine Brustwarzen","Ehemann: Unbequeme Position halten - 1 Minute","Wahrheit: Ehefrau, was wuerdest du tun wenn du totale Macht haettest?","Ehemann: Augen verbinden - Ehefrau beruehrt ihn 1 Minute wo sie will","Ehefrau: Ziehe Ehemann an den Haaren und kuesse ihn hart","Wahrheit: Ehemann, wie sehr erregt dich Schmerz von ihr?","Ehefrau: Kratze ihre Naegel ueber seinen Ruecken","Ehemann: Waescheklammern an Brustwarzen - 30 Sekunden aushalten"]},
+  hotwife:{name:"Hotwife",emoji:"\u{1F483}",color:"#ff69b4",light:"#ffaacc",streets:[
+    {id:13,name:"Flirt-Blvd",short:"Flirt",price:260,hotelCost:130,owner:null,hasHotel:false},
+    {id:14,name:"Verfuehr.-Al.",short:"Verfuehr",price:290,hotelCost:145,owner:null,hasHotel:false},
+    {id:15,name:"Attraktiv.-Str.",short:"Attrak",price:310,hotelCost:155,owner:null,hasHotel:false}],
+    tasks:["Wahrheit: Ehefrau, nenne 3 Gruende warum sie sich einen anderen Mann treffen koennte","Ehefrau: Tanze 30 Sekunden lang sexy fuer ihn","Wahrheit: Ehefrau, beschreibe deinen Traummann (nicht Ehemann)","Ehefrau: Zieh dich aus und praesentiere dich 1 Minute lang","Wahrheit: Ehemann, wie wuerde es sich anfuehlen sie mit einem anderen Mann zu sehen?","Ehefrau: Erzaehle eine Fantasie ueber einen anderen Mann - mindestens 1 Minute","Wahrheit: Ehefrau, welcher Mann hat dich zuletzt angemacht?","Ehefrau: Beschreibe dein perfektes Date mit einem Lover","Wahrheit: Ehemann, welchen ihrer Freunde findest du am bedrohlichsten?","Ehefrau: Zeige ein Foto eines Mannes den du attraktiv findest","Ehefrau: Schicke einem attraktiven Mann ein flirtendes Sexting - Screenshot zeigen"]},
+  cuckold:{name:"Cuckold",emoji:"\u{1F441}\u{FE0F}",color:"#32cd32",light:"#66ee66",streets:[
+    {id:16,name:"Beobacht.-G.",short:"Beob",price:270,hotelCost:135,owner:null,hasHotel:false},
+    {id:17,name:"Dienst-Allee",short:"Dienst",price:300,hotelCost:150,owner:null,hasHotel:false},
+    {id:18,name:"Demütig.-Str.",short:"Demut",price:340,hotelCost:170,owner:null,hasHotel:false}],
+    tasks:["Wahrheit: Ehemann, warum verdient sie einen besseren Mann?","Ehemann: Danke ihr aufrichtig dass sie bei dir bleibt","Wahrheit: Ehefrau, was macht andere Maenner attraktiver als ihn?","Ehemann: Putze ihre Schuhe - vollstaendig und ordentlich","Wahrheit: Ehemann, wie war es das letzte Mal zu frueh zu kommen?","Ehefrau: Beschreibe ein Date mit einem anderen Mann - Ehemann hoert zu","Wahrheit: Ehemann, wuerdest du ihre Schuhe putzen nachdem sie bei einem anderen war?","Ehemann: Sage was ein anderer Mann besser kann als du","Wahrheit: Ehefrau, wie gross sollte ein richtiger Mann sein?","Ehemann: Knie vor ihr - sage warum du es verdienst betrogen zu werden","Ehemann: Masturbiere waehrend sie von einem anderen Mann erzaehlt"]},
+  keuschheit:{name:"Keuschheit",emoji:"\u{1F512}",color:"#daa520",light:"#ffe566",streets:[
+    {id:19,name:"Enthaltsamk.-Al.",short:"Enthal",price:350,hotelCost:175,owner:null,hasHotel:false},
+    {id:20,name:"Kaefig-Gasse",short:"Kaefig",price:400,hotelCost:200,owner:null,hasHotel:false},
+    {id:21,name:"Kontrolle-Blvd",short:"Kontr.",price:450,hotelCost:225,owner:null,hasHotel:false}],
+    tasks:["Penis-Check: Ehemann messen. Unter 15 cm? Zahle 100 Euro!","Wahrheit: Ehemann, wie oft denkst du taeglich an Sex?","Ehefrau: Bestimme wann er das naechste Mal kommen darf","Wahrheit: Ehefrau, warum ist dein Dildo besser als sein Schwanz?","Ehemann: Schwoere 3 Tage auf jeden Orgasmus zu verzichten","Wahrheit: Ehemann, was ist schlimmer - kein Orgasmus oder sie mit einem anderen?","Ehefrau: Zeige deinen Dildo und erklaere warum er besser ist","Penis-Vergleich: Ehefrau vergleicht mit Dildo und kommentiert laut","Wahrheit: Ehemann, wie lange haeltst du durchschnittlich durch?","Ehefrau: Ehemann darf sich beruehren bis kurz vor den Orgasmus - dann Stop!"]}
+};
+const VA={
+  truth:{label:'Wahrheit',reward:200,punishment:0,items:['Wann hattest du zuletzt einen Orgasmus?','Was ist deine geheimste sexuelle Fantasie?','Mit wem ausser deinem Partner wuerdest du gerne schlafen?','Wo ist der verrueckteste Ort wo du Sex hattest?','Wuerdest du einen Dreier mitmachen? Mit wem?','Schaust du Pornos? Welche Art gefaellt dir?','Hast du schon mal fremdgegangen oder daran gedacht?','Was macht dich am schnellsten geil?','Was ist das Perverseste das du je gemacht hast?','Wie oft masturbierst du pro Woche?']},
+  dare:{label:'Pflicht',reward:300,punishment:150,items:['Ziehe ein Kleidungsstueck aus','Kuesse den Partner leidenschaftlich fuer 30 Sekunden','Tanze sexy fuer deinen Partner','Massiere Partners Genitalien 1 Min (ueber der Kleidung)','Stoehne laut fuer 10 Sekunden','Beschreibe detailliert eure letzte Sex-Session','Beruehre dich selbst 30 Sekunden - Partner schaut zu','Gib deinem Partner einen Lapdance fuer 1 Minute','Fluestere 5 schmutzige Dinge ins Ohr','Lecke/sauge an Partners Finger auf verfuehrerische Weise']},
+  extreme:{label:'Extrem',reward:500,punishment:300,items:['Oralsex bis der Partner fast kommt','Lass den Partner deine Brueste/Po 2 Min kneten','Reite den Partner 2 Min (mit Kleidung)','Nackt raekeln und posieren fuer den Partner 2 Minuten','Partner darf ein Foto von dir machen','Handjob fuer 2 Minuten','Lass dich fesseln und ueberall kuessen','Erzaehle eine Fremdgeh-Fantasie so detailliert wie moeglich','Strip fuer deinen Partner - volles Programm','Lass den Partner 5 Min machen was er will']}
+};
+const BOARD=[];
+(function(){
+  const corners=[{n:'LOS',e:'\u{1F3AF}'},{n:'Event',e:'\u{1F4A1}'},{n:'Pause',e:'\u{23F8}\u{FE0F}'},{n:'Park',e:'\u{1F17F}\u{FE0F}'},{n:'Bonus',e:'\u{1F381}'},{n:'Event',e:'\u{1F4A1}'},{n:'Akt',e:'\u{26A1}'}];
+  const seq=[{t:'corner',ci:0},{t:'romantik',si:1},{t:'romantik',si:2},{t:'romantik',si:3},{t:'corner',ci:1},{t:'kuscheln',si:4},{t:'kuscheln',si:5},{t:'kuscheln',si:6},{t:'corner',ci:2},{t:'femdom',si:7},{t:'femdom',si:8},{t:'femdom',si:9},{t:'corner',ci:3},{t:'bdsm',si:10},{t:'bdsm',si:11},{t:'bdsm',si:12},{t:'corner',ci:4},{t:'hotwife',si:13},{t:'hotwife',si:14},{t:'hotwife',si:15},{t:'corner',ci:5},{t:'cuckold',si:16},{t:'cuckold',si:17},{t:'cuckold',si:18},{t:'corner',ci:6},{t:'keuschheit',si:19},{t:'keuschheit',si:20},{t:'keuschheit',si:21}];
+  seq.forEach((s,i)=>{
+    if(s.t==='corner')BOARD.push({theme:'corner',name:corners[s.ci].n,emoji:corners[s.ci].e,index:i});
+    else BOARD.push({theme:s.t,streetId:s.si,index:i});
+  });
+})();
+const CX=250,CY=250,ROUT=238,RIN=148,RCENTER=92,N=28,SLICE=(2*Math.PI)/N;
+function polar(cx,cy,r,a){return{x:cx+r*Math.cos(a),y:cy+r*Math.sin(a)};}
+function arc(cx,cy,r1,r2,a1,a2){
+  const p1=polar(cx,cy,r2,a1),p2=polar(cx,cy,r2,a2),p3=polar(cx,cy,r1,a2),p4=polar(cx,cy,r1,a1);
+  const lg=a2-a1>Math.PI?1:0;
+  return `M${p1.x.toFixed(2)},${p1.y.toFixed(2)} A${r2},${r2} 0 ${lg},1 ${p2.x.toFixed(2)},${p2.y.toFixed(2)} L${p3.x.toFixed(2)},${p3.y.toFixed(2)} A${r1},${r1} 0 ${lg},0 ${p4.x.toFixed(2)},${p4.y.toFixed(2)} Z`;
+}
+function svgEl(tag,attrs){
+  const el=document.createElementNS('http://www.w3.org/2000/svg',tag);
+  if(attrs)for(const[k,v]of Object.entries(attrs))el.setAttribute(k,v);
+  return el;
+}
+function segFill(cell){if(cell.theme==='corner')return['#6a0dad','#9a2be2'];return[THEMES[cell.theme].color,THEMES[cell.theme].light];}
+
+function renderSVG(){
+  const svg=document.getElementById('boardSvg');
+  while(svg.firstChild)svg.removeChild(svg.firstChild);
+  const defs=svgEl('defs');
+  BOARD.forEach((c,i)=>{
+    const[c1,c2]=segFill(c);
+    const lg=svgEl('linearGradient',{id:'lg'+i,x1:'0%',y1:'0%',x2:'100%',y2:'100%'});
+    lg.innerHTML=`<stop offset="0%" stop-color="${c2}"/><stop offset="100%" stop-color="${c1}"/>`;
+    defs.appendChild(lg);
+  });
+  const cgr=svgEl('radialGradient',{id:'cgr',cx:'50%',cy:'50%',r:'70%'});
+  cgr.innerHTML='<stop offset="0%" stop-color="rgba(255,255,255,0.15)"/><stop offset="100%" stop-color="rgba(139,0,255,0.06)"/>';
+  defs.appendChild(cgr);
+  svg.appendChild(defs);
+  const bgc=svgEl('circle',{cx:CX,cy:CY,r:ROUT+4,fill:'rgba(255,245,248,0.96)',stroke:'rgba(200,180,220,0.4)','stroke-width':'1'});
+  svg.appendChild(bgc);
+  const segG=svgEl('g');
+  BOARD.forEach((cell,i)=>{
+    const a1=-Math.PI/2+i*SLICE,a2=a1+SLICE*0.965;
+    const p=svgEl('path',{d:arc(CX,CY,RIN,ROUT,a1,a2),fill:`url(#lg${i})`,stroke:'rgba(255,255,255,0.3)','stroke-width':'1.5',id:'seg'+i,class:'seg'});
+    p.addEventListener('click',()=>handleSegClick(i));
+    segG.appendChild(p);
+  });
+  svg.appendChild(segG);
+  const labG=svgEl('g',{id:'labG'});
+  BOARD.forEach((cell,i)=>{
+    const midA=-Math.PI/2+(i+0.5)*SLICE;
+    const labR=(RIN+ROUT)/2;
+    const lx=CX+labR*Math.cos(midA),ly=CY+labR*Math.sin(midA);
+    const rotDeg=(midA*180/Math.PI)+90;
+    const g=svgEl('g',{transform:`translate(${lx.toFixed(1)},${ly.toFixed(1)}) rotate(${rotDeg.toFixed(1)})`});
+    if(cell.theme==='corner'){
+      const em=svgEl('text',{'text-anchor':'middle','dominant-baseline':'middle',x:'0',y:'-7','font-size':'12'});
+      em.textContent=cell.emoji;
+      const lb=svgEl('text',{'text-anchor':'middle','dominant-baseline':'middle',x:'0',y:'8','font-size':'7',fill:'white','font-weight':'700','font-family':'Poppins,sans-serif'});
+      lb.textContent=cell.name;
+      g.appendChild(em);g.appendChild(lb);
+    } else {
+      const st=streetById(cell.streetId);
+      const nm=svgEl('text',{'text-anchor':'middle','dominant-baseline':'middle',x:'0',y:'-7','font-size':'7.5','font-weight':'700',fill:'rgba(255,255,255,0.97)','font-family':'Poppins,sans-serif'});
+      nm.textContent=st.short;
+      const pr=svgEl('text',{'text-anchor':'middle','dominant-baseline':'middle',x:'0',y:'5','font-size':'6',fill:'rgba(255,255,255,0.82)','font-family':'Poppins,sans-serif'});
+      pr.textContent='E'+st.price;
+      g.appendChild(nm);g.appendChild(pr);
+    }
+    labG.appendChild(g);
+  });
+  svg.appendChild(labG);
+  const cc=svgEl('circle',{cx:CX,cy:CY,r:RCENTER,fill:'url(#cgr)',stroke:'rgba(139,0,255,0.25)','stroke-width':'2'});
+  svg.appendChild(cc);
+  const ct=svgEl('text',{x:CX,y:CY-12,'text-anchor':'middle','dominant-baseline':'middle','font-size':'22','font-family':'Playfair Display,serif','font-weight':'900',fill:'#8b00ff'});
+  ct.textContent='\u{1F3AD}';
+  const cs=svgEl('text',{x:CX,y:CY+10,'text-anchor':'middle','dominant-baseline':'middle','font-size':'11','font-family':'Playfair Display,serif','font-weight':'700',fill:'#8b00ff'});
+  cs.textContent='EROPOLY';
+  svg.appendChild(ct);svg.appendChild(cs);
+  svg.appendChild(svgEl('g',{id:'ownerG'}));
+  svg.appendChild(svgEl('g',{id:'hotelG'}));
+  svg.appendChild(svgEl('g',{id:'markerG'}));
+  updateOwnerVisuals();updateMarkers();
+}
+
+function updateOwnerVisuals(){
+  const svg=document.getElementById('boardSvg');
+  const og=svg.getElementById('ownerG');og.innerHTML='';
+  const hg=svg.getElementById('hotelG');hg.innerHTML='';
+  BOARD.forEach((cell,i)=>{
+    if(cell.theme==='corner')return;
+    const st=streetById(cell.streetId);if(!st)return;
+    const a1=-Math.PI/2+i*SLICE,a2=a1+SLICE*0.965;
+    if(st.owner){
+      const col=st.owner==='frau'?'#ff1493':'#32cd32';
+      const band=svgEl('path',{d:arc(CX,CY,RIN,RIN+7,a1,a2),fill:col,opacity:'0.9'});
+      og.appendChild(band);
+      const midA=-Math.PI/2+(i+0.5)*SLICE;
+      const ex=CX+(ROUT-11)*Math.cos(midA),ey=CY+(ROUT-11)*Math.sin(midA);
+      const em=svgEl('text',{x:ex.toFixed(1),y:ey.toFixed(1),'text-anchor':'middle','dominant-baseline':'middle','font-size':'10'});
+      em.textContent=st.owner==='frau'?'\u{1F451}':'\u{1F512}';
+      og.appendChild(em);
+    }
+    if(st.hasHotel){
+      const midA=-Math.PI/2+(i+0.5)*SLICE;
+      const hr=(RIN+ROUT)/2+14;
+      const hx=CX+hr*Math.cos(midA),hy=CY+hr*Math.sin(midA);
+      const star=svgEl('text',{x:hx.toFixed(1),y:hy.toFixed(1),'text-anchor':'middle','dominant-baseline':'middle','font-size':'11'});
+      star.textContent='\u{1F3E8}';
+      hg.appendChild(star);
+    }
+  });
+}
+
+function updateMarkers(){
+  const svg=document.getElementById('boardSvg');
+  const mg=svg.getElementById('markerG');if(!mg)return;mg.innerHTML='';
+  [[GS.frauPos,'frau','#ff1493','\u{1F451}'],[GS.mannPos,'mann','#32cd32','\u{1F512}']].forEach(([pos,p,col,em])=>{
+    const midA=-Math.PI/2+(pos+0.5)*SLICE;
+    const r=(RIN+ROUT)/2+(p==='frau'?14:-14);
+    const mx=CX+r*Math.cos(midA),my=CY+r*Math.sin(midA);
+    const cir=svgEl('circle',{cx:mx.toFixed(1),cy:my.toFixed(1),r:'15',fill:col,stroke:'white','stroke-width':'3',opacity:'0.92'});
+    const et=svgEl('text',{x:mx.toFixed(1),y:my.toFixed(1),'text-anchor':'middle','dominant-baseline':'middle','font-size':'11'});
+    et.textContent=em;
+    mg.appendChild(cir);mg.appendChild(et);
+  });
+}
+
+function handleSegClick(i){
+  const cell=BOARD[i];if(cell.theme==='corner')return;
+  const st=streetById(cell.streetId);if(!st)return;
+  const tk=themeKeyOf(st);const th=THEMES[tk];
+  showModal(`<div class="mt">${th.emoji} ${st.name}</div><div class="mb"><div style="color:${th.color};font-weight:700;margin-bottom:6px">${th.emoji} ${th.name}</div><div>Preis: <strong>E${st.price}</strong></div><div>Hotel-Kosten: <strong>E${st.hotelCost}</strong></div><div style="margin-top:8px">Besitzer: <strong>${st.owner?lbl(st.owner):'Niemand'}</strong></div>${st.hasHotel?'<div style="margin-top:4px;color:var(--gold)">Hotel vorhanden</div>':''}</div><div class="mbtns"><button class="btn bs" onclick="closeModal()">Schliessen</button></div>`);
+}
+function money(p){return p==='frau'?GS.frauMoney:GS.mannMoney;}
+function setMoney(p,v){if(p==='frau')GS.frauMoney=Math.max(0,v);else GS.mannMoney=Math.max(0,v);}
+function lbl(p){return p==='frau'?'Ehefrau':'Ehemann';}
+function opp(p){return p==='frau'?'mann':'frau';}
+function hasMonopoly(p,k){return THEMES[k].streets.every(s=>s.owner===p);}
+function monoCount(p){return Object.keys(THEMES).filter(k=>hasMonopoly(p,k)).length;}
+function allStreets(){return Object.values(THEMES).flatMap(t=>t.streets);}
+function streetById(id){return allStreets().find(s=>s.id===id);}
+function themeKeyOf(st){return Object.keys(THEMES).find(k=>THEMES[k].streets.includes(st));}
+function fmt(n){return 'E '+n.toLocaleString('de-DE');}
+function rnd(arr){return arr[Math.floor(Math.random()*arr.length)];}
+function showModal(html){const c=document.getElementById('MC');c.style.display='flex';c.className='moverlay';c.innerHTML=`<div class="mbox">${html}</div>`;}
+function closeModal(){const c=document.getElementById('MC');c.style.display='none';c.innerHTML='';}
+function MT(t){return`<div class="mt">${t}</div>`;}
+function MB(t){return`<div class="mb">${t}</div>`;}
+
+function renderThemeBlocks(){
+  const c=document.getElementById('themeBlocksContainer');c.innerHTML='';
+  Object.entries(THEMES).forEach(([k,th])=>{
+    const fF=th.streets.filter(s=>s.owner==='frau').length,fM=th.streets.filter(s=>s.owner==='mann').length,hotels=th.streets.filter(s=>s.hasHotel).length;
+    const d=document.createElement('div');d.className='tb';d.style.borderLeftColor=th.color;
+    d.innerHTML=`<div class="tbh"><div class="tbn">${th.emoji} ${th.name}${hasMonopoly('frau',k)?'<span class="mbadge">MONOPOL F</span>':''}${hasMonopoly('mann',k)?'<span class="mbadge">MONOPOL M</span>':''}</div><div class="tbs"><span>F:${fF}</span><span>M:${fM}</span><span>H:${hotels}</span></div></div><div class="sg">${th.streets.map(s=>`<div class="si"><span>${s.short}</span><span>${s.owner==='frau'?'F':s.owner==='mann'?'M':'-'}${s.hasHotel?'H':''}</span></div>`).join('')}</div>`;
+    c.appendChild(d);
+  });
+}
+
+function updateUI(){
+  const s=allStreets();
+  document.getElementById('frauMoney').textContent=fmt(GS.frauMoney);
+  document.getElementById('mannMoney').textContent=fmt(GS.mannMoney);
+  document.getElementById('frauStreets').textContent=s.filter(x=>x.owner==='frau').length;
+  document.getElementById('mannStreets').textContent=s.filter(x=>x.owner==='mann').length;
+  document.getElementById('frauHotels').textContent=s.filter(x=>x.owner==='frau'&&x.hasHotel).length;
+  document.getElementById('mannHotels').textContent=s.filter(x=>x.owner==='mann'&&x.hasHotel).length;
+  document.getElementById('frauMon').textContent=monoCount('frau');
+  document.getElementById('mannMon').textContent=monoCount('mann');
+  document.getElementById('hFM').textContent=fmt(GS.frauMoney);
+  document.getElementById('hMM').textContent=fmt(GS.mannMoney);
+  document.getElementById('hFH').textContent=s.filter(x=>x.owner==='frau'&&x.hasHotel).length;
+  document.getElementById('hMH').textContent=s.filter(x=>x.owner==='mann'&&x.hasHotel).length;
+  document.getElementById('frauCard').classList.toggle('active',GS.currentPlayer==='frau');
+  document.getElementById('mannCard').classList.toggle('active',GS.currentPlayer==='mann');
+  document.getElementById('hpFrau').classList.toggle('on',GS.currentPlayer==='frau');
+  document.getElementById('hpMann').classList.toggle('on',GS.currentPlayer==='mann');
+  updateOwnerVisuals();updateMarkers();renderThemeBlocks();
+}
+
+function rollDice(){
+  if(!GS.gameActive||GS.rolled)return;
+  const die=document.getElementById('dieDisplay');die.classList.add('rolling');
+  setTimeout(()=>{const roll=Math.floor(Math.random()*6)+1;die.textContent=roll;die.classList.remove('rolling');GS.rolled=true;document.getElementById('rollBtn').disabled=true;setTimeout(()=>movePlayer(roll),350);},600);
+}
+function movePlayer(sp){
+  const p=GS.currentPlayer;const old=p==='frau'?GS.frauPos:GS.mannPos;const nw=(old+sp)%BOARD.length;
+  if(p==='frau')GS.frauPos=nw;else GS.mannPos=nw;
+  if(nw<old)passGo(p);updateUI();setTimeout(()=>handleLanding(nw),500);
+}
+function passGo(p){setMoney(p,money(p)+200);showModal(`${MT('LOS!')}${MB(`<div class="rbadge">+${fmt(200)}</div><br>${lbl(p)} erhaelt Startgeld!`)}<div class="mbtns"><button class="btn bsu" onclick="closeModal();updateUI();">OK</button></div>`);}
+function handleLanding(pos){
+  const cell=BOARD[pos];const p=GS.currentPlayer;
+  if(cell.theme==='corner'){handleCorner(cell.name,p);}
+  else{const st=streetById(cell.streetId);if(!st)return;const k=themeKeyOf(st);
+    if(!st.owner)showBuyModal(p,st);
+    else if(st.owner!==p&&st.hasHotel)showHotelLandModal(p,st,k);
+    else if(st.owner===p&&!st.hasHotel&&hasMonopoly(p,k))showBuildModal(p,st);}
+}
+function showBuyModal(p,st){showModal(`${MT('Strasse kaufen?')}${MB(`<div style="font-size:1.2rem;font-weight:700;color:var(--gold);margin-bottom:8px">${st.name}</div><div style="font-size:1.5rem;font-weight:700;color:#4caf50;margin-bottom:10px">${fmt(st.price)}</div><div style="font-size:.8rem;opacity:.75">Guthaben: ${fmt(money(p))}</div>`)}<div class="mbtns"><button class="btn bsu" onclick="doBuy(${st.id})">Kaufen</button><button class="btn bs" onclick="closeModal()">Ablehnen</button></div>`);}
+function doBuy(id){const p=GS.currentPlayer;const s=streetById(id);if(money(p)<s.price){showModal(`${MT('Kein Geld')}${MB(`Benoetigt: ${fmt(s.price)}`)}<div class="mbtns"><button class="btn bs" onclick="closeModal()">OK</button></div>`);return;}setMoney(p,money(p)-s.price);s.owner=p;const mono=hasMonopoly(p,themeKeyOf(s));showModal(`${MT('Gekauft!')}${MB(`<strong>${s.name}</strong> fuer ${fmt(s.price)}${mono?'<br><br><span style="color:var(--gold);font-weight:700">MONOPOL erreicht!</span>':''}`)}<div class="mbtns"><button class="btn bsu" onclick="closeModal();updateUI();">Super!</button></div>`);}
+function showBuildModal(p,st){showModal(`${MT('Hotel bauen?')}${MB(`<strong>${st.name}</strong><br><div style="font-size:1.3rem;font-weight:700;color:#ff9800;margin:8px 0">${fmt(st.hotelCost)}</div><div style="font-size:.8rem;opacity:.7">Guthaben: ${fmt(money(p))}</div>`)}<div class="mbtns"><button class="btn bw" onclick="doBuild(${st.id})">Bauen</button><button class="btn bs" onclick="closeModal()">Spaeter</button></div>`);}
+function doBuild(id){const p=GS.currentPlayer;const s=streetById(id);if(money(p)<s.hotelCost){showModal(`${MT('Kein Geld')}${MB(fmt(s.hotelCost))}<div class="mbtns"><button class="btn bs" onclick="closeModal()">OK</button></div>`);return;}setMoney(p,money(p)-s.hotelCost);s.hasHotel=true;showModal(`${MT('Hotel gebaut!')}${MB(`<strong>${s.name}</strong> fuer ${fmt(s.hotelCost)}`)}<div class="mbtns"><button class="btn bsu" onclick="closeModal();updateUI();">Super!</button></div>`);}
+function showHotelLandModal(p,st,tk){const rent=Math.floor(st.price*0.3);showModal(`${MT('Fremdes Hotel!')}${MB(`<div style="font-weight:700;color:var(--gold);margin-bottom:6px">${st.name}</div>Besitzer: ${lbl(st.owner)}<br><div style="font-size:1.3rem;font-weight:700;color:#f44336;margin:8px 0">Miete: ${fmt(rent)}</div>`)}<div class="mbtns"><button class="btn bd" onclick="doPayRent(${st.id},${rent})">Miete zahlen</button><button class="btn bw" onclick="handPhone('${tk}')">Aufgabe machen</button></div>`);}
+function doPayRent(id,rent){const s=streetById(id);const p=GS.currentPlayer;setMoney(p,money(p)-rent);setMoney(s.owner,money(s.owner)+rent);showModal(`${MT('Miete gezahlt!')}${MB(`<span style="font-size:1.2rem;font-weight:700;color:#f44336">-${fmt(rent)}</span><br>Guthaben: ${fmt(money(p))}`)}<div class="mbtns"><button class="btn bsu" onclick="closeModal();updateUI();">Weiter</button></div>`);}
+function handPhone(tk){const o=opp(GS.currentPlayer);showModal(`${MT('Handy uebergeben!')}${MB(`${lbl(GS.currentPlayer)} gibt Handy an<br><strong style="color:var(--gold)">${lbl(o)}</strong>`)}<div class="mbtns"><button class="btn bw" onclick="showTask('${tk}')">Ich habe das Handy</button></div>`);}
+function showTask(tk){const th=THEMES[tk];const task=rnd(th.tasks);showModal(`${MT(th.emoji+' '+th.name)}${MB(`<div style="font-size:1rem;line-height:1.6">${task}</div>`)}<div style="text-align:center;font-size:.8rem;margin-bottom:10px;opacity:.8">Ausfuehrend: <strong>${lbl(GS.currentPlayer)}</strong></div><div class="mbtns"><button class="btn bsu" onclick="taskDone()">Erledigt!</button><button class="btn bd" onclick="taskSkip()">Ueberspringen (-50)</button></div>`);}
+function taskDone(){const p=GS.currentPlayer;showModal(`${MT('Handy zurueck!')}${MB(`${lbl(p)} gibt Handy zurueck an <strong style="color:var(--gold)">${lbl(opp(p))}</strong>`)}<div class="mbtns"><button class="btn bsu" onclick="closeModal();updateUI();">Super!</button></div>`);}
+function taskSkip(){const p=GS.currentPlayer;setMoney(p,money(p)-50);showModal(`${MT('Uebersprungen!')}${MB(`<span style="color:#f44336;font-weight:700">-${fmt(50)}</span><br>Handy zurueck an <strong>${lbl(opp(p))}</strong>`)}<div class="mbtns"><button class="btn bs" onclick="closeModal();updateUI();">OK</button></div>`);}
+function handleCorner(name,p){
+  if(name==='Pause'){showModal(`${MT('Pause!')}${MB('Du setzt eine Runde aus!')}<div class="mbtns"><button class="btn bs" onclick="closeModal();doEndTurn();">OK</button></div>`);}
+  else if(name==='Park'){setMoney(p,money(p)+150);showModal(`${MT('Freies Parken!')}${MB(`<div class="rbadge">+${fmt(150)}</div>`)}<div class="mbtns"><button class="btn bsu" onclick="closeModal();updateUI();">OK</button></div>`);}
+  else if(name==='Bonus'){setMoney(p,money(p)+200);showModal(`${MT('Bonus!')}${MB(`<div class="rbadge">+${fmt(200)}</div>`)}<div class="mbtns"><button class="btn bsu" onclick="closeModal();updateUI();">OK</button></div>`);}
+  else{const evs=[{t:'Glucksfall! +150',fn:()=>setMoney(p,money(p)+150),b:'+150'},{t:'Strafzahlung -100',fn:()=>{setMoney(p,money(p)-100);setMoney(opp(p),money(opp(p))+100)},b:'-100'},{t:'Nochmal wuerfeln!',fn:()=>setTimeout(()=>{GS.rolled=false;document.getElementById('rollBtn').disabled=false;},500),b:'Neu'},{t:'Kleines Geschenk +80',fn:()=>setMoney(p,money(p)+80),b:'+80'}];const ev=rnd(evs);ev.fn();showModal(`${MT('Ereignis!')}${MB(`${ev.t}<br><div class="rbadge">${ev.b}</div>`)}<div class="mbtns"><button class="btn bsu" onclick="closeModal();updateUI();">OK</button></div>`);}
+}
+function doEndTurn(){GS.currentPlayer=opp(GS.currentPlayer);GS.rolled=false;document.getElementById('rollBtn').disabled=false;updateUI();}
+function showVA(){const{truth,dare,extreme}=VA;showModal(`${MT('Freiwillige Aktion')}${MB('<strong>Waehle deine Herausforderung!</strong><br>Je extremer desto mehr Geld!')}<div class="mbtns"><button class="btn bb" onclick="startVA('truth')">Wahrheit (+${fmt(truth.reward)})</button><button class="btn bw" onclick="startVA('dare')">Pflicht (+${fmt(dare.reward)} / -${fmt(dare.punishment)})</button><button class="btn bd" onclick="startVA('extreme')">Extrem (+${fmt(extreme.reward)} / -${fmt(extreme.punishment)})</button><button class="btn bs" onclick="closeModal()">Doch nicht</button></div>`);}
+function startVA(type){const a=VA[type];const item=rnd(a.items);showModal(`${MT(a.label)}${MB(`<div style="font-size:1rem;line-height:1.6">${item}</div>`)}<div style="text-align:center;margin-bottom:11px"><div class="rbadge">+${fmt(a.reward)}</div>${a.punishment?`<div class="pnote">Ablehnung: -${fmt(a.punishment)}</div>`:''}</div><div class="mbtns"><button class="btn bsu" onclick="vaOK('${type}')">Gemacht!</button>${a.punishment?`<button class="btn bd" onclick="vaNo('${type}')">Ablehnen</button>`:''}</div>`);}
+function vaOK(type){const p=GS.currentPlayer;const r=VA[type].reward;setMoney(p,money(p)+r);showModal(`${MT('Belohnung!')}${MB(`<div class="rbadge">+${fmt(r)}</div><br>Guthaben: ${fmt(money(p))}`)}<div class="mbtns"><button class="btn bsu" onclick="closeModal();updateUI();">OK</button></div>`);}
+function vaNo(type){const p=GS.currentPlayer;const pen=VA[type].punishment;setMoney(p,money(p)-pen);showModal(`${MT('Abgelehnt!')}${MB(`<span style="color:#f44336;font-weight:700">-${fmt(pen)}</span>`)}<div class="mbtns"><button class="btn bs" onclick="closeModal();updateUI();">OK</button></div>`);}
+function showTheft(){showModal(`${MT('Diebstahl')}${MB(`Kosten: -${fmt(200)}<br>Wuerfelst du X -> X x 50 = gestohlener Betrag`)}<div class="mbtns"><button class="btn bd" onclick="doTheft()">Durchfuehren!</button><button class="btn bs" onclick="closeModal()">Abbrechen</button></div>`);}
+function doTheft(){const p=GS.currentPlayer;const o=opp(p);if(money(p)<200){showModal(`${MT('Kein Geld')}${MB('Diebstahl kostet 200')}<div class="mbtns"><button class="btn bs" onclick="closeModal()">OK</button></div>`);return;}setMoney(p,money(p)-200);const roll=Math.floor(Math.random()*6)+1;const stolen=Math.min(roll*50,money(o));setMoney(o,money(o)-stolen);setMoney(p,money(p)+stolen);showModal(`${MT('Diebstahl!')}${MB(`Gewuerfelt: <strong>${roll}</strong><br><div class="rbadge">+${fmt(stolen)}</div><br>Kosten: -200 | Netto: +${fmt(stolen-200)}`)}<div class="mbtns"><button class="btn bsu" onclick="closeModal();updateUI();">Weiter</button></div>`);}
+function showFT(){const opts=Object.entries(THEMES).map(([k,t])=>`<option value="${k}">${t.emoji} ${t.name}</option>`).join('');showModal(`${MT('Aufgabe erzwingen')}${MB(`Kosten: -${fmt(150)}<br>Waehle Thema - Gegner muss Aufgabe erfuellen!`)}<div class="fr2"><label class="fl">Thema:</label><select id="ftSel" class="fsel">${opts}</select></div><div class="mbtns"><button class="btn" onclick="doFT()">Erzwingen!</button><button class="btn bs" onclick="closeModal()">Abbrechen</button></div>`);}
+function doFT(){const p=GS.currentPlayer;if(money(p)<150){showModal(`${MT('Kein Geld')}${MB('Kostet 150')}<div class="mbtns"><button class="btn bs" onclick="closeModal()">OK</button></div>`);return;}setMoney(p,money(p)-150);const k=document.getElementById('ftSel').value;const th=THEMES[k];const task=rnd(th.tasks);showModal(`${MT(th.emoji+' '+th.name)}${MB(`<div style="font-size:1rem;line-height:1.6">${task}</div>`)}<div style="text-align:center;font-size:.8rem;margin-bottom:10px;opacity:.8">Ausfuehrend: <strong>${lbl(opp(p))}</strong></div><div class="mbtns"><button class="btn bsu" onclick="closeModal();updateUI();">Erledigt!</button></div>`);}
+function showTrade(){showModal(`${MT('Handel')}${MB('Was moechtet ihr handeln?')}<div class="mbtns"><button class="btn bw" onclick="showMT()">Geld uebertragen</button><button class="btn" onclick="showST()">Strassen tauschen</button><button class="btn bs" onclick="closeModal()">Abbrechen</button></div>`);}
+function showMT(){showModal(`${MT('Geld uebertragen')}<div class="fr2"><label class="fl">Von:</label><select id="mFrom" class="fsel"><option value="frau">Ehefrau (${fmt(GS.frauMoney)})</option><option value="mann">Ehemann (${fmt(GS.mannMoney)})</option></select></div><div class="fr2"><label class="fl">Betrag:</label><input type="number" id="mAmt" class="finp" placeholder="z.B. 500" min="1"></div><div class="mbtns" style="margin-top:10px"><button class="btn bsu" onclick="doMT()">Uebertragen</button><button class="btn bs" onclick="showTrade()">Zurueck</button></div>`);}
+function doMT(){const from=document.getElementById('mFrom').value;const to=opp(from);const amt=parseInt(document.getElementById('mAmt').value)||0;if(amt<=0){alert('Betrag eingeben!');return;}if(money(from)<amt){alert('Nicht genug Geld!');return;}setMoney(from,money(from)-amt);setMoney(to,money(to)+amt);showModal(`${MT('Uebertragen!')}${MB(`<div class="rbadge">${fmt(amt)}</div><br>${lbl(from)} zu ${lbl(to)}`)}<div class="mbtns"><button class="btn bsu" onclick="closeModal();updateUI();">OK</button></div>`);}
+function showST(){const fS=allStreets().filter(s=>s.owner==='frau');const mS=allStreets().filter(s=>s.owner==='mann');const fo=`<option value="">Keine Strasse</option>${fS.map(s=>`<option value="${s.id}">${s.short} (${fmt(s.price)})</option>`).join('')}`;const mo=`<option value="">Keine Strasse</option>${mS.map(s=>`<option value="${s.id}">${s.short} (${fmt(s.price)})</option>`).join('')}`;showModal(`${MT('Strassen tauschen')}<div class="fr2"><label class="fl">Ehefrau gibt:</label><select id="sfF" class="fsel">${fo}</select></div><div class="fr2"><label class="fl">Ehefrau zahlt zusaetzlich:</label><input type="number" id="smF" class="finp" placeholder="0" min="0" value="0"></div><div class="tdiv">Tausch</div><div class="fr2"><label class="fl">Ehemann gibt:</label><select id="sfM" class="fsel">${mo}</select></div><div class="fr2"><label class="fl">Ehemann zahlt zusaetzlich:</label><input type="number" id="smM" class="finp" placeholder="0" min="0" value="0"></div><div class="mbtns" style="margin-top:10px"><button class="btn bsu" onclick="doST()">Tauschen</button><button class="btn bs" onclick="showTrade()">Zurueck</button></div>`);}
+function doST(){const sfId=parseInt(document.getElementById('sfF').value);const smId=parseInt(document.getElementById('sfM').value);const mf=parseInt(document.getElementById('smF').value)||0;const mm=parseInt(document.getElementById('smM').value)||0;if(!sfId&&!smId){alert('Mindestens eine Strasse!');return;}if(mf>0&&GS.frauMoney<mf){alert('Ehefrau kein Geld!');return;}if(mm>0&&GS.mannMoney<mm){alert('Ehemann kein Geld!');return;}if(sfId)streetById(sfId).owner='mann';if(smId)streetById(smId).owner='frau';if(mf>0){GS.frauMoney-=mf;GS.mannMoney+=mf;}if(mm>0){GS.mannMoney-=mm;GS.frauMoney+=mm;}showModal(`${MT('Handel erfolgreich!')}${MB('Tausch abgeschlossen!')}<div class="mbtns"><button class="btn bsu" onclick="closeModal();updateUI();">OK</button></div>`);}
+function showEG(){const s=allStreets();const fa=GS.frauMoney+s.filter(x=>x.owner==='frau').reduce((a,x)=>a+x.price+(x.hasHotel?x.hotelCost:0),0);const ma=GS.mannMoney+s.filter(x=>x.owner==='mann').reduce((a,x)=>a+x.price+(x.hasHotel?x.hotelCost:0),0);const w=fa>=ma?'EHEFRAU':'EHEMANN';const diff=Math.abs(fa-ma);const pay=Math.round(diff/1000);showModal(`${MT('SPIELENDE!')}${MB(`<div style="font-size:2rem;margin-bottom:8px">Trophae</div><div style="line-height:2;margin-bottom:10px"><div>Ehefrau: <strong style="color:var(--gold)">${fmt(fa)}</strong></div><div>Ehemann: <strong style="color:var(--gold)">${fmt(ma)}</strong></div></div><div style="font-weight:700;margin-bottom:8px">Gewinner: ${w}</div><div style="background:rgba(255,215,0,.15);padding:10px;border-radius:8px"><div style="font-size:.8rem;opacity:.8">Differenz: ${fmt(diff)}</div><div style="font-size:1.3rem;font-weight:700;color:var(--gold)">Zahlung: ${pay} Euro</div></div>`)}<div class="mbtns"><button class="btn bs" onclick="closeModal()">Schliessen</button></div>`);}
+function init(){
+  renderSVG();renderThemeBlocks();updateUI();
+  document.getElementById('rollBtn').addEventListener('click',rollDice);
+  document.getElementById('endTurnBtn').addEventListener('click',doEndTurn);
+  document.getElementById('actionBtn').addEventListener('click',showVA);
+  document.getElementById('tradeBtn').addEventListener('click',showTrade);
+  document.getElementById('theftBtn').addEventListener('click',showTheft);
+  document.getElementById('forceTaskBtn').addEventListener('click',showFT);
+  document.getElementById('endGameBtn').addEventListener('click',showEG);
+}
+window.addEventListener('DOMContentLoaded',init);
+</script>
 </body>
 </html>
