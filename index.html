@@ -17,7 +17,7 @@
     <meta name="author" content="EROPOLY">
     <meta name="robots" content="noindex, nofollow">
 
-    <!-- Open Graph (fuer Link-Vorschau z.B. bei WhatsApp) -->
+    <!-- Open Graph -->
     <meta property="og:title" content="&#127917; EROPOLY">
     <meta property="og:description" content="Das erotische Paerspiel - jetzt spielen!">
     <meta property="og:type" content="website">
@@ -129,6 +129,7 @@ body{font-family:'Poppins',sans-serif;background:linear-gradient(135deg,var(--bg
 .fsel,.finp{width:100%;padding:8px 10px;border-radius:7px;background:rgba(0,0,0,.3);color:#fff;font-size:.82rem;border:1px solid rgba(255,255,255,.17)}
 .fsel option{background:#2d1f45}
 .tdiv{text-align:center;margin:10px 0;font-size:1.1rem;opacity:.45}
+.psych{color:#ff00ff;font-weight:700}
     </style>
 </head>
 <body>
@@ -154,12 +155,12 @@ body{font-family:'Poppins',sans-serif;background:linear-gradient(135deg,var(--bg
      <div class="ct">Spieler</div>
      <div class="pc fr active" id="frauCard">
        <div class="pch"><div class="pcn">&#128081; Ehefrau</div>
-<div class="pcm" id="frauMoney">3.500</div></div>
+<div class="pcm" id="frauMoney">2.500</div></div>
        <div class="pcs"><span>&#127968; <span id="frauStreets">0</span></span><span>&#127968; <span id="frauHotels">0</span></span><span>&#127919; <span id="frauMon">0</span> Monopole</span></div>
      </div>
      <div class="pc mn" id="mannCard">
        <div class="pch"><div class="pcn">&#128274; Ehemann</div>
-<div class="pcm" id="mannMoney">3.500</div></div>
+<div class="pcm" id="mannMoney">2.500</div></div>
        <div class="pcs"><span>&#127968; <span id="mannStreets">0</span></span><span>&#127968; <span id="mannHotels">0</span></span><span>&#127919; <span id="mannMon">0</span> Monopole</span></div>
      </div>
    </div>
@@ -200,7 +201,7 @@ body{font-family:'Poppins',sans-serif;background:linear-gradient(135deg,var(--bg
        <li><strong>Pause-Feld:</strong> Eine Runde aussetzen</li>
        <li><strong>Park / Bonus:</strong> Gratis Geld kassieren</li>
        <li><strong>Event / Aktion:</strong> Zufallsereignis - gut oder schlecht</li>
-       <li><strong>Freiwillige Aktion:</strong> Wahrheit (+&#8364;200) / Pflicht (+&#8364;300) / Extrem (+&#8364;500) - ablehnen kostet Strafe</li>
+       <li><strong>Freiwillige Aktion:</strong> Wahrheit (+&#8364;200) / Pflicht (+&#8364;300) / Extrem (+&#8364;500) / Psychologisch (+&#8364;400) - ablehnen kostet Strafe</li>
        <li><strong>Diebstahl:</strong> &#8364;200 Einsatz, Wuerfel 1-3 = Verlust, 4-6 = Wuerfel x 80 gestohlen (max. 40%). Nur 1x/Zug!</li>
        <li><strong>Aufgabe erzwingen:</strong> &#8364;150 - Gegner muss zufaellige Aufgabe aus gewahltem Thema erledigen</li>
        <li><strong>Handel:</strong> Geld und Strassen koennen jederzeit getauscht werden</li>
@@ -214,27 +215,10 @@ body{font-family:'Poppins',sans-serif;background:linear-gradient(135deg,var(--bg
 
 /* ═══════════════════════════════════════════════════════════════════
    AUFGABEN-BIBLIOTHEK
-   ───────────────────────────────────────────────────────────────────
-   Hier kannst du Aufgaben hinzufügen, ändern oder entfernen.
-   
-   Struktur:
-     TASK_LIBRARY = {
-       themenname: [
-         "Aufgabe 1",
-         "Aufgabe 2",
-         ...
-       ]
-     }
-   
-   Themen: romantik | kuscheln | femdom | bdsm | hotwife | cuckold | keuschheit
-   
-   Jede Zeile in einem Theme-Array ist eine eigene Aufgabe.
-   Füge einfach neue Zeilen hinzu – sie werden automatisch eingebunden!
-═══════════════════════════════════════════════════════════════════ */
+   ═══════════════════════════════════════════════════════════════════ */
 
 const TASK_LIBRARY = {
   romantik: [
-    // ── Romantik ──────────────────────────────────────────────────
     "Ehemann: Massiere Ehefraus Ruecken 3 Minuten lang",
     "Ehefrau: Nur Unterwaesche anbehalten - bleib so fuer 2 Minuten",
     "Ehemann: Kuesse Ehefraus Hals und Nacken langsam fuer 1 Minute",
@@ -250,11 +234,14 @@ const TASK_LIBRARY = {
     "Wahrheit: Ehefrau, wann warst du zuletzt so richtig erregt?",
     "Wahrheit: Ehemann, was ist deine liebste Koerperpartie an ihr?",
     "Wahrheit: Beide, wann hattet ihr den besten Sex und warum?",
-    // ── Eigene Romantik-Aufgaben hier einfuegen: ──────────────────
+    "Ehemann: Kuesse ihre Hand wie ein Gentleman",
+    "Ehefrau: Lass dich von ihm auf den Armen tragen",
+    "Beide: Macht ein Selfie zusammen - mit Kuss",
+    "Ehemann: Singe ihr ein verliebtes Lied vor",
+    "Ehefrau: Schreib ihm eine Liebesnachricht auf seinen Koerper",
   ],
 
   kuscheln: [
-    // ── Kuscheln ──────────────────────────────────────────────────
     "Ehemann: Umarme Ehefrau von hinten 1 Minute - Haende auf dem Bauch",
     "Wahrheit: Ehemann, wann warst du zuletzt richtig geil auf sie?",
     "Ehemann: Streichle ihre Haare und sage ihr 3 ehrliche Komplimente",
@@ -269,11 +256,11 @@ const TASK_LIBRARY = {
     "Beide: Kuesst euch 1 Minute lang nur auf den Hals",
     "Ehemann: Streichle ihren ganzen Koerper (ueber Kleidung) fuer 2 Minuten",
     "Ehefrau: Leg deinen Kopf in seinen Schoss - er streichelt dein Haar 3 Min",
-    // ── Eigene Kuscheln-Aufgaben hier einfuegen: ──────────────────
+    "Wahrheit: Ehemann, wann hast du zuletzt geweint?",
+    "Beide: Umarmt euch 2 Minuten lang ohne zu reden",
   ],
 
   femdom: [
-    // ── Femdom ────────────────────────────────────────────────────
     "Ehemann: Knie nieder und massiere Ehefraus Beine und Fuesse",
     "Ehefrau: Gib einen Befehl - Ehemann fuehrt ihn sofort aus",
     "Wahrheit: Ehemann, warum verdient sie die Kontrolle ueber dich?",
@@ -282,17 +269,16 @@ const TASK_LIBRARY = {
     "Wahrheit: Ehemann, wie fuehlt es sich an von ihr dominiert zu werden?",
     "Ehemann: Ganzkoerper-Massage fuer Ehefrau - 5 Minuten",
     "Ehefrau: Ehemann muss sich nackt vor ihr praesentieren - 1 Minute",
-    "Wahrheit: Ehemann, was waere das Erniedrigendste das du fuer sie tun wuerdest?",
+    "Wahrheit: Ehemann, was waere das Erniedrigendeste das du fuer sie tun wuerdest?",
     "Ehemann: Kuesse ihre Fuesse und sage dabei warum sie es verdient",
     "Ehefrau: Befiehl ihm seine Kleidung auszuziehen - ein Stueck nach dem anderen",
     "Ehemann: Muss 2 Minuten auf Knien vor ihr bleiben ohne sich zu bewegen",
     "Ehefrau: Setze dich auf seinen Ruecken - er macht 5 Liegestuetzen mit dir",
     "Wahrheit: Ehefrau, was ist das Maechtigste das du ihm gegenueber fuehlen kannst?",
-    // ── Eigene Femdom-Aufgaben hier einfuegen: ────────────────────
+    "Ehemann: Putze ihre Schuhe mit der Zunge (simuliert)",
   ],
 
   bdsm: [
-    // ── BDSM ──────────────────────────────────────────────────────
     "Ehemann: 10 kraeftige Klapse auf den nackten Po",
     "Wahrheit: Ehemann, wie sehr quaelt dich das Warten wenn du nicht kommen darfst?",
     "Ehefrau: Kneife 5 Mal in seine Brustwarzen",
@@ -307,11 +293,10 @@ const TASK_LIBRARY = {
     "Ehemann: Haende hinter dem Ruecken - Ehefrau kuesst und beruehrt ihn 2 Minuten",
     "Ehefrau: Verbindet seine Haende mit einem Guertel - 3 Minuten",
     "Wahrheit: Ehefrau, wie weit wuerdest du beim Thema Schmerz wirklich gehen?",
-    // ── Eigene BDSM-Aufgaben hier einfuegen: ─────────────────────
+    "Ehemann: Werde gefesselt und erniedrigt fuer 5 Minuten",
   ],
 
   hotwife: [
-    // ── Hotwife ───────────────────────────────────────────────────
     "Wahrheit: Ehefrau, nenne 3 Gruende warum sie sich mit einem anderen Mann treffen koennte",
     "Ehefrau: Tanze 30 Sekunden sexy fuer ihn - voller Koerpereinsatz",
     "Wahrheit: Ehefrau, beschreibe deinen Traummann im Detail - nicht Ehemann",
@@ -327,11 +312,9 @@ const TASK_LIBRARY = {
     "Ehefrau: Schminkt sich sexy vor ihm auf - so als wuerde sie jemanden treffen",
     "Ehefrau: Zieht ihr schoenste Unterwaesche an und zeigt sie ihm - ohne sie auszuziehen",
     "Ehefrau: Schreibt eine SMS an einen Mann als waere sie Single - zeigt sie ihm",
-    // ── Eigene Hotwife-Aufgaben hier einfuegen: ───────────────────
   ],
 
   cuckold: [
-    // ── Cuckold ───────────────────────────────────────────────────
     "Wahrheit: Ehemann, warum verdient sie einen besseren Mann als dich?",
     "Ehemann: Danke ihr aufrichtig dafuer dass sie noch bei dir ist",
     "Wahrheit: Ehefrau, was macht andere Maenner attraktiver als ihn?",
@@ -343,15 +326,13 @@ const TASK_LIBRARY = {
     "Wahrheit: Ehefrau, wie gross sollte ein richtiger Mann mindestens sein?",
     "Ehemann: Knie vor ihr und sage warum du es verdienst betrogen zu werden",
     "Ehemann: Masturbiere waehrend sie von einem anderen Mann erzaehlt",
-    "Wahrheit: Ehemann, wuerdest du zusehen wenn sie mit einem anderen ist?",
+    "Wahrheit: Ehemann, wuerdest du zusehen wenn sie mit einem anderen Fickt?",
     "Ehemann: Putzt ihr die Schuhe und kuessst jeden danach",
     "Ehemann: Massiert ihre Fuesse waehrend sie von einem anderen erzaehlt",
     "Ehemann: Schreibt auf Papier: 'Ich bin nicht gut genug' - 10x",
-    // ── Eigene Cuckold-Aufgaben hier einfuegen: ───────────────────
   ],
 
   keuschheit: [
-    // ── Keuschheit ────────────────────────────────────────────────
     "Penis-Check: Ehemann messen. Unter 15 cm? Zahle 100 Euro Strafe!",
     "Wahrheit: Ehemann, wie oft denkst du taeglich an Sex?",
     "Ehefrau: Bestimmt ab jetzt wann er das naechste Mal kommen darf",
@@ -366,14 +347,191 @@ const TASK_LIBRARY = {
     "Wahrheit: Ehefrau, macht es dich maechtig seinen Orgasmus zu kontrollieren?",
     "Ehemann: Darf Ehefrau 2 Minuten beruehren aber sie bestimmt wo und wie",
     "Ehefrau: Beschreibt in Detail was sie tun wuerde wenn er kommen darf - aber er darf nicht",
-    // ── Eigene Keuschheit-Aufgaben hier einfuegen: ────────────────
+    "Ehemann: Wichse fuer sie aber komm nicht - Stop auf ihren Befehl",
   ],
 };
 
 /* ═══════════════════════════════════════════════════════════════════
-   AUFGABEN werden automatisch aus der TASK_LIBRARY geladen.
-   Aenderungen in TASK_LIBRARY wirken sich sofort auf alle Themen aus.
-═══════════════════════════════════════════════════════════════════ */
+   FREIWILLIGE AKTIONEN (VA) - ERWEITERT
+   ═══════════════════════════════════════════════════════════════════ */
+const VA = {
+  truth: {
+    label: 'Wahrheit',
+    reward: 200,
+    punishment: 0,
+    items: [
+      'Wann hattest du zuletzt einen Orgasmus?',
+      'Was ist deine geheimste sexuelle Fantasie?',
+      'Mit wem ausser deinem Partner wuerdest du gerne schlafen?',
+      'Wo ist der verrueckteste Ort wo du Sex hattest?',
+      'Wuerdest du einen Dreier mitmachen? Mit wem?',
+      'Schaust du Pornos? Welche Art gefaellt dir?',
+      'Hast du schon mal fremdgegangen oder daran gedacht?',
+      'Was macht dich am schnellsten geil?',
+      'Was ist das Perverseste das du je gemacht hast?',
+      'Wie oft masturbierst du pro Woche?',
+      'Hast du schon mal mit jemandem geschlafen den du kaum kanntest?',
+      'Was ist deine Lieblingsstellung beim Sex?',
+      'Hast du schon mal Sex in der Oeffentlichkeit gehabt?',
+      'Welches Koerperteil findest du an dir selbst am sexiesten?',
+      'Hast du schon mal Nacktbilder von dir verschickt?',
+      'Was ist das Schmutzigste das du beim Sex gesagt hast?',
+      'Hast du schon mal jemanden beim Sex erwischt?',
+      'Welches Sexspielzeug besitzt du und wie oft benutzt du es?',
+      'Hast du schon mal einen One-Night-Stand gehabt?',
+      'Was ist das Verruchteste das du je im Bett gemacht hast?',
+      'Hast du schon mal mit mehreren Personen an einem Tag geschlafen?',
+      'Was ist deine geheimste Fetisch-Vorliebe?',
+      'Hast du schon mal Analsex gehabt? Wie war es?',
+      'Welcher Pornodarsteller oder Darstellerin findest du am heissesten?',
+      'Hast du schon mal jemanden beim Masturbieren beobachtet?',
+    ]
+  },
+  
+  psychological: {
+    label: 'Psychologisch',
+    reward: 400,
+    punishment: 200,
+    items: [
+      'Glaubst du wirklich, dass deine Frau dich noch respektieren wuerde, wenn sie wuesste, was du nachts allein im Kopf fickst?',
+      'Wuerdest du es geil finden, wenn deine Frau dich nach dem Bull fragen wuerde: "Soll ich ihm einen blasen, waehrend du zusiehst?" – oder bricht dir dann etwas weg?',
+      'Was ist schlimmer: Dass du diese Fantasie nie auslebst – oder dass du sie auslebst und merkst, dass sie dich fuer immer kaputtmacht?',
+      'Hast du schon mal deine Frau beim Sex heimlich "Bull" genannt – und sie hat es nicht gemerkt? Wie krank ist das?',
+      'Wenn deine Frau einen Bull wirklich lieben wuerde – nicht nur ficken – waerst du dann immer noch geil oder ploetzlich nur noch zerstoert?',
+      'Wuerdest du dich nach einem echten Cuckold-Erlebnis noch trauen, ihr ins Gesicht zu sehen, waehrend sie kommt? Oder wuerdest du wegschauen?',
+      'Wie oft hast du dir vorgestellt, wie deine Frau ueber einen anderen stoehnt – und danach konntest du sie tagelang nicht normal anfassen?',
+      'Bist du eigentlich geil auf den Bull oder geil darauf, endlich mal zu wissen, wie es sich anfuehlt, der Verlierer zu sein?',
+      'Wuerdest du deiner Frau erlauben, dich waehrend des Bull-Sexes zu filmen, wie du winselnd auf dem Boden liegst?',
+      'Was ist die demuetigendste Einzelhandlung, die du dir vorstellen kannst – und warum steht dir bei diesem Gedanken einer?',
+      'Hast du Angst, dass deine Fantasie verschwindet, sobald du sie auslebst – und dass du dann nichts mehr hast?',
+      'Wuerdest du deine Frau bitten, dich nach einem Bull-Treffen deine eigene Scham lecken zu lassen? Und wuerdest du sie dann noch kuessen?',
+      'Wenn dein bester Freund dich fragen wuerde: "Alter, bist du noch ganz sauber?" – was wuerdest du ihm antworten?',
+      'Wie oft hast du geweint, nachdem du auf Cuckold-Pornos gekommen bist – und wie lange hast du gebraucht, um dich wieder zu beruhigen?',
+      'Was waere dir peinlicher: Dass deine Frau deine Fantasie rausfindet – oder dass deine Mutter sie rausfindet?',
+      'Stell dir vor, deine Frau sagt morgen: "Ich will keinen Bull. Ich will einfach nur dich – aber richtig, mit Liebe." Enttaeuscht dich das?',
+      'Bist du suechtig nach dem Gedanken, ersetzt zu werden – weil du dich selbst schon laengst ersetzt hast?',
+      'Wuerdest du deine Frau verlassen, wenn sie ploetzlich sagt: "Schluss mit Fantasien. Du gehst zur Therapie"?',
+      'Was wuerdest du tun, wenn deine Frau dich nach einem echten Bull-Treffen auslacht, weil du immer noch hart wirst, waehrend du heulst?',
+      'Warum muss dieser ganze Scheiss sein? – Weil du ohne Schmerz keine Lust mehr spuerst. – Weil du glaubst, du verdienst nichts Besseres.',
+      'Hast du schon mal darueber nachgedacht, dass deine Frau vielleicht schon weiss was du dir wuenschst – und deshalb langsam die Lust an dir verliert?',
+      'Wuerdest du es ertragen zu wissen, dass deine Frau beim Sex mit dir an den Bull denkt – und du es weisst?',
+      'Was ist schlimmer: Die Demuetigung oder die Einsamkeit danach – und warum weisst du das nicht?',
+      'Hast du Angst, dass der Bull besser ist als du – oder Hoffnung?',
+      'Wuerdest du deine Frau noch begehren koennen, nachdem ein anderer Mann in ihr gekommen ist?',
+      'Was passiert in deinem Kopf, wenn du nach dem Sex mit ihr schlafen gehst – schaemst du dich oder bist du stolz?',
+      'Hast du schon mal ueberlegt, dass du vielleicht nicht geil auf Cuckolding bist, sondern auf Selbstzerstoerung?',
+      'Wuerdest du es verkraften, wenn deine Frau sagt: "Er war besser als du, und das weisst du jetzt auch?"',
+      'Warum masturbierst du lieber zu der Fantasie, als echte Intimitaet mit deiner Frau zu suchen?',
+      'Hast du Angst, dass wenn du aufhoerst diese Fantasie zu haben, du merkst dass deine Beziehung leer ist?',
+      'Wuerdest du den Bull bitte langsamer zu machen – oder schneller, damit es schneller vorbei ist?',
+      'Was denkst du, wenn du dich selbst im Spiegel siehst – waerend du dir vorstellst wie sie schreit?',
+      'Hast du schon mal gewuenscht, du waerst der Bull – und dann gemerkt, dass du das niemals sein wirst?',
+      'Warum erregt dich der Gedanke, dass sie dich nicht mehr braucht?',
+      'Wuerdest du ihr helfen, sich fuer den Bull schoen zu machen – und dabei weinen?',
+      'Was ist das Schlimmste: Dass sie es geniesst – oder dass du es auch tust?',
+      'Hast du schon mal darueber nachgedacht, dass du vielleicht nur noch geil wirst, wenn du leidest?',
+      'Wuerdest du den Bull um Verzeihung bitten, dass du im Raum bist?',
+      'Was wuerdest du tun, wenn sie sagt: "Ich liebe ihn" – und meint es ernst?',
+      'Warum fuehlst du dich mehr wie ein Mann, wenn du dich wie Muell fuehlst?',
+      'Hast du Angst, dass sie nach dem Bull nie wieder mit dir schlafen will?',
+      'Wuerdest du es vorziehen, wenn sie so tut als waere es nur Sex – obwohl ihr beide wisst, dass es mehr ist?',
+      'Was ist schwerer zu ertragen: Sein Lachen oder ihr Stoehnen?',
+      'Hast du schon mal gewuenscht, du waerst tot – nur damit du es nicht mitansehen musst?',
+      'Warum erzaehlst du dir selbst, es waere nur eine Fantasie, wenn du es dir jeden Tag genauer vorstellst?',
+      'Wuerdest du deine Familie fuer diese Fantasie riskieren?',
+      'Was wuerdest du tun, wenn deine Kinder es irgendwann erfahren?',
+      'Hast du schon mal darueber nachgedacht, dass du vielleicht krank bist – und das nicht als Beleidigung meinst?',
+      'Warum weinst du manchmal nach dem Orgasmus – und trotzdem kommst du immer wieder zurueck?',
+      'Wuerdest du lieber der Bull sein – oder geht es dir nur darum, endlich etwas zu fuehlen, auch wenn es Schmerz ist?',
+    ]
+  },
+
+  dare: {
+    label: 'Pflicht',
+    reward: 300,
+    punishment: 150,
+    items: [
+      'Ziehe ein Kleidungsstueck aus - langsam',
+      'Kuesse mich so als waere es das erste Mal - 1 volle Minute',
+      'Tanze sexy fuer mich - kein Abbruch erlaubt',
+      'Beruehre mich genau dort wo ich es dir zeige - 2 Minuten',
+      'Stoehne laut fuer 20 Sekunden - so echt wie moeglich',
+      'Beschreibe unsere letzte Sex-Session in vollen Details laut aus',
+      'Beruehre dich selbst 1 Minute - ich schaue nur zu ohne zu helfen',
+      'Lapdance fuer 2 Minuten - ich darf nicht anfassen',
+      'Fluestere mir die 5 schmutzigsten Dinge ins Ohr die du mit mir machen willst',
+      'Lecke langsam meinen Finger - Augenkontakt dabei',
+      'Ziehe dich bis auf nichts aus und posiere 2 Minuten fuer mich',
+      'Kuesse mich vom Hals langsam bis zum Bauchknopf',
+      'Reibe dich 2 Minuten von hinten an mir - kein Sex erlaubt',
+      'Beis mich sanft in den Hals und lass Spuren zurueck',
+      'Zeige mir deine erotischste Pose - ich darf ein Foto machen',
+      'Streichle mich 3 Minuten - ich sage dir genau wo',
+      'Zeige mir wie du am liebsten beruehrt werden moechtest',
+      'Atme mir 1 Minute heiss in den Nacken ohne mich anzufassen',
+      'Schreibe mit deiner Zunge ein schmutziges Wort auf meinen Bauch',
+      'Zieh mich aus - aber nur mit den Zaehnen und den Lippen',
+      'Beschreibe laut und langsam was du jetzt am liebsten tun wuerdest',
+      'Kuesse mich an 5 Stellen die du normalerweise auslaesst',
+      'Sag mir genau was du heute Nacht von mir willst - laut und deutlich',
+      'Lass mich 2 Minuten lang machen was ich will - kein Widerstand',
+      'Mach mir klar ohne Worte was du jetzt sofort haben willst',
+      'Schreib einem Ex/einer Ex "Ich vermisse dich" und zeig mir die Antwort - live',
+      'Simulier Cuckold-Sex mit mir - sag laut wie geil es ist dass ich nur zuschaue',
+      'Zeig mir dein Handy - die letzten 5 Sex-Chats ohne loeschen',
+      'Fluestere mir ins Ohr wie du von einem anderen gefickt werden willst - 2 Minuten',
+      'Spiel mir vor wie du mit wem anders schreibst - ich diktiere die schmutzigen Nachrichten',
+      'Mach einen Strip nur fuer mich - dabei erzaehlst du von deinem schoensten Fremdgeh-Traum',
+      'Lass mich deine Augen verbinden - dann tu so als waere ein anderer hier der dich anfasst',
+      'Nenn mir drei Leute aus unserem Bekanntenkreis - und dann rangier sie nach geilheit',
+      'Mach 20 Kniebeugen waehrend du laut staunst wie gut der Arsch von wem anders aussieht',
+      'Zieh dich aus - dann kriech zu mir und sag "Bitte betrueg mich"',
+    ]
+  },
+ 
+  extreme: {
+    label: 'Extrem',
+    reward: 500,
+    punishment: 300,
+    items: [
+      'Oralsex bis ich fast komme - dann Stop',
+      'Lass mich deinen ganzen Koerper 5 Minuten verwöhnen wie ich will',
+      'Reite mich 3 Minuten - Tempo bestimmst du',
+      'Nackt posieren fuer mich - ich fotografiere was ich will',
+      'Handjob oder Oralsex bis zum Ende',
+      'Lass dich fesseln und 5 Minuten lang ueberall kuesssen und beruehren',
+      'Erzaehle eine Fremdgeh-Fantasie mit echten Namen - so detailliert wie moeglich',
+      'Volles Programm Strip - alles faellt',
+      'Ich entscheide die naechsten 10 Minuten komplett - alles erlaubt',
+      'Beruehre dich selbst bis zum Ende - ich schaue zu und helfe nicht',
+      'Lass dich mit verbundenen Augen 5 Minuten lang ueberall beruehren',
+      'Zeige mir live wie du alleine zum Hoehepunkt kommst',
+      'Oralsex genau 5 Minuten - Stoppuhr laeuft - kein Abbruch',
+      'Lass mich deinen Koerper mit Eiswuerfeln abfahren - ueberall',
+      'Mach mich 5 Minuten verrueckt - kein Sex erlaubt - dann entscheide ich',
+      'Wir haben Sex genau so wie ich es dir jetzt beschreibe - kein Widerspruch',
+      'Du spielst vor wie du alleine bist - ich schaue nur zu',
+      'Lass mich bestimmen in welcher Stellung und wie lange',
+      'Beschreibe eine Fantasie mit einer anderen Person bis ich eifersuechtigt werde',
+      'Nur Mund - 5 Minuten - kein anderer Koerperkontakt',
+      'Fuehre meine Hand genau dahin wo du jetzt beruehrt werden willst',
+      'Zeig mir ohne Worte was du jetzt haben willst',
+      'Wir tun genau das was du dir heimlich am meisten wuenschst - sag es laut',
+      'Alle Grenzen fallen fuer die naechsten 15 Minuten - du entscheidest alles',
+      'Das Verrueckteste das wir je gemacht haben - nochmal - jetzt sofort',
+      'Lass mich dich mit einem Dildo nehmen waehrend du mir zuhoerst wie der Bull besser ist',
+      'Ich ficke dich jetzt und du sagst mir die ganze Zeit wie sehr du den Bull begehrst',
+      'Du wirst gefesselt und ich mache mit dir was ich will - Safe Word gilt',
+      'Wir simulieren einen Dreier - du spielst den Bull und ich deine Frau',
+      'Lass mich dich filmen wie du dich selbst demuetigst fuer den Bull',
+      'Ich ficke dich und du musst laut den Namen deines besten Freundes sagen',
+    ]
+  }
+};
+
+/* ═══════════════════════════════════════════════════════════════════
+   SPIEL-LOGIK
+   ═══════════════════════════════════════════════════════════════════ */
 const GS={currentPlayer:'frau',frauMoney:2500,mannMoney:2500,frauPos:0,mannPos:0,gameActive:true,rolled:false,stoleThisTurn:false};
 const THEMES={
   romantik:{name:"Romantik",emoji:"\u{1F496}",color:"#ff1493",light:"#ff69b4",streets:[
@@ -412,17 +570,12 @@ const THEMES={
     {id:21,name:"Kontrolle-Blvd",short:"KONTRL",price:450,hotelCost:225,owner:null,hasHotel:false}],
     tasks:[]}
 };
+
 // Auto-inject tasks from TASK_LIBRARY into THEMES
 Object.keys(TASK_LIBRARY).forEach(key => {
   if(THEMES[key]) THEMES[key].tasks = TASK_LIBRARY[key].filter(t => t && t.trim());
 });
 
-
-const VA={
-  truth:{label:'Wahrheit',reward:200,punishment:0,items:['Wann hattest du zuletzt einen Orgasmus?','Was ist deine geheimste sexuelle Fantasie?','Mit wem ausser deinem Partner wuerdest du gerne schlafen?','Wo ist der verrueckteste Ort wo du Sex hattest?','Wuerdest du einen Dreier mitmachen? Mit wem?','Schaust du Pornos? Welche Art gefaellt dir?','Hast du schon mal fremdgegangen oder daran gedacht?','Was macht dich am schnellsten geil?','Was ist das Perverseste das du je gemacht hast?','Wie oft masturbierst du pro Woche?']},
-  dare:{label:'Pflicht',reward:300,punishment:150,items:['Ziehe ein Kleidungsstueck aus','Kuesse den Partner leidenschaftlich fuer 30 Sekunden','Tanze sexy fuer deinen Partner','Massiere Partners Genitalien 1 Min (ueber der Kleidung)','Stoehne laut fuer 10 Sekunden','Beschreibe detailliert eure letzte Sex-Session','Beruehre dich selbst 30 Sekunden - Partner schaut zu','Gib deinem Partner einen Lapdance fuer 1 Minute','Fluestere 5 schmutzige Dinge ins Ohr','Lecke/sauge an Partners Finger auf verfuehrerische Weise']},
-  extreme:{label:'Extrem',reward:500,punishment:300,items:['Oralsex bis der Partner fast kommt','Lass den Partner deine Brueste/Po 2 Min kneten','Reite den Partner 2 Min (mit Kleidung)','Nackt raekeln und posieren fuer den Partner 2 Minuten','Partner darf ein Foto von dir machen','Handjob fuer 2 Minuten','Lass dich fesseln und ueberall kuessen','Erzaehle eine Fremdgeh-Fantasie so detailliert wie moeglich','Strip fuer deinen Partner - volles Programm','Lass den Partner 5 Min machen was er will']}
-};
 const BOARD=[];
 (function(){
   const corners=[{n:'LOS',e:'\u{1F3AF}'},{n:'Event',e:'\u{1F4A1}'},{n:'Pause',e:'\u{23F8}\u{FE0F}'},{n:'Park',e:'\u{1F17F}\u{FE0F}'},{n:'Bonus',e:'\u{1F381}'},{n:'Event',e:'\u{1F4A1}'},{n:'Akt',e:'\u{26A1}'}];
@@ -432,39 +585,7 @@ const BOARD=[];
     else BOARD.push({theme:s.t,streetId:s.si,index:i});
   });
 })();
-const CX=250,CY=250,ROUT=238,RIN=148,RCENTER=92,N=28,SLICE=(2*Math.PI)/N;
-/* ══ GRID BOARD DATA ══
-   10x10 grid, corners at (0,0),(9,0),(0,9),(9,9)
-   Bottom row (row 9): positions 0-9 left to right  → indices 0..9
-   Left col  (col 0):  positions 10-17 bottom to top → indices 10..17  (rows 8..1)
-   Top row   (row 0):  positions 18-27 left to right → indices 18..27
-   Right col (col 9):  positions 28-.. top to bottom → indices 28..
-   
-   Simplified: 28 fields around the border of 10x10 grid
-   Row9: col0..9 = fields 0..9   (left to right, bottom)
-   Col0: row8..1 = fields 10..17 (bottom to top, left)
-   Row0: col0..9 = fields 18..27 (left to right, top)  -- actually reverse for real monopoly feel
-   Col9: row1..8 = fields 28..   
-*/
 
-// Grid layout: map board index → [row, col]
-// Bottom row L→R: 0-9, Left col B→T: 10-17, Top row L→R: 18-27 (but reversed = R→L for classic look... keep simple)
-// We use: bottom=0..9, left(up)=10..17, top(right)=18..27, right(down) not needed, 28 fields total fits 3 sides + corners
-
-// Actually map the 28 board positions to a 10x10 grid:
-// Bottom row (row 9, col 0..9): 8 street fields + 2 corners = positions 0..9
-// Left col (col 0, row 8..1): 6 street fields + 2 corners but corners shared... 
-// We go: bottom 10 cells (row9), left 8 cells (col0, rows 8..1), top 10 cells (row0), right 8 cells (col9, rows 1..8) = 36 border cells
-// But we only have 28 fields. So we space them out or use a smaller grid.
-// Simplest: use a 10x10, place all 28 fields along the border evenly. Skip some cells.
-
-// Let's define exact grid positions for all 28 board fields:
-// Bottom row (row=9): col 0,1,2,3,4,5,6,7,8,9 → 10 fields (indices 0..9)  [LOS at col0, going right]
-// Left col (col=0): row 8,7,6,5,4,3,2,1 → 8 fields (indices 10..17) [going up]  
-// Top row (row=0): col 0,1,2,3,4,5,6,7,8,9 → 10 fields (indices 18..27) [going right]
-// That's 28! Perfect. Right side is just the center area.
-
-// 8x8 grid, all 4 sides, LOS = top-right (0,7), clockwise
 const GRID_POS = [
   {row:0,col:7}, // 0  LOS
   {row:1,col:7},{row:2,col:7},{row:3,col:7},{row:4,col:7},{row:5,col:7},{row:6,col:7}, // 1-6 right col down
@@ -492,7 +613,6 @@ function renderFieldContent(div,field,idx,row,col,SIZE){
   const st=streetById(field.streetId);
   if(!st)return;
 
-  // Vertical fields: rotate content
   const rotDeg = isRight?90 : isLeft?-90 : 0;
   const inner=document.createElement('div');
   inner.style.cssText=`display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;height:100%;${rotDeg?'transform:rotate('+rotDeg+'deg);':''}`; 
@@ -518,7 +638,6 @@ function updateBoardVisuals(){
     const st=streetById(field.streetId);
     if(!st)return;
     
-    // Remove old strips/hotels/pips
     div.querySelectorAll('.owner-strip,.hotel-badge,.player-pip').forEach(e=>e.remove());
     
     if(st.owner){
@@ -534,17 +653,15 @@ function updateBoardVisuals(){
     }
   });
   updateMarkers();
-  // sync center die
   const cd=document.getElementById('dieCenter');
   const hd=document.getElementById('dieDisplay');
   if(cd&&hd)cd.textContent=hd.textContent;
-  // turn display
   const bt=document.getElementById('bcTurn');
   if(bt)bt.textContent='Aktuell: '+(GS.currentPlayer==='frau'?'\u{1F451} Ehefrau':'\u{1F512} Ehemann');
-  // sync buttons
   const rollBtnC=document.getElementById('rollBtnC');
   if(rollBtnC) rollBtnC.disabled=GS.rolled;
 }
+
 function updateOwnerVisuals(){ updateBoardVisuals(); }
 
 function updateMarkers(){
@@ -585,14 +702,17 @@ function closeModal(){const c=document.getElementById('MC');c.style.display='non
 function MT(t){return`<div class="mt">${t}</div>`;}
 function MB(t){return`<div class="mb">${t}</div>`;}
 
-
-
 function movePlayer(sp){
   const p=GS.currentPlayer;const old=p==='frau'?GS.frauPos:GS.mannPos;const nw=(old+sp)%BOARD.length;
   if(p==='frau')GS.frauPos=nw;else GS.mannPos=nw;
   if(nw<old)passGo(p);updateUI();setTimeout(()=>handleLanding(nw),500);
 }
-function passGo(p){setMoney(p,money(p)+200);showModal(`${MT('LOS!')}${MB(`<div class="rbadge">+${fmt(200)}</div><br>${lbl(p)} erhaelt Startgeld!`)}<div class="mbtns"><button class="btn bsu" onclick="closeModal();updateUI();">OK</button></div>`);}
+
+function passGo(p){
+  setMoney(p,money(p)+200);
+  showModal(`${MT('LOS!')}${MB(`<div class="rbadge">+${fmt(200)}</div><br>${lbl(p)} erhaelt Startgeld!`)}<div class="mbtns"><button class="btn bsu" onclick="closeModal();updateUI();">OK</button></div>`);
+}
+
 function handleLanding(pos){
   const cell=BOARD[pos];const p=GS.currentPlayer;
   if(cell.theme==='corner'){handleCorner(cell.name,p);}
@@ -602,17 +722,16 @@ function handleLanding(pos){
       showBuyModal(p,st);
     } else if(st.owner!==p){
       if(st.hasHotel){
-        showHotelLandModal(p,st,k);        // Hotel: hohe Miete ODER Aufgabe
+        showHotelLandModal(p,st,k);
       } else {
-        showBasicRentModal(p,st);          // Keine Hotel: kleine Miete, keine Aufgabe
+        showBasicRentModal(p,st);
       }
     }
-    // own street: no action needed on landing
   }
 }
 
 function showBasicRentModal(p,st){
-  const rent=Math.floor(st.price*0.15); // 10% - kleine Grundmiete ohne Hotel
+  const rent=Math.floor(st.price*0.15);
   const own=st.owner;
   showModal(`${MT('&#127968; Grundmiete!')}${MB(`
     <div style="font-weight:700;color:var(--gold);margin-bottom:6px">${st.name}</div>
@@ -623,16 +742,28 @@ function showBasicRentModal(p,st){
     <button class="btn bw" onclick="doBasicRent(${st.id},${rent})">&#128184; Zahlen</button>
   </div>`);
 }
+
 function doBasicRent(id,rent){
   const s=streetById(id);const p=GS.currentPlayer;
   setMoney(p,money(p)-rent);setMoney(s.owner,money(s.owner)+rent);
   showModal(`${MT('&#128184; Miete gezahlt!')}${MB(`<span style="color:#ff9800;font-weight:700">-${fmt(rent)}</span><br>Guthaben: ${fmt(money(p))}`)}<div class="mbtns"><button class="btn bsu" onclick="closeModal();updateUI();">OK</button></div>`);
 }
 
-function showBuyModal(p,st){showModal(`${MT('Strasse kaufen?')}${MB(`<div style="font-size:1.2rem;font-weight:700;color:var(--gold);margin-bottom:8px">${st.name}</div><div style="font-size:1.5rem;font-weight:700;color:#4caf50;margin-bottom:10px">${fmt(st.price)}</div><div style="font-size:.8rem;opacity:.75">Guthaben: ${fmt(money(p))}</div>`)}<div class="mbtns"><button class="btn bsu" onclick="doBuy(${st.id})">Kaufen</button><button class="btn bs" onclick="closeModal()">Ablehnen</button></div>`);}
-function doBuy(id){const p=GS.currentPlayer;const s=streetById(id);if(money(p)<s.price){showModal(`${MT('Kein Geld')}${MB(`Benoetigt: ${fmt(s.price)}`)}<div class="mbtns"><button class="btn bs" onclick="closeModal()">OK</button></div>`);return;}setMoney(p,money(p)-s.price);s.owner=p;const mono=hasMonopoly(p,themeKeyOf(s));showModal(`${MT('Gekauft!')}${MB(`<strong>${s.name}</strong> fuer ${fmt(s.price)}${mono?'<br><br><span style="color:var(--gold);font-weight:700">MONOPOL erreicht!</span>':''}`)}<div class="mbtns"><button class="btn bsu" onclick="closeModal();updateUI();">Super!</button></div>`);}
-function showBuildModal(p,st){showModal(`${MT('Hotel bauen?')}${MB(`<strong>${st.name}</strong><br><div style="font-size:1.3rem;font-weight:700;color:#ff9800;margin:8px 0">${fmt(st.hotelCost)}</div><div style="font-size:.8rem;opacity:.7">Guthaben: ${fmt(money(p))}</div>`)}<div class="mbtns"><button class="btn bw" onclick="doBuild(${st.id})">Bauen</button><button class="btn bs" onclick="closeModal()">Spaeter</button></div>`);}
-function doBuild(id){const p=GS.currentPlayer;const s=streetById(id);if(money(p)<s.hotelCost){showModal(`${MT('Kein Geld')}${MB(fmt(s.hotelCost))}<div class="mbtns"><button class="btn bs" onclick="closeModal()">OK</button></div>`);return;}setMoney(p,money(p)-s.hotelCost);s.hasHotel=true;showModal(`${MT('Hotel gebaut!')}${MB(`<strong>${s.name}</strong> fuer ${fmt(s.hotelCost)}`)}<div class="mbtns"><button class="btn bsu" onclick="closeModal();updateUI();">Super!</button></div>`);}
+function showBuyModal(p,st){
+  showModal(`${MT('Strasse kaufen?')}${MB(`<div style="font-size:1.2rem;font-weight:700;color:var(--gold);margin-bottom:8px">${st.name}</div><div style="font-size:1.5rem;font-weight:700;color:#4caf50;margin-bottom:10px">${fmt(st.price)}</div><div style="font-size:.8rem;opacity:.75">Guthaben: ${fmt(money(p))}</div>`)}<div class="mbtns"><button class="btn bsu" onclick="doBuy(${st.id})">Kaufen</button><button class="btn bs" onclick="closeModal()">Ablehnen</button></div>`);
+}
+
+function doBuy(id){
+  const p=GS.currentPlayer;const s=streetById(id);
+  if(money(p)<s.price){
+    showModal(`${MT('Kein Geld')}${MB(`Benoetigt: ${fmt(s.price)}`)}<div class="mbtns"><button class="btn bs" onclick="closeModal()">OK</button></div>`);
+    return;
+  }
+  setMoney(p,money(p)-s.price);s.owner=p;
+  const mono=hasMonopoly(p,themeKeyOf(s));
+  showModal(`${MT('Gekauft!')}${MB(`<strong>${s.name}</strong> fuer ${fmt(s.price)}${mono?'<br><br><span style="color:var(--gold);font-weight:700">MONOPOL erreicht!</span>':''}`)}<div class="mbtns"><button class="btn bsu" onclick="closeModal();updateUI();">Super!</button></div>`);
+}
+
 function doBuildHotel(id){
   const p=GS.currentPlayer;const s=streetById(id);
   if(money(p)<s.hotelCost){
@@ -643,15 +774,40 @@ function doBuildHotel(id){
   s.hasHotel=true;
   showModal(`${MT('&#127968; Hotel gebaut!')}${MB('<div style="font-size:2rem;margin-bottom:6px">&#127968;</div><strong>'+s.name+'</strong><br>fuer <span style="color:#ff9800;font-weight:700">'+fmt(s.hotelCost)+'</span><br><br>Guthaben: '+fmt(money(p)))}<div class="mbtns"><button class="btn bsu" onclick="closeModal();updateUI();">Super!</button></div>`);
 }
-function showHotelLandModal(p,st,tk){const rent=Math.floor(st.price*0.5);showModal(`${MT('Fremdes Hotel!')}${MB(`<div style="font-weight:700;color:var(--gold);margin-bottom:6px">${st.name}</div>Besitzer: ${lbl(st.owner)}<br><div style="font-size:1.3rem;font-weight:700;color:#f44336;margin:8px 0">Miete: ${fmt(rent)}</div>`)}<div class="mbtns"><button class="btn bd" onclick="doPayRent(${st.id},${rent})">Miete zahlen</button><button class="btn bw" onclick="handPhone('${tk}')">Aufgabe machen</button></div>`);}
-function doPayRent(id,rent){const s=streetById(id);const p=GS.currentPlayer;setMoney(p,money(p)-rent);setMoney(s.owner,money(s.owner)+rent);showModal(`${MT('Miete gezahlt!')}${MB(`<span style="font-size:1.2rem;font-weight:700;color:#f44336">-${fmt(rent)}</span><br>Guthaben: ${fmt(money(p))}`)}<div class="mbtns"><button class="btn bsu" onclick="closeModal();updateUI();">Weiter</button></div>`);}
-function handPhone(tk){const o=opp(GS.currentPlayer);showModal(`${MT('Handy uebergeben!')}${MB(`${lbl(GS.currentPlayer)} gibt Handy an<br><strong style="color:var(--gold)">${lbl(o)}</strong>`)}<div class="mbtns"><button class="btn bw" onclick="showTask('${tk}')">Ich habe das Handy</button></div>`);}
-function showTask(tk){const th=THEMES[tk];const task=rnd(th.tasks);showModal(`${MT(th.emoji+' '+th.name)}${MB(`<div style="font-size:1rem;line-height:1.6">${task}</div>`)}<div style="text-align:center;font-size:.8rem;margin-bottom:10px;opacity:.8">Ausfuehrend: <strong>${lbl(GS.currentPlayer)}</strong></div><div class="mbtns"><button class="btn bsu" onclick="taskDone()">Erledigt!</button><button class="btn bd" onclick="taskSkip()">Ueberspringen (-50)</button></div>`);}
-function taskDone(){const p=GS.currentPlayer;showModal(`${MT('Handy zurueck!')}${MB(`${lbl(p)} gibt Handy zurueck an <strong style="color:var(--gold)">${lbl(opp(p))}</strong>`)}<div class="mbtns"><button class="btn bsu" onclick="closeModal();updateUI();">Super!</button></div>`);}
-function taskSkip(){const p=GS.currentPlayer;setMoney(p,money(p)-50);showModal(`${MT('Uebersprungen!')}${MB(`<span style="color:#f44336;font-weight:700">-${fmt(50)}</span><br>Handy zurueck an <strong>${lbl(opp(p))}</strong>`)}<div class="mbtns"><button class="btn bs" onclick="closeModal();updateUI();">OK</button></div>`);}
+
+function showHotelLandModal(p,st,tk){
+  const rent=Math.floor(st.price*0.5);
+  showModal(`${MT('Fremdes Hotel!')}${MB(`<div style="font-weight:700;color:var(--gold);margin-bottom:6px">${st.name}</div>Besitzer: ${lbl(st.owner)}<br><div style="font-size:1.3rem;font-weight:700;color:#f44336;margin:8px 0">Miete: ${fmt(rent)}</div>`)}<div class="mbtns"><button class="btn bd" onclick="doPayRent(${st.id},${rent})">Miete zahlen</button><button class="btn bw" onclick="handPhone('${tk}')">Aufgabe machen</button></div>`);
+}
+
+function doPayRent(id,rent){
+  const s=streetById(id);const p=GS.currentPlayer;
+  setMoney(p,money(p)-rent);setMoney(s.owner,money(s.owner)+rent);
+  showModal(`${MT('Miete gezahlt!')}${MB(`<span style="font-size:1.2rem;font-weight:700;color:#f44336">-${fmt(rent)}</span><br>Guthaben: ${fmt(money(p))}`)}<div class="mbtns"><button class="btn bsu" onclick="closeModal();updateUI();">Weiter</button></div>`);
+}
+
+function handPhone(tk){
+  const o=opp(GS.currentPlayer);
+  showModal(`${MT('Handy uebergeben!')}${MB(`${lbl(GS.currentPlayer)} gibt Handy an<br><strong style="color:var(--gold)">${lbl(o)}</strong>`)}<div class="mbtns"><button class="btn bw" onclick="showTask('${tk}')">Ich habe das Handy</button></div>`);
+}
+
+function showTask(tk){
+  const th=THEMES[tk];const task=rnd(th.tasks);
+  showModal(`${MT(th.emoji+' '+th.name)}${MB(`<div style="font-size:1rem;line-height:1.6">${task}</div>`)}<div style="text-align:center;font-size:.8rem;margin-bottom:10px;opacity:.8">Ausfuehrend: <strong>${lbl(GS.currentPlayer)}</strong></div><div class="mbtns"><button class="btn bsu" onclick="taskDone()">Erledigt!</button><button class="btn bd" onclick="taskSkip()">Ueberspringen (-50)</button></div>`);
+}
+
+function taskDone(){
+  const p=GS.currentPlayer;
+  showModal(`${MT('Handy zurueck!')}${MB(`${lbl(p)} gibt Handy zurueck an <strong style="color:var(--gold)">${lbl(opp(p))}</strong>`)}<div class="mbtns"><button class="btn bsu" onclick="closeModal();updateUI();">Super!</button></div>`);
+}
+
+function taskSkip(){
+  const p=GS.currentPlayer;setMoney(p,money(p)-50);
+  showModal(`${MT('Uebersprungen!')}${MB(`<span style="color:#f44336;font-weight:700">-${fmt(50)}</span><br>Handy zurueck an <strong>${lbl(opp(p))}</strong>`)}<div class="mbtns"><button class="btn bs" onclick="closeModal();updateUI();">OK</button></div>`);
+}
+
 function handleCorner(name,p){
   if(name==='LOS'){
-    // Landing exactly on LOS - already got passGo bonus, show confirmation
     showModal(`${MT('&#127919; LOS!')}${MB('Du bist genau auf LOS gelandet!<br><div class="rbadge">+'+fmt(200)+'</div><br>Startgeld bereits gutgeschrieben!')}<div class="mbtns"><button class="btn bsu" onclick="closeModal();updateUI();">Super!</button></div>`);
   } else if(name==='Pause'){
     showModal(`${MT('&#9208;&#65039; Pause!')}${MB('Du setzt diese Runde aus.<br><span style="font-size:0.8rem;opacity:0.7">Dein Gegner ist zweimal dran.</span>')}<div class="mbtns"><button class="btn bs" onclick="closeModal();doEndTurn();">OK</button></div>`);
@@ -662,7 +818,6 @@ function handleCorner(name,p){
     setMoney(p,money(p)+200);
     showModal(`${MT('&#127873; Bonus!')}${MB('Unverhofftes Glueck!<br><div class="rbadge">+'+fmt(200)+'</div>')}<div class="mbtns"><button class="btn bsu" onclick="closeModal();updateUI();">OK</button></div>`);
   } else {
-    // Event / Akt - random event
     const evs=[
       {t:'&#127808; Glueckstag!',       fn:()=>setMoney(p,money(p)+150),                                                   b:'+'+fmt(150)},
       {t:'&#128176; Strafzahlung!',      fn:()=>{setMoney(p,money(p)-100);setMoney(opp(p),money(opp(p))+100)},             b:'-'+fmt(100)},
@@ -675,19 +830,49 @@ function handleCorner(name,p){
     showModal(`${MT('&#128161; Ereignis!')}${MB(ev.t+'<br><br><div class="rbadge">'+ev.b+'</div>')}<div class="mbtns"><button class="btn bsu" onclick="closeModal();updateUI();">OK</button></div>`);
   }
 }
-function doEndTurn(){GS.currentPlayer=opp(GS.currentPlayer);GS.rolled=false;GS.stoleThisTurn=false;updateUI();}
-function showVA(){const{truth,dare,extreme}=VA;showModal(`${MT('Freiwillige Aktion')}${MB('<strong>Waehle deine Herausforderung!</strong><br>Je extremer desto mehr Geld!')}<div class="mbtns"><button class="btn bb" onclick="startVA('truth')">Wahrheit (+${fmt(truth.reward)})</button><button class="btn bw" onclick="startVA('dare')">Pflicht (+${fmt(dare.reward)} / -${fmt(dare.punishment)})</button><button class="btn bd" onclick="startVA('extreme')">Extrem (+${fmt(extreme.reward)} / -${fmt(extreme.punishment)})</button><button class="btn bs" onclick="closeModal()">Doch nicht</button></div>`);}
-function startVA(type){
-  const a=VA[type];const item=rnd(a.items);
-  const declinePen=a.punishment||30;
-  showModal(`${MT(a.label)}${MB(`<div style="font-size:1rem;line-height:1.6">${item}</div>`)}<div style="text-align:center;margin-bottom:11px"><div class="rbadge">+${fmt(a.reward)}</div><div class="pnote">Ablehnen kostet: -${fmt(declinePen)}</div></div><div class="mbtns"><button class="btn bsu" onclick="vaOK('${type}')">&#10003; Gemacht!</button><button class="btn bd" onclick="vaNo('${type}',${declinePen})">&#10060; Ablehnen (-${fmt(declinePen)})</button></div>`);
+
+function doEndTurn(){
+  GS.currentPlayer=opp(GS.currentPlayer);
+  GS.rolled=false;
+  GS.stoleThisTurn=false;
+  updateUI();
 }
-function vaOK(type){const p=GS.currentPlayer;const r=VA[type].reward;setMoney(p,money(p)+r);showModal(`${MT('Belohnung!')}${MB(`<div class="rbadge">+${fmt(r)}</div><br>Guthaben: ${fmt(money(p))}`)}<div class="mbtns"><button class="btn bsu" onclick="closeModal();updateUI();">OK</button></div>`);}
-function vaNo(type,pen){const p=GS.currentPlayer;pen=pen||VA[type].punishment||30;setMoney(p,money(p)-pen);showModal(`${MT('&#128554; Abgelehnt!')}${MB(`<span style="color:#f44336;font-weight:700">-${fmt(pen)}</span><br><span style="font-size:0.8rem;opacity:0.7">Feige!</span>`)}<div class="mbtns"><button class="btn bs" onclick="closeModal();updateUI();">OK</button></div>`);}
+
+function showVA(){
+  const{truth,dare,extreme,psychological}=VA;
+  showModal(`${MT('Freiwillige Aktion')}${MB('<strong>Waehle deine Herausforderung!</strong><br>Je extremer desto mehr Geld!')}<div class="mbtns">
+    <button class="btn bb" onclick="startVA('truth')">Wahrheit (+${fmt(truth.reward)})</button>
+    <button class="btn bw" onclick="startVA('dare')">Pflicht (+${fmt(dare.reward)} / -${fmt(dare.punishment)})</button>
+    <button class="btn" style="background:linear-gradient(135deg,#ff00ff,#8b00ff)" onclick="startVA('psychological')">Psychologisch (+${fmt(psychological.reward)} / -${fmt(psychological.punishment)})</button>
+    <button class="btn bd" onclick="startVA('extreme')">Extrem (+${fmt(extreme.reward)} / -${fmt(extreme.punishment)})</button>
+    <button class="btn bs" onclick="closeModal()">Doch nicht</button>
+  </div>`);
+}
+
+function startVA(type){
+  const a=VA[type];
+  const item=rnd(a.items);
+  const declinePen=a.punishment||30;
+  const colorClass = type==='psychological' ? 'psych' : '';
+  showModal(`${MT(a.label)}${MB(`<div style="font-size:1rem;line-height:1.6" class="${colorClass}">${item}</div>`)}<div style="text-align:center;margin-bottom:11px"><div class="rbadge">+${fmt(a.reward)}</div><div class="pnote">Ablehnen kostet: -${fmt(declinePen)}</div></div><div class="mbtns"><button class="btn bsu" onclick="vaOK('${type}')">&#10003; Gemacht!</button><button class="btn bd" onclick="vaNo('${type}',${declinePen})">&#10060; Ablehnen (-${fmt(declinePen)})</button></div>`);
+}
+
+function vaOK(type){
+  const p=GS.currentPlayer;
+  const r=VA[type].reward;
+  setMoney(p,money(p)+r);
+  showModal(`${MT('Belohnung!')}${MB(`<div class="rbadge">+${fmt(r)}</div><br>Guthaben: ${fmt(money(p))}`)}<div class="mbtns"><button class="btn bsu" onclick="closeModal();updateUI();">OK</button></div>`);
+}
+
+function vaNo(type,pen){
+  const p=GS.currentPlayer;
+  pen=pen||VA[type].punishment||30;
+  setMoney(p,money(p)-pen);
+  showModal(`${MT('&#128554; Abgelehnt!')}${MB(`<span style="color:#f44336;font-weight:700">-${fmt(pen)}</span><br><span style="font-size:0.8rem;opacity:0.7">Feige!</span>`)}<div class="mbtns"><button class="btn bs" onclick="closeModal();updateUI();">OK</button></div>`);
+}
 
 function showHotelManager(){
   const p=GS.currentPlayer;
-  // Find all streets player owns with monopoly but no hotel yet
   const eligible=[];
   Object.keys(THEMES).forEach(k=>{
     if(!hasMonopoly(p,k))return;
@@ -717,26 +902,34 @@ function showHotelManager(){
 }
 
 function showTheft(){
-  if(GS.stoleThisTurn){showModal(`${MT('Diebstahl')}${MB('Diebstahl nur 1x pro Zug erlaubt!')}<div class="mbtns"><button class="btn bs" onclick="closeModal()">OK</button></div>`);return;}
+  if(GS.stoleThisTurn){
+    showModal(`${MT('Diebstahl')}${MB('Diebstahl nur 1x pro Zug erlaubt!')}<div class="mbtns"><button class="btn bs" onclick="closeModal()">OK</button></div>`);
+    return;
+  }
   showModal(`${MT('&#128184; Diebstahl')}<div class="mb" style="font-size:0.85rem;line-height:1.7">
     <strong>Einsatz: -${fmt(200)}</strong><br>
     &#127922; Wuerfelst du 1-3: Einsatz verloren, nichts gestohlen<br>
-    &#127922; Wuerfelst du 4-6: Zahl x 50 gestohlen (max. 40% des Gegners)<br>
+    &#127922; Wuerfelst du 4-6: Zahl x 80 gestohlen (max. 40% des Gegners)<br>
     <span style="opacity:0.7;font-size:0.78rem">Nur 1x pro Zug moeglich</span>
   </div><div class="mbtns"><button class="btn bd" onclick="doTheft()">&#128184; Riskieren!</button><button class="btn bs" onclick="closeModal()">Abbrechen</button></div>`);
 }
+
 function doTheft(){
   const p=GS.currentPlayer;const o=opp(p);
-  if(GS.stoleThisTurn){showModal(`${MT('Nur 1x!')}${MB('Diebstahl nur einmal pro Zug.')}<div class="mbtns"><button class="btn bs" onclick="closeModal()">OK</button></div>`);return;}
-  if(money(p)<200){showModal(`${MT('Kein Geld')}${MB('Diebstahl kostet '+fmt(200))}<div class="mbtns"><button class="btn bs" onclick="closeModal()">OK</button></div>`);return;}
+  if(GS.stoleThisTurn){
+    showModal(`${MT('Nur 1x!')}${MB('Diebstahl nur einmal pro Zug.')}<div class="mbtns"><button class="btn bs" onclick="closeModal()">OK</button></div>`);
+    return;
+  }
+  if(money(p)<200){
+    showModal(`${MT('Kein Geld')}${MB('Diebstahl kostet '+fmt(200))}<div class="mbtns"><button class="btn bs" onclick="closeModal()">OK</button></div>`);
+    return;
+  }
   setMoney(p,money(p)-200);
   GS.stoleThisTurn=true;
   const roll=Math.floor(Math.random()*6)+1;
   if(roll<=3){
-    // FAIL - einsatz verloren
     showModal(`${MT('&#128184; Erwischt!')}${MB(`<div style="font-size:2rem;margin-bottom:6px">&#128165;</div>Gewuerfelt: <strong>${roll}</strong> (1-3 = Pech!)<br><br><span style="color:#f44336;font-weight:700">Einsatz verloren: -${fmt(200)}</span><br><span style="font-size:0.8rem;opacity:0.7">Nichts gestohlen</span>`)}<div class="mbtns"><button class="btn bs" onclick="closeModal();updateUI();">&#128577; Pech gehabt</button></div>`);
   } else {
-    // SUCCESS - steal capped at 40% of opponent money
     const maxSteal=Math.floor(money(o)*0.4);
     const raw=roll*80;
     const stolen=Math.min(raw,maxSteal,money(o));
@@ -745,52 +938,83 @@ function doTheft(){
     showModal(`${MT('&#128184; Diebstahl!')}${MB(`<div style="font-size:2rem;margin-bottom:6px">&#128516;</div>Gewuerfelt: <strong>${roll}</strong> (Erfolg!)<br><div class="rbadge">+${fmt(stolen)} gestohlen</div><br><span style="font-size:0.8rem;opacity:0.7">Einsatz: -${fmt(200)} | Netto: ${netto>=0?'+':''}${fmt(netto)}</span>`)}<div class="mbtns"><button class="btn bsu" onclick="closeModal();updateUI();">&#127775; Super!</button></div>`);
   }
 }
-function showFT(){const opts=Object.entries(THEMES).map(([k,t])=>`<option value="${k}">${t.emoji} ${t.name}</option>`).join('');showModal(`${MT('Aufgabe erzwingen')}${MB(`Kosten: -${fmt(150)}<br>Waehle Thema - Gegner muss Aufgabe erfuellen!`)}<div class="fr2"><label class="fl">Thema:</label><select id="ftSel" class="fsel">${opts}</select></div><div class="mbtns"><button class="btn" onclick="doFT()">Erzwingen!</button><button class="btn bs" onclick="closeModal()">Abbrechen</button></div>`);}
-function doFT(){const p=GS.currentPlayer;if(money(p)<150){showModal(`${MT('Kein Geld')}${MB('Kostet 150')}<div class="mbtns"><button class="btn bs" onclick="closeModal()">OK</button></div>`);return;}setMoney(p,money(p)-150);const k=document.getElementById('ftSel').value;const th=THEMES[k];const task=rnd(th.tasks);showModal(`${MT(th.emoji+' '+th.name)}${MB(`<div style="font-size:1rem;line-height:1.6">${task}</div>`)}<div style="text-align:center;font-size:.8rem;margin-bottom:10px;opacity:.8">Ausfuehrend: <strong>${lbl(opp(p))}</strong></div><div class="mbtns"><button class="btn bsu" onclick="closeModal();updateUI();">Erledigt!</button></div>`);}
-function showTrade(){showModal(`${MT('Handel')}${MB('Was moechtet ihr handeln?')}<div class="mbtns"><button class="btn bw" onclick="showMT()">Geld uebertragen</button><button class="btn" onclick="showST()">Strassen tauschen</button><button class="btn bs" onclick="closeModal()">Abbrechen</button></div>`);}
-function showMT(){showModal(`${MT('Geld uebertragen')}<div class="fr2"><label class="fl">Von:</label><select id="mFrom" class="fsel"><option value="frau">Ehefrau (${fmt(GS.frauMoney)})</option><option value="mann">Ehemann (${fmt(GS.mannMoney)})</option></select></div><div class="fr2"><label class="fl">Betrag:</label><input type="number" id="mAmt" class="finp" placeholder="z.B. 500" min="1"></div><div class="mbtns" style="margin-top:10px"><button class="btn bsu" onclick="doMT()">Uebertragen</button><button class="btn bs" onclick="showTrade()">Zurueck</button></div>`);}
-function doMT(){const from=document.getElementById('mFrom').value;const to=opp(from);const amt=parseInt(document.getElementById('mAmt').value)||0;if(amt<=0){alert('Betrag eingeben!');return;}if(money(from)<amt){alert('Nicht genug Geld!');return;}setMoney(from,money(from)-amt);setMoney(to,money(to)+amt);showModal(`${MT('Uebertragen!')}${MB(`<div class="rbadge">${fmt(amt)}</div><br>${lbl(from)} zu ${lbl(to)}`)}<div class="mbtns"><button class="btn bsu" onclick="closeModal();updateUI();">OK</button></div>`);}
-function showST(){const fS=allStreets().filter(s=>s.owner==='frau');const mS=allStreets().filter(s=>s.owner==='mann');const fo=`<option value="">Keine Strasse</option>${fS.map(s=>`<option value="${s.id}">${s.short} (${fmt(s.price)})</option>`).join('')}`;const mo=`<option value="">Keine Strasse</option>${mS.map(s=>`<option value="${s.id}">${s.short} (${fmt(s.price)})</option>`).join('')}`;showModal(`${MT('Strassen tauschen')}<div class="fr2"><label class="fl">Ehefrau gibt:</label><select id="sfF" class="fsel">${fo}</select></div><div class="fr2"><label class="fl">Ehefrau zahlt zusaetzlich:</label><input type="number" id="smF" class="finp" placeholder="0" min="0" value="0"></div><div class="tdiv">Tausch</div><div class="fr2"><label class="fl">Ehemann gibt:</label><select id="sfM" class="fsel">${mo}</select></div><div class="fr2"><label class="fl">Ehemann zahlt zusaetzlich:</label><input type="number" id="smM" class="finp" placeholder="0" min="0" value="0"></div><div class="mbtns" style="margin-top:10px"><button class="btn bsu" onclick="doST()">Tauschen</button><button class="btn bs" onclick="showTrade()">Zurueck</button></div>`);}
-function doST(){const sfId=parseInt(document.getElementById('sfF').value);const smId=parseInt(document.getElementById('sfM').value);const mf=parseInt(document.getElementById('smF').value)||0;const mm=parseInt(document.getElementById('smM').value)||0;if(!sfId&&!smId){alert('Mindestens eine Strasse!');return;}if(mf>0&&GS.frauMoney<mf){alert('Ehefrau kein Geld!');return;}if(mm>0&&GS.mannMoney<mm){alert('Ehemann kein Geld!');return;}if(sfId)streetById(sfId).owner='mann';if(smId)streetById(smId).owner='frau';if(mf>0){GS.frauMoney-=mf;GS.mannMoney+=mf;}if(mm>0){GS.mannMoney-=mm;GS.frauMoney+=mm;}showModal(`${MT('Handel erfolgreich!')}${MB('Tausch abgeschlossen!')}<div class="mbtns"><button class="btn bsu" onclick="closeModal();updateUI();">OK</button></div>`);}
-function showEG(){const s=allStreets();const fa=GS.frauMoney+s.filter(x=>x.owner==='frau').reduce((a,x)=>a+x.price+(x.hasHotel?x.hotelCost:0),0);const ma=GS.mannMoney+s.filter(x=>x.owner==='mann').reduce((a,x)=>a+x.price+(x.hasHotel?x.hotelCost:0),0);const w=fa>=ma?'EHEFRAU':'EHEMANN';const diff=Math.abs(fa-ma);const pay=Math.round(diff/1000);showModal(`${MT('SPIELENDE!')}${MB(`<div style="font-size:2rem;margin-bottom:8px">Trophae</div><div style="line-height:2;margin-bottom:10px"><div>Ehefrau: <strong style="color:var(--gold)">${fmt(fa)}</strong></div><div>Ehemann: <strong style="color:var(--gold)">${fmt(ma)}</strong></div></div><div style="font-weight:700;margin-bottom:8px">Gewinner: ${w}</div><div style="background:rgba(255,215,0,.15);padding:10px;border-radius:8px"><div style="font-size:.8rem;opacity:.8">Differenz: ${fmt(diff)}</div><div style="font-size:1.3rem;font-weight:700;color:var(--gold)">Zahlung: ${pay} Euro</div></div>`)}<div class="mbtns"><button class="btn bs" onclick="closeModal()">Schliessen</button></div>`);}
+
+function showFT(){
+  const opts=Object.entries(THEMES).map(([k,t])=>`<option value="${k}">${t.emoji} ${t.name}</option>`).join('');
+  showModal(`${MT('Aufgabe erzwingen')}${MB(`Kosten: -${fmt(150)}<br>Waehle Thema - Gegner muss Aufgabe erfuellen!`)}<div class="fr2"><label class="fl">Thema:</label><select id="ftSel" class="fsel">${opts}</select></div><div class="mbtns"><button class="btn" onclick="doFT()">Erzwingen!</button><button class="btn bs" onclick="closeModal()">Abbrechen</button></div>`);
+}
+
+function doFT(){
+  const p=GS.currentPlayer;
+  if(money(p)<150){
+    showModal(`${MT('Kein Geld')}${MB('Kostet 150')}<div class="mbtns"><button class="btn bs" onclick="closeModal()">OK</button></div>`);
+    return;
+  }
+  setMoney(p,money(p)-150);
+  const k=document.getElementById('ftSel').value;
+  const th=THEMES[k];
+  const task=rnd(th.tasks);
+  showModal(`${MT(th.emoji+' '+th.name)}${MB(`<div style="font-size:1rem;line-height:1.6">${task}</div>`)}<div style="text-align:center;font-size:.8rem;margin-bottom:10px;opacity:.8">Ausfuehrend: <strong>${lbl(opp(p))}</strong></div><div class="mbtns"><button class="btn bsu" onclick="closeModal();updateUI();">Erledigt!</button></div>`);
+}
+
+function showTrade(){
+  showModal(`${MT('Handel')}${MB('Was moechtet ihr handeln?')}<div class="mbtns"><button class="btn bw" onclick="showMT()">Geld uebertragen</button><button class="btn" onclick="showST()">Strassen tauschen</button><button class="btn bs" onclick="closeModal()">Abbrechen</button></div>`);
+}
+
+function showMT(){
+  showModal(`${MT('Geld uebertragen')}<div class="fr2"><label class="fl">Von:</label><select id="mFrom" class="fsel"><option value="frau">Ehefrau (${fmt(GS.frauMoney)})</option><option value="mann">Ehemann (${fmt(GS.mannMoney)})</option></select></div><div class="fr2"><label class="fl">Betrag:</label><input type="number" id="mAmt" class="finp" placeholder="z.B. 500" min="1"></div><div class="mbtns" style="margin-top:10px"><button class="btn bsu" onclick="doMT()">Uebertragen</button><button class="btn bs" onclick="showTrade()">Zurueck</button></div>`);
+}
+
+function doMT(){
+  const from=document.getElementById('mFrom').value;
+  const to=opp(from);
+  const amt=parseInt(document.getElementById('mAmt').value)||0;
+  if(amt<=0){alert('Betrag eingeben!');return;}
+  if(money(from)<amt){alert('Nicht genug Geld!');return;}
+  setMoney(from,money(from)-amt);
+  setMoney(to,money(to)+amt);
+  showModal(`${MT('Uebertragen!')}${MB(`<div class="rbadge">${fmt(amt)}</div><br>${lbl(from)} zu ${lbl(to)}`)}<div class="mbtns"><button class="btn bsu" onclick="closeModal();updateUI();">OK</button></div>`);
+}
+
+function showST(){
+  const fS=allStreets().filter(s=>s.owner==='frau');
+  const mS=allStreets().filter(s=>s.owner==='mann');
+  const fo=`<option value="">Keine Strasse</option>${fS.map(s=>`<option value="${s.id}">${s.short} (${fmt(s.price)})</option>`).join('')}`;
+  const mo=`<option value="">Keine Strasse</option>${mS.map(s=>`<option value="${s.id}">${s.short} (${fmt(s.price)})</option>`).join('')}`;
+  showModal(`${MT('Strassen tauschen')}<div class="fr2"><label class="fl">Ehefrau gibt:</label><select id="sfF" class="fsel">${fo}</select></div><div class="fr2"><label class="fl">Ehefrau zahlt zusaetzlich:</label><input type="number" id="smF" class="finp" placeholder="0" min="0" value="0"></div><div class="tdiv">Tausch</div><div class="fr2"><label class="fl">Ehemann gibt:</label><select id="sfM" class="fsel">${mo}</select></div><div class="fr2"><label class="fl">Ehemann zahlt zusaetzlich:</label><input type="number" id="smM" class="finp" placeholder="0" min="0" value="0"></div><div class="mbtns" style="margin-top:10px"><button class="btn bsu" onclick="doST()">Tauschen</button><button class="btn bs" onclick="showTrade()">Zurueck</button></div>`);
+}
+
+function doST(){
+  const sfId=parseInt(document.getElementById('sfF').value);
+  const smId=parseInt(document.getElementById('sfM').value);
+  const mf=parseInt(document.getElementById('smF').value)||0;
+  const mm=parseInt(document.getElementById('smM').value)||0;
+  if(!sfId&&!smId){alert('Mindestens eine Strasse!');return;}
+  if(mf>0&&GS.frauMoney<mf){alert('Ehefrau kein Geld!');return;}
+  if(mm>0&&GS.mannMoney<mm){alert('Ehemann kein Geld!');return;}
+  if(sfId)streetById(sfId).owner='mann';
+  if(smId)streetById(smId).owner='frau';
+  if(mf>0){GS.frauMoney-=mf;GS.mannMoney+=mf;}
+  if(mm>0){GS.mannMoney-=mm;GS.frauMoney+=mm;}
+  showModal(`${MT('Handel erfolgreich!')}${MB('Tausch abgeschlossen!')}<div class="mbtns"><button class="btn bsu" onclick="closeModal();updateUI();">OK</button></div>`);
+}
+
+function showEG(){
+  const s=allStreets();
+  const fa=GS.frauMoney+s.filter(x=>x.owner==='frau').reduce((a,x)=>a+x.price+(x.hasHotel?x.hotelCost:0),0);
+  const ma=GS.mannMoney+s.filter(x=>x.owner==='mann').reduce((a,x)=>a+x.price+(x.hasHotel?x.hotelCost:0),0);
+  const w=fa>=ma?'EHEFRAU':'EHEMANN';
+  const diff=Math.abs(fa-ma);
+  const pay=Math.round(diff/1000);
+  showModal(`${MT('SPIELENDE!')}${MB(`<div style="font-size:2rem;margin-bottom:8px">Trophae</div><div style="line-height:2;margin-bottom:10px"><div>Ehefrau: <strong style="color:var(--gold)">${fmt(fa)}</strong></div><div>Ehemann: <strong style="color:var(--gold)">${fmt(ma)}</strong></div></div><div style="font-weight:700;margin-bottom:8px">Gewinner: ${w}</div><div style="background:rgba(255,215,0,.15);padding:10px;border-radius:8px"><div style="font-size:.8rem;opacity:.8">Differenz: ${fmt(diff)}</div><div style="font-size:1.3rem;font-weight:700;color:var(--gold)">Zahlung: ${pay} Euro</div></div>`)}<div class="mbtns"><button class="btn bs" onclick="closeModal()">Schliessen</button></div>`);
+}
+
 window.addEventListener('DOMContentLoaded',init);
-/* ══ GRID BOARD DATA ══
-   10x10 grid, corners at (0,0),(9,0),(0,9),(9,9)
-   Bottom row (row 9): positions 0-9 left to right  → indices 0..9
-   Left col  (col 0):  positions 10-17 bottom to top → indices 10..17  (rows 8..1)
-   Top row   (row 0):  positions 18-27 left to right → indices 18..27
-   Right col (col 9):  positions 28-.. top to bottom → indices 28..
-   
-   Simplified: 28 fields around the border of 10x10 grid
-   Row9: col0..9 = fields 0..9   (left to right, bottom)
-   Col0: row8..1 = fields 10..17 (bottom to top, left)
-   Row0: col0..9 = fields 18..27 (left to right, top)  -- actually reverse for real monopoly feel
-   Col9: row1..8 = fields 28..   
-*/
 
-// Grid layout: map board index → [row, col]
-// Bottom row L→R: 0-9, Left col B→T: 10-17, Top row L→R: 18-27 (but reversed = R→L for classic look... keep simple)
-// We use: bottom=0..9, left(up)=10..17, top(right)=18..27, right(down) not needed, 28 fields total fits 3 sides + corners
-
-// Actually map the 28 board positions to a 10x10 grid:
-// Bottom row (row 9, col 0..9): 8 street fields + 2 corners = positions 0..9
-// Left col (col 0, row 8..1): 6 street fields + 2 corners but corners shared... 
-// We go: bottom 10 cells (row9), left 8 cells (col0, rows 8..1), top 10 cells (row0), right 8 cells (col9, rows 1..8) = 36 border cells
-// But we only have 28 fields. So we space them out or use a smaller grid.
-// Simplest: use a 10x10, place all 28 fields along the border evenly. Skip some cells.
-
-// Let's define exact grid positions for all 28 board fields:
-// Bottom row (row=9): col 0,1,2,3,4,5,6,7,8,9 → 10 fields (indices 0..9)  [LOS at col0, going right]
-// Left col (col=0): row 8,7,6,5,4,3,2,1 → 8 fields (indices 10..17) [going up]  
-// Top row (row=0): col 0,1,2,3,4,5,6,7,8,9 → 10 fields (indices 18..27) [going right]
-// That's 28! Perfect. Right side is just the center area.
-
-// 8x8 grid, all 4 sides, LOS = top-right (0,7), clockwise
 function renderBoard(){
   const board=document.getElementById('monoBoard');
   board.innerHTML='';
 
-  // Build lookup: "row_col" -> boardIndex
   const fieldMap={};
   BOARD.forEach((field,i)=>{
     const gp=GRID_POS[i];
@@ -818,7 +1042,6 @@ function renderBoard(){
         }
         renderFieldContent(div,field,fieldIdx,r,c,SIZE);
       } else if(!isBorder && r===1 && c===1){
-        // Center block: spans rows 1..6, cols 1..6
         div.className='board-center';
         div.style.cssText='grid-column:2/8;grid-row:2/8;';
         div.innerHTML=`
@@ -843,9 +1066,8 @@ function renderBoard(){
         },50);
         continue;
       } else if(!isBorder){
-        continue; // covered by center span
+        continue;
       } else {
-        // border cell not in fieldMap – shouldn't happen with our 8x8 layout
         div.className='mf mf-empty';
       }
       board.appendChild(div);
@@ -910,6 +1132,7 @@ function rollDice(){
     setTimeout(()=>movePlayer(roll),350);
   },600);
 }
+
 function toggleThemeBlocks(){
   const c=document.getElementById('themeBlocksContainer');
   const icon=document.getElementById('themeToggleIcon');
@@ -917,6 +1140,7 @@ function toggleThemeBlocks(){
   c.style.display=hidden?'':'none';
   icon.textContent=hidden?'&#9660;':'&#9650;';
 }
+
 function showWelcome(){
   showModal(`
     <div class="mt">&#127917; Willkommen bei EROPOLY!</div>
@@ -929,7 +1153,7 @@ function showWelcome(){
       <div>&#128165; <strong>Fremdes Hotel: 50% Miete</strong> ODER Aufgabe aus dem Thema erledigen</div>
       <div>&#127919; <strong>LOS ueberqueren</strong> = +&#8364;200</div>
       <div style="margin-top:10px;font-weight:700;color:var(--gold)">&#9889; Spezial-Aktionen (Sidebar):</div>
-      <div>&#127919; Freiwillige Aktion – Wahrheit/Pflicht/Extrem fuer Geld</div>
+      <div>&#127919; Freiwillige Aktion – Wahrheit/Pflicht/Extrem/Psychologisch fuer Geld</div>
       <div>&#127968; Hotel bauen – jederzeit moeglich bei Monopol</div>
       <div>&#128184; Diebstahl – riskant, 1x pro Zug</div>
       <div>&#127919; Aufgabe erzwingen – kostet &#8364;150, Gegner muss ran</div>
@@ -941,11 +1165,11 @@ function showWelcome(){
     </div>
   `);
 }
+
 function init(){
   renderBoard();renderThemeBlocks();updateUI();
   showWelcome();
   document.getElementById('hotelBtn').addEventListener('click',showHotelManager);
-
   document.getElementById('actionBtn').addEventListener('click',showVA);
   document.getElementById('tradeBtn').addEventListener('click',showTrade);
   document.getElementById('theftBtn').addEventListener('click',showTheft);
