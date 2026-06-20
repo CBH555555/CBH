@@ -34,8 +34,8 @@
 :root{--romantik:#ff1493;--kuscheln:#00bfff;--femdom:#8b00ff;--bdsm:#ff4500;--hotwife:#ff69b4;--cuckold:#32cd32;--keuschheit:#ffd700;--bg-dark:#1a0f2e;--bg-card:#2d1f45;--gold:#ffd700}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 body{font-family:'Poppins',sans-serif;background:linear-gradient(135deg,var(--bg-dark),#1f1038,var(--bg-dark));color:#fff;min-height:100vh;overflow-x:hidden}
-.game-header{position:sticky;top:0;z-index:200;background:linear-gradient(135deg,#6a0dad,#c71585,#228b22);padding:5px 8px;box-shadow:0 3px 14px rgba(0,0,0,.55)}
-.hi{display:flex;justify-content:space-between;align-items:center;gap:4px}
+.game-header{position:sticky;top:0;z-index:200;background:linear-gradient(135deg,#6a0dad,#c71585,#228b22);padding:5px 8px;box-shadow:0 3px 14px rgba(0,0,0,.55);display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.hi{display:flex;justify-content:space-between;align-items:center;gap:4px;flex:1}
 .hp{flex:1;font-size:.65rem;font-weight:700}
 .hp.l{text-align:left}.hp.r{text-align:right}
 .hpb{display:inline-block;padding:3px 7px;border-radius:7px;background:rgba(0,0,0,.45);border:1.5px solid rgba(255,255,255,.2)}
@@ -130,6 +130,8 @@ body{font-family:'Poppins',sans-serif;background:linear-gradient(135deg,var(--bg
 .fsel option{background:#2d1f45}
 .tdiv{text-align:center;margin:10px 0;font-size:1.1rem;opacity:.45}
 .psych{color:#ff00ff;font-weight:700}
+.sync-btn{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:#fff;padding:4px 8px;border-radius:6px;font-size:0.6rem;cursor:pointer;margin-left:4px}
+.sync-btn:active{transform:scale(0.95)}
     </style>
 </head>
 <body>
@@ -138,6 +140,7 @@ body{font-family:'Poppins',sans-serif;background:linear-gradient(135deg,var(--bg
     <div class="hp l"><div class="hpb" id="hpFrau">&#128081; <span id="hFM">2.500</span> | <span id="hFH">0</span>&#127968;</div></div>
     <div class="hc">
       <div class="ht">&#127917; EROPOLY</div>
+      <button class="sync-btn" onclick="syncNow()" title="Mit Cloud synchronisieren">&#9733; Sync</button>
     </div>
     <div class="hp r"><div class="hpb" id="hpMann">&#128274; <span id="hMM">2.500</span> | <span id="hMH">0</span>&#127968;</div></div>
   </div>
@@ -206,12 +209,109 @@ body{font-family:'Poppins',sans-serif;background:linear-gradient(135deg,var(--bg
        <li><strong>Aufgabe erzwingen:</strong> &#8364;150 - Gegner muss zufaellige Aufgabe aus gewahltem Thema erledigen</li>
        <li><strong>Handel:</strong> Geld und Strassen koennen jederzeit getauscht werden</li>
        <li><strong>Spielende:</strong> Gesamtvermoegen (Bargeld + Strassen + Hotels) &#247; 1000 = realer &#8364;-Betrag</li>
+       <li><strong>&#9733; Cloud-Sync:</strong> Spielstand wird automatisch gespeichert – beide Spieler sehen dasselbe Brett!</li>
      </ul>
    </div>
 </div>
 
 <div id="MC" style="display:none"></div>
 <script>
+
+/* ═══════════════════════════════════════════════════════════════════
+   CLOUD-SPEICHER (JSONBIN.IO)
+   ═══════════════════════════════════════════════════════════════════ */
+
+const BIN_ID = "6a36f943da38895dfee43b94";       // ← DEINE BIN-ID EINTRAGEN
+const MASTER_KEY = "$2a$10$RXS/6UhoYPTh7nq/AcLtEeSOld4i4UdPbE25C2m90QuyLRxaGrLgS"; // ← DEIN MASTER-KEY EINTRAGEN
+
+const API_BASE = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
+const HEADERS = {
+  "X-Master-Key": MASTER_KEY,
+  "Content-Type": "application/json"
+};
+
+let cloudVersion = null;
+let syncPending = false;
+
+async function loadFromCloud() {
+  try {
+    const res = await fetch(`${API_BASE}/latest`, { headers: HEADERS });
+    if (!res.ok) throw new Error("Load failed");
+    const json = await res.json();
+    cloudVersion = json.record.version;
+    return json.record;
+  } catch (e) {
+    console.warn("Cloud load failed:", e);
+    return null;
+  }
+}
+
+async function saveToCloud(data) {
+  if (syncPending) return;
+  syncPending = true;
+  try {
+    const putHeaders = { ...HEADERS };
+    if (cloudVersion) putHeaders["X-Bin-Version"] = cloudVersion;
+    const res = await fetch(API_BASE, {
+      method: 'PUT',
+      headers: putHeaders,
+      body: JSON.stringify(data)
+    });
+    if (!res.ok) throw new Error("Save failed");
+    const result = await res.json();
+    cloudVersion = result.record.version;
+    console.log("Cloud saved");
+  } catch (e) {
+    console.warn("Cloud save failed:", e);
+  }
+  syncPending = false;
+}
+
+function packGameState() {
+  const streets = allStreets().map(s => ({
+    id: s.id,
+    owner: s.owner,
+    hasHotel: s.hasHotel
+  }));
+  return {
+    frauMoney: GS.frauMoney,
+    mannMoney: GS.mannMoney,
+    frauPos: GS.frauPos,
+    mannPos: GS.mannPos,
+    currentPlayer: GS.currentPlayer,
+    rolled: GS.rolled,
+    stoleThisTurn: GS.stoleThisTurn,
+    gameActive: GS.gameActive,
+    streets: streets
+  };
+}
+
+function unpackGameState(data) {
+  GS.frauMoney = data.frauMoney ?? 2500;
+  GS.mannMoney = data.mannMoney ?? 2500;
+  GS.frauPos = data.frauPos ?? 0;
+  GS.mannPos = data.mannPos ?? 0;
+  GS.currentPlayer = data.currentPlayer ?? 'frau';
+  GS.rolled = data.rolled ?? false;
+  GS.stoleThisTurn = data.stoleThisTurn ?? false;
+  GS.gameActive = data.gameActive ?? true;
+  if (data.streets) {
+    data.streets.forEach(sd => {
+      const st = streetById(sd.id);
+      if (st) {
+        st.owner = sd.owner;
+        st.hasHotel = sd.hasHotel;
+      }
+    });
+  }
+}
+
+async function syncNow() {
+  const data = packGameState();
+  await saveToCloud(data);
+  updateUI();
+  console.log("Manuell synchronisiert");
+}
 
 /* ═══════════════════════════════════════════════════════════════════
    AUFGABEN-BIBLIOTHEK
@@ -757,6 +857,7 @@ function movePlayer(sp){
 function passGo(p){
   setMoney(p,money(p)+200);
   showModal(`${MT('LOS!')}${MB(`<div class="rbadge">+${fmt(200)}</div><br>${lbl(p)} erhaelt Startgeld!`)}<div class="mbtns"><button class="btn bsu" onclick="closeModal();updateUI();">OK</button></div>`);
+  saveToCloud(packGameState());
 }
 
 function handleLanding(pos){
@@ -774,6 +875,7 @@ function handleLanding(pos){
       }
     }
   }
+  saveToCloud(packGameState());
 }
 
 function showBasicRentModal(p,st){
@@ -793,6 +895,7 @@ function doBasicRent(id,rent){
   const s=streetById(id);const p=GS.currentPlayer;
   setMoney(p,money(p)-rent);setMoney(s.owner,money(s.owner)+rent);
   showModal(`${MT('&#128184; Miete gezahlt!')}${MB(`<span style="color:#ff9800;font-weight:700">-${fmt(rent)}</span><br>Guthaben: ${fmt(money(p))}`)}<div class="mbtns"><button class="btn bsu" onclick="closeModal();updateUI();">OK</button></div>`);
+  saveToCloud(packGameState());
 }
 
 function showBuyModal(p,st){
@@ -808,6 +911,7 @@ function doBuy(id){
   setMoney(p,money(p)-s.price);s.owner=p;
   const mono=hasMonopoly(p,themeKeyOf(s));
   showModal(`${MT('Gekauft!')}${MB(`<strong>${s.name}</strong> fuer ${fmt(s.price)}${mono?'<br><br><span style="color:var(--gold);font-weight:700">MONOPOL erreicht!</span>':''}`)}<div class="mbtns"><button class="btn bsu" onclick="closeModal();updateUI();">Super!</button></div>`);
+  saveToCloud(packGameState());
 }
 
 function doBuildHotel(id){
@@ -819,6 +923,7 @@ function doBuildHotel(id){
   setMoney(p,money(p)-s.hotelCost);
   s.hasHotel=true;
   showModal(`${MT('&#127968; Hotel gebaut!')}${MB('<div style="font-size:2rem;margin-bottom:6px">&#127968;</div><strong>'+s.name+'</strong><br>fuer <span style="color:#ff9800;font-weight:700">'+fmt(s.hotelCost)+'</span><br><br>Guthaben: '+fmt(money(p)))}<div class="mbtns"><button class="btn bsu" onclick="closeModal();updateUI();">Super!</button></div>`);
+  saveToCloud(packGameState());
 }
 
 function showHotelLandModal(p,st,tk){
@@ -830,6 +935,7 @@ function doPayRent(id,rent){
   const s=streetById(id);const p=GS.currentPlayer;
   setMoney(p,money(p)-rent);setMoney(s.owner,money(s.owner)+rent);
   showModal(`${MT('Miete gezahlt!')}${MB(`<span style="font-size:1.2rem;font-weight:700;color:#f44336">-${fmt(rent)}</span><br>Guthaben: ${fmt(money(p))}`)}<div class="mbtns"><button class="btn bsu" onclick="closeModal();updateUI();">Weiter</button></div>`);
+  saveToCloud(packGameState());
 }
 
 function handPhone(tk){
@@ -845,11 +951,13 @@ function showTask(tk){
 function taskDone(){
   const p=GS.currentPlayer;
   showModal(`${MT('Handy zurueck!')}${MB(`${lbl(p)} gibt Handy zurueck an <strong style="color:var(--gold)">${lbl(opp(p))}</strong>`)}<div class="mbtns"><button class="btn bsu" onclick="closeModal();updateUI();">Super!</button></div>`);
+  saveToCloud(packGameState());
 }
 
 function taskSkip(){
   const p=GS.currentPlayer;setMoney(p,money(p)-50);
   showModal(`${MT('Uebersprungen!')}${MB(`<span style="color:#f44336;font-weight:700">-${fmt(50)}</span><br>Handy zurueck an <strong>${lbl(opp(p))}</strong>`)}<div class="mbtns"><button class="btn bs" onclick="closeModal();updateUI();">OK</button></div>`);
+  saveToCloud(packGameState());
 }
 
 function handleCorner(name,p){
@@ -875,6 +983,7 @@ function handleCorner(name,p){
     const ev=rnd(evs);ev.fn();
     showModal(`${MT('&#128161; Ereignis!')}${MB(ev.t+'<br><br><div class="rbadge">'+ev.b+'</div>')}<div class="mbtns"><button class="btn bsu" onclick="closeModal();updateUI();">OK</button></div>`);
   }
+  saveToCloud(packGameState());
 }
 
 function doEndTurn(){
@@ -882,6 +991,7 @@ function doEndTurn(){
   GS.rolled=false;
   GS.stoleThisTurn=false;
   updateUI();
+  saveToCloud(packGameState());
 }
 
 function showVA(){
@@ -908,6 +1018,7 @@ function vaOK(type){
   const r=VA[type].reward;
   setMoney(p,money(p)+r);
   showModal(`${MT('Belohnung!')}${MB(`<div class="rbadge">+${fmt(r)}</div><br>Guthaben: ${fmt(money(p))}`)}<div class="mbtns"><button class="btn bsu" onclick="closeModal();updateUI();">OK</button></div>`);
+  saveToCloud(packGameState());
 }
 
 function vaNo(type,pen){
@@ -915,6 +1026,7 @@ function vaNo(type,pen){
   pen=pen||VA[type].punishment||30;
   setMoney(p,money(p)-pen);
   showModal(`${MT('&#128554; Abgelehnt!')}${MB(`<span style="color:#f44336;font-weight:700">-${fmt(pen)}</span><br><span style="font-size:0.8rem;opacity:0.7">Feige!</span>`)}<div class="mbtns"><button class="btn bs" onclick="closeModal();updateUI();">OK</button></div>`);
+  saveToCloud(packGameState());
 }
 
 function showHotelManager(){
@@ -983,6 +1095,7 @@ function doTheft(){
     const netto=stolen-200;
     showModal(`${MT('&#128184; Diebstahl!')}${MB(`<div style="font-size:2rem;margin-bottom:6px">&#128516;</div>Gewuerfelt: <strong>${roll}</strong> (Erfolg!)<br><div class="rbadge">+${fmt(stolen)} gestohlen</div><br><span style="font-size:0.8rem;opacity:0.7">Einsatz: -${fmt(200)} | Netto: ${netto>=0?'+':''}${fmt(netto)}</span>`)}<div class="mbtns"><button class="btn bsu" onclick="closeModal();updateUI();">&#127775; Super!</button></div>`);
   }
+  saveToCloud(packGameState());
 }
 
 function showFT(){
@@ -1001,6 +1114,7 @@ function doFT(){
   const th=THEMES[k];
   const task=rnd(th.tasks);
   showModal(`${MT(th.emoji+' '+th.name)}${MB(`<div style="font-size:1rem;line-height:1.6">${task}</div>`)}<div style="text-align:center;font-size:.8rem;margin-bottom:10px;opacity:.8">Ausfuehrend: <strong>${lbl(opp(p))}</strong></div><div class="mbtns"><button class="btn bsu" onclick="closeModal();updateUI();">Erledigt!</button></div>`);
+  saveToCloud(packGameState());
 }
 
 function showTrade(){
@@ -1020,6 +1134,7 @@ function doMT(){
   setMoney(from,money(from)-amt);
   setMoney(to,money(to)+amt);
   showModal(`${MT('Uebertragen!')}${MB(`<div class="rbadge">${fmt(amt)}</div><br>${lbl(from)} zu ${lbl(to)}`)}<div class="mbtns"><button class="btn bsu" onclick="closeModal();updateUI();">OK</button></div>`);
+  saveToCloud(packGameState());
 }
 
 function showST(){
@@ -1043,6 +1158,7 @@ function doST(){
   if(mf>0){GS.frauMoney-=mf;GS.mannMoney+=mf;}
   if(mm>0){GS.mannMoney-=mm;GS.frauMoney+=mm;}
   showModal(`${MT('Handel erfolgreich!')}${MB('Tausch abgeschlossen!')}<div class="mbtns"><button class="btn bsu" onclick="closeModal();updateUI();">OK</button></div>`);
+  saveToCloud(packGameState());
 }
 
 function showEG(){
@@ -1177,6 +1293,7 @@ function rollDice(){
     GS.rolled=true;
     setTimeout(()=>movePlayer(roll),350);
   },600);
+  saveToCloud(packGameState());
 }
 
 function toggleThemeBlocks(){
@@ -1185,6 +1302,29 @@ function toggleThemeBlocks(){
   const hidden=c.style.display==='none';
   c.style.display=hidden?'':'none';
   icon.textContent=hidden?'&#9660;':'&#9650;';
+}
+
+async function init(){
+  // 1. Versuche Spielstand aus der Cloud zu laden
+  const cloudData = await loadFromCloud();
+  if (cloudData && cloudData.frauMoney !== undefined) {
+    unpackGameState(cloudData);
+    console.log('Spielstand aus Cloud geladen');
+  }
+
+  renderBoard();renderThemeBlocks();updateUI();
+  
+  // Nur Willkommens-Modal anzeigen, wenn das Spiel noch frisch ist (kein Cloud-Stand)
+  if (!cloudData || cloudData.frauMoney === undefined) {
+    showWelcome();
+  }
+
+  document.getElementById('hotelBtn').addEventListener('click',showHotelManager);
+  document.getElementById('actionBtn').addEventListener('click',showVA);
+  document.getElementById('tradeBtn').addEventListener('click',showTrade);
+  document.getElementById('theftBtn').addEventListener('click',showTheft);
+  document.getElementById('forceTaskBtn').addEventListener('click',showFT);
+  document.getElementById('endGameBtn').addEventListener('click',showEG);
 }
 
 function showWelcome(){
@@ -1203,6 +1343,8 @@ function showWelcome(){
       <div>&#127968; Hotel bauen – jederzeit moeglich bei Monopol</div>
       <div>&#128184; Diebstahl – riskant, 1x pro Zug</div>
       <div>&#127919; Aufgabe erzwingen – kostet &#8364;150, Gegner muss ran</div>
+      <div style="margin-top:10px;font-weight:700;color:var(--gold)">&#9733; Cloud-Sync:</div>
+      <div>Spielstand wird automatisch gespeichert – beide Spieler sehen dasselbe!</div>
       <div style="margin-top:10px;font-weight:700;color:var(--gold)">&#127937; Spielende:</div>
       <div>Gesamtvermoegen &#247; 1000 = realer &#8364;-Betrag den der Verlierer zahlt</div>
     </div>
@@ -1210,17 +1352,6 @@ function showWelcome(){
       <button class="btn bsu" onclick="closeModal()">&#127922; Spiel starten!</button>
     </div>
   `);
-}
-
-function init(){
-  renderBoard();renderThemeBlocks();updateUI();
-  showWelcome();
-  document.getElementById('hotelBtn').addEventListener('click',showHotelManager);
-  document.getElementById('actionBtn').addEventListener('click',showVA);
-  document.getElementById('tradeBtn').addEventListener('click',showTrade);
-  document.getElementById('theftBtn').addEventListener('click',showTheft);
-  document.getElementById('forceTaskBtn').addEventListener('click',showFT);
-  document.getElementById('endGameBtn').addEventListener('click',showEG);
 }
 
 </script>
